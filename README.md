@@ -1,6 +1,6 @@
 # 🎓 Senior Project 2025-2026 🎓
 
-# Vulcan Activity Tracker 🚀 
+### Vulcan Activity Tracker 🚀 
 
 ![Project Logo](./project_pic/vulcan.png)
 

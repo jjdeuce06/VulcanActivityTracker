@@ -31,9 +31,9 @@
 
 # 📝 Members:
    This project was developed collaboratively by:  
-    - **🟢 Margo BONAL**  
-    - **🟡 John GEREGA**  
-    - **🔵 Luke RUFFING**
+    - **🟢 Margo Bonal**  
+    - **🟡 John Gerega**  
+    - **🔵 Luke Ruffing**
 
 #✨ Notes:
 

@@ -1,20 +1,8 @@
 # 🎓 Senior Project 2025-2026 🎓
-================================
 
-# 📌 Project Name:
-    Vulcan Activity Tracker 🚀 
+# Vulcan Activity Tracker 🚀 
 
-# 👥 Group Number:
-    ***GROUP #2***
-
- # 📝 Group Members:
-   This project was developed collaboratively by:  
-    - **🟢 Margo BONAL**  
-    - **🟡 John GEREGA**  
-    - **🔵 Luke RUFFING**
-
-
-   ![Project Logo](./project_pic/vulcan.png)
+![Project Logo](./project_pic/vulcan.png)
 
 
 # 💡 Project Description:
@@ -38,6 +26,14 @@
     - Fall 2025 🍂: Research & Planning
     - Spring 2026 🌸: Implementation & Presentation
 
+# 👥 Group Number:
+    ***GROUP #2***
+
+ # 📝 Group Members:
+   This project was developed collaboratively by:  
+    - **🟢 Margo BONAL**  
+    - **🟡 John GEREGA**  
+    - **🔵 Luke RUFFING**
 
 - ✨ Notes:
 

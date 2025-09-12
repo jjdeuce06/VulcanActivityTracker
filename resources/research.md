@@ -17,7 +17,7 @@ Strava Citation:
 https://www.strava.com
 
 - Format:
-***Developer's Last Name, First Initial. (Year). Name of software (Version number) [Computer software or Mobile app]. Publisher. URL.***s
+***Developer's Last Name, First Initial. (Year). Name of software (Version number) [Computer software or Mobile app]. Publisher. URL.***
 
 
 

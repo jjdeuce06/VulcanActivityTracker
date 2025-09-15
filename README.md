@@ -12,10 +12,10 @@
 
 
 # ⚙️ Technologies & Tools:
-    - [Language 1] 🖥️
-    - [Framework/Library] 📚
-    - [Database] 🗄️
-    - [Other Tools] 🛠️
+    - [Python] 🖥️
+    - [Flask] 📚
+    - [MSQL or MSSQL] 🗄️
+    - [VS Code, Git, GitHub] 🛠️
 
 
 # 🚦 Status:

@@ -1,0 +1,32 @@
+import smtplib
+smtp_server = "smtp.gmail.com"
+port = 587
+sender_email = "your_email@gmail.com"
+password = "your_password"
+server = smtplib.SMTP(smtp_server, port)
+server.ehlo()
+server.starttls()
+server.login(sender_email, password)
+
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+from email.mime.application import MIMEApplication
+from email.mime.multipart import MIMEMultipart
+import os
+msg = MIMEMultipart()
+msg['Subject'] = "Subject of the Email"
+msg['From'] = sender_email
+msg['To'] = "recipient_email@gmail.com"
+# Attach text
+text = "This is the body of the email."
+msg.attach(MIMEText(text, 'plain'))
+# Attach an image
+with open("path/to/image.jpg", 'rb') as img:
+   img_data = img.read()
+   msg.attach(MIMEImage(img_data, name=os.path.basename("path/to/image.jpg")))
+# Attach a file
+with open("path/to/file.pdf", 'rb') as f:
+   file_data = f.read()
+   file = MIMEApplication(file_data, name=os.path.basename("path/to/file.pdf"))
+   file['Content-Disposition'] = f'attachment; filename="{os.path.basename("path/to/file.pdf")}"'
+   msg.attach(file)

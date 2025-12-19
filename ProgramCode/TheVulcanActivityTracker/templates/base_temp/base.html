@@ -51,19 +51,20 @@
         <div class="skills-grid">
             <div class="skill-card">
                 <h3>Profile</h3>
-                <p>...</p>
+                <p>Add, Update, and Filter Activities </p>
             </div>
             <div class="skill-card">
                 <h3>Enviroments</h3>
-                <p>...</p>
+                <p>View gym amenities and indoor climbing areas.</p>
             </div>
             <div class="skill-card">
                 <h3>LeaderBoard</h3>
-                <p>...</p>
+                <p>Shows highest user participation and statistics in certain athletics</p>
             </div>
             <div class="skill-card">
                 <h3>Groups</h3>
-                <p>...</p>
+                <p>Group exercises and activities with friends or clubs. </p>
+                <p>View activities statistics for group and see who participated in the activity.</p>
             </div>
         </div>
     </section>
@@ -74,28 +75,51 @@
         <div class="projects-grid">
             <div class="project-card">
                 <div class="project-img">
-                    <img src="static/img/dash.png" alt="Project Image">
+                   <img src="{{ url_for('style_folder.static', filename='img/gym.png') }}" alt="gym">
                 </div>
                 <div class="project-content">
-                    <h3>Gym</h3>
-                    <p>...</p>
+                    <h3>Gymnasium</h3>
                     <div class="project-links"></div>
                 </div>
             </div>
             <div class="project-card">
                 <div class="project-img">
-                    <img src="static/img/atm.png" alt="Project Image">
+                   <img src="{{ url_for('style_folder.static', filename='img/run.png') }}" alt="runpaths">
                 </div>
                 <div class="project-content">
                     <h3>Running Tracks</h3>
-                    <p>...</p>
                 </div>
             </div>
             <div class="project-card">
-                <div class="project-img">Project Image</div>
+                <div class="project-img">
+                    <img src="{{ url_for('style_folder.static', filename='img/convo.jpg') }}" alt="other">
+                </div>
                 <div class="project-content">
-                    <h3>Other</h3>
-                    <p>...</p>
+                    <h3>Convocation Center</h3>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="project-img">
+                    <img src="{{ url_for('style_folder.static', filename='img/soccer.png') }}" alt="other">
+                </div>
+                <div class="project-content">
+                    <h3>Fields</h3>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="project-img">
+                    <img src="{{ url_for('style_folder.static', filename='img/tennis.png') }}" alt="other">
+                </div>
+                <div class="project-content">
+                    <h3>Courts</h3>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="project-img">
+                    <img src="{{ url_for('style_folder.static', filename='img/pool.png') }}" alt="other">
+                </div>
+                <div class="project-content">
+                    <h3>Pool</h3>
                 </div>
             </div>
         </div>
@@ -104,7 +128,7 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2025 The Vulcan Activity Tracker. All rights reserved.</p>
+        <p>&copy; 2025 The Vulcan Activity Tracker.</p>
     </footer>
 
     <script>

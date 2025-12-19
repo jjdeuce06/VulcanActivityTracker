@@ -7,7 +7,7 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #7c2828;
+    background-color: #070b3f;
     color: #fff;
     line-height: 1.6;
 }
@@ -86,15 +86,6 @@ h2 {
     margin-bottom: 3rem;
 }
 
-/* Hero Section */
-/*#home {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    background: linear-gradient(135deg, #7c2828 0%, #2d2a2a 100%);
-}*/
 
 #home {
     display: flex;
@@ -102,6 +93,7 @@ h2 {
     justify-content: center;
     align-items: center;
     text-align: center;
+    width: 100vw;
     
     /* Add background image */
     background-image: 
@@ -118,7 +110,7 @@ h2 {
 
 .hero-subtitle {
     font-size: 1.5rem;
-    color: #888;
+    color: #ffffff;
     margin-bottom: 2rem;
 }
 
@@ -142,7 +134,7 @@ h2 {
 
 /* About Section */
 #about {
-    background: #7c2828;
+    background: #070b3f;
 }
 
 .about-content {
@@ -157,9 +149,9 @@ h2 {
     width: 100%;
     max-width: 300px;
     height: 300px;
-    border-radius: 50%;
+    /*border-radius: 50%;*/
     object-fit: cover;
-    border: 3px solid #333;
+    border: 3px solid #33333300;
 }
 
 .about-text {
@@ -169,7 +161,7 @@ h2 {
 
 /* Skills Section */
 #skills {
-    background: #7c2828;
+    background: #6b1414;
 }
 
 .skills-grid {
@@ -179,7 +171,7 @@ h2 {
 }
 
 .skill-card {
-    background: #7c2828;
+    background: #6b1414;
     padding: 2rem;
     border-radius: 10px;
     border: 1px solid #333;
@@ -198,7 +190,7 @@ h2 {
 
 /* Projects Section */
 #projects {
-    background: #7c2828;
+    background: #6b1414;
 }
 
 .projects-grid {
@@ -208,7 +200,7 @@ h2 {
 }
 
 .project-card {
-    background: #7c2828;
+    background: #6b1414;
     border-radius: 10px;
     overflow: hidden;
     border: 1px solid #333;
@@ -261,7 +253,7 @@ h2 {
 
 /* Resume Section */
 #resume {
-    background: #7c2828;
+    background: #6b1414;
 }
 
 .resume-container {
@@ -348,7 +340,7 @@ h2 {
 
 /* Footer */
 footer {
-    background: #7c2828;
+    background: #6b1414;
     padding: 2rem;
     text-align: center;
     border-top: 1px solid #333;

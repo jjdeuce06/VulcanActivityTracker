@@ -1,0 +1,148 @@
+<!--This will hold the base template for all extended pages-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Vulcan Activity Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/styles.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#training">Training</a></li>
+            <li><a href="#login">Login</a></li>
+        </ul>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home">
+        <div class="hero-content">
+            <h1>The Vulcan Activity Tracker</h1>
+            <p class="hero-subtitle"> Campus Athletic Activity Tracker</p>
+            <p>Pennsylvania Western University - California- CS Senior Project</p>
+            <div>
+                <a href="#login" class="cta-button">Log In</a>
+                <a href="#features" class="cta-button">Features</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <h2>About</h2>
+        <div class="about-content">
+           <img src="{{ url_for('style_folder.static', filename='img/vulcan.png') }}" alt="about" class="profile-img">
+            <div class="about-text">
+                <p>The purpose of the Vulcan Activity Tracker is to bring together the PennWest student population into one athletic app that allows for the tracking of all campus sports, cycling, weightlifting, calisthenics, swimming, running, climbing, equestrian sports, and general exercise categories. </p> 
+                <p>In one combined platform, the Vulcan Activity Tracker aspires to meet student organization needs, social interaction, and exercise goal planning in a free accessible way. </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="features">
+        <h2>Features</h2>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <h3>Profile</h3>
+                <p>...</p>
+            </div>
+            <div class="skill-card">
+                <h3>Enviroments</h3>
+                <p>...</p>
+            </div>
+            <div class="skill-card">
+                <h3>LeaderBoard</h3>
+                <p>...</p>
+            </div>
+            <div class="skill-card">
+                <h3>Groups</h3>
+                <p>...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="training">
+        <h2>Training Enviroments</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-img">
+                    <img src="static/img/dash.png" alt="Project Image">
+                </div>
+                <div class="project-content">
+                    <h3>Gym</h3>
+                    <p>...</p>
+                    <div class="project-links"></div>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="project-img">
+                    <img src="static/img/atm.png" alt="Project Image">
+                </div>
+                <div class="project-content">
+                    <h3>Running Tracks</h3>
+                    <p>...</p>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="project-img">Project Image</div>
+                <div class="project-content">
+                    <h3>Other</h3>
+                    <p>...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 The Vulcan Activity Tracker. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add active class to navigation based on scroll position
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('section');
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 60) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            document.querySelectorAll('nav a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Contact form handling (you'll need to implement the Flask route)
+        document.querySelector('.contact-form').addEventListener('submit', function(e) {
+            // Form will be handled by Flask
+            console.log('Form submitted');
+        });
+    </script>
+</body>
+</html>

@@ -27,3 +27,7 @@ https://developers.strava.com/
 
 ---
 
+### campus atheletics imgs
+https://calvulcans.com/facilities/hamer-hall-natatorium/16
+
+

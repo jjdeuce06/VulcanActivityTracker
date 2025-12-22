@@ -4,8 +4,8 @@ from flask import Flask, request, jsonify
 from blueprints.blue import login_api
 
 
-@login_api.route('/register', methods =['POST'])
-def register():
+@login_api.route('/login', methods =['POST'])
+def login():
     data = request.get_json()
     username = data.get("username")
     password = data.get("password")

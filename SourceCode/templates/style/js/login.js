@@ -53,7 +53,7 @@ async function hashPassword(password){
 //Step 2: API to send hash
 
 async function sendLoginData(username, hashPassword){
-    const response = await fetch("/login_api/register", {
+    const response = await fetch("login_api/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

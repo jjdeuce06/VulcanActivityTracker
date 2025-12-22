@@ -4,6 +4,9 @@ import os
 #hold blueprints
 #template 
 blue = Blueprint('blue', __name__)
+login_api = Blueprint('login_api', __name__)
+
+#Folder Blueprint
 style_folder = Blueprint('style_folder', __name__,
     static_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "templates", "style") ),static_url_path='/style'
 )

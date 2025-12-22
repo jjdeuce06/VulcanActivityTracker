@@ -16,7 +16,7 @@
             <li><a href="#about">About</a></li>
             <li><a href="#features">Features</a></li>
             <li><a href="#training">Training</a></li>
-            <li><a href="#login">Login</a></li>
+            <li><a href="#login" id="loginlink" onclick="clickLogin()" >Login</a></li>
         </ul>
     </nav>
 
@@ -162,11 +162,11 @@
             });
         });
 
-        // Contact form handling (you'll need to implement the Flask route)
-        document.querySelector('.contact-form').addEventListener('submit', function(e) {
-            // Form will be handled by Flask
-            console.log('Form submitted');
-        });
+
+        function clickLogin(){
+            window.location.href = "/login";
+            
+        }
     </script>
 </body>
 </html>

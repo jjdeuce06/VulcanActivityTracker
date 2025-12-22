@@ -1,0 +1,80 @@
+/* Reset + base */
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #070b3f;
+}
+
+h2 {
+    color:white;
+
+}
+
+/* Main page content */
+.page {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Login card */
+.login-card {
+    background: #2b2b2b;
+    padding: 30px 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    width: 350px;
+    text-align: center;
+}
+
+/* Logo */
+.profile-img {
+    width: 120px;
+    margin-bottom: 20px;
+}
+
+/* Form */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.login-form input {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+}
+
+.login-form button {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+#loginBtn {
+    background: #7c2828;
+    color: white;
+}
+
+.cancelbtn {
+    background: #555;
+    color: white;
+}
+
+/* Footer stays at bottom */
+footer {
+    background: #6b1414;
+    color: #aaa;
+    text-align: center;
+    padding: 10px;
+}

@@ -1,35 +1,38 @@
 <!DOCTYPE html>
 <html>
-	<head>
+<head>
     <title>Vulcan Activity Tracker</title>
-    <link rel="stylesheet" href="homeStyle.css">
-    </head>
+    <link rel="stylesheet" href="style/css/loginstyle.css">
+</head>
+
 <body>
-    <form action="action_page.php" method="post">
+    <main class="page">
+        <div class="login-card">
 
-    <h1> Vulcan Activity Tracker</h1>
-  <div class="imgcontainer">
-    <img src="project_pic/vulcan.png" alt="Avatar" class="avatar">
-  </div>
+            <img src="{{ url_for('style_folder.static', filename='img/vulcan.png') }}"
+                 alt="Vulcan Logo"
+                 class="profile-img">
+                 <label><h2>Welcome</h2></label>
 
-  <div class="container" id = "loginContainer">
-    <label for="uname"><b>Username</b></label>
-    <input type="text" placeholder="Enter Username" name="uname" required>
-    <br>
-    <label for="psw"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="psw" required>
-    <br>
-    <button type="submit" id = "loginBtn">Login</button>
-    <br>
-    <label>
-      <input type="checkbox" checked="checked" name="remember"> Remember me
-    </label>
-  </div>
+            <div class="login-form">
+                <input type="text" placeholder="Enter Username" required>
+                <input type="password" placeholder="Enter Password" required>
 
-  <div class="container" style="background-color:#f1f1f1">
-    <button type="button" class="cancelbtn">Cancel</button>
-    <span class="psw">Forgot <a href="#">password?</a></span>
-  </div>
-</form>
+                <button id="loginBtn">Login</button>
+                <button class="cancelbtn" onclick="backHome()">Cancel</button>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 The Vulcan Activity Tracker.</p>
+    </footer>
+
+<script>
+function backHome() {
+    window.location.href = "/";
+}
+</script>
 </body>
 </html>

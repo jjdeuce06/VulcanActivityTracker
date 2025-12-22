@@ -8,7 +8,7 @@ style_folder = Blueprint('style_folder', __name__,
     static_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "templates", "style") ),static_url_path='/style'
 )
 ROUTES = {"/": "base_temp/welcome.html",
-          "/login": "login.html",
+          "/login": "pages/login.html",
         }   
 
 def make_view(tpl):

@@ -1,0 +1,38 @@
+services:
+  platform-dev:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      PYTHONUNBUFFERED: 1
+    volumes:
+      - "./server:/opt/VulcanActivityTracker/platform/server/"
+      - "./templates:/opt/VulcanActivityTracker/platform/templates/"
+      - "./requirements.txt:/tmp/requirements.txt"
+    ports:
+      - "6455:6455"
+    networks:
+      - vulcan_network
+    depends_on:
+      - mssql
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql_server
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "VulcanP@ssw0rd!"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    restart: unless-stopped
+    networks:
+      - vulcan_network
+
+networks:
+  vulcan_network:
+    driver: bridge
+volumes:
+  mssql_data:

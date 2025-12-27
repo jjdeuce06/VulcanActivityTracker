@@ -36,6 +36,10 @@
     - **🔵 Luke Ruffing**
 
 #✨ Notes:
+- recomended VS extentions 
+    - Docker (microsoft)
+    - Dev Containers (microsoft)
+    - WSL (microsoft)
 
 
 ==============================

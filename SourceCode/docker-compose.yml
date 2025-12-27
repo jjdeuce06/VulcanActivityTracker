@@ -9,7 +9,8 @@ services:
       PYTHONUNBUFFERED: 1
       FLASK_ENV: development
     volumes:
-      - .:/VulcanActivityTracker
+      #- .:/VulcanActivityTracker
+        - ./server/database:/var/opt/mssql/data
     working_dir: /VulcanActivityTracker
     ports:
       - "6455:6455"

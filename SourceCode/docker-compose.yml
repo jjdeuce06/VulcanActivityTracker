@@ -4,12 +4,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: vulcan_platform_dev
     environment:
       PYTHONUNBUFFERED: 1
+      FLASK_ENV: development
     volumes:
-      - "./server:/opt/VulcanActivityTracker/platform/server/"
-      - "./templates:/opt/VulcanActivityTracker/platform/templates/"
-      - "./requirements.txt:/tmp/requirements.txt"
+      - .:/VulcanActivityTracker
+    working_dir: /VulcanActivityTracker
     ports:
       - "6455:6455"
     networks:
@@ -25,6 +26,7 @@ services:
     environment:
       SA_PASSWORD: "VulcanP@ssw0rd!"
       ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
     volumes:
       - mssql_data:/var/opt/mssql
     restart: unless-stopped

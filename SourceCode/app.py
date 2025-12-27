@@ -10,4 +10,4 @@ app.register_blueprint(style_folder)
 app.register_blueprint(login_api, url_prefix="/login_api")
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=6455, debug=True)

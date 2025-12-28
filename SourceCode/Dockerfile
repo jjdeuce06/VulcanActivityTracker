@@ -21,12 +21,18 @@ RUN curl -o /etc/yum.repos.d/msprod.repo \
     https://packages.microsoft.com/config/rhel/9/prod.repo && \
     ACCEPT_EULA=Y dnf install -y msodbcsql17
 
+
+# App working directory
+WORKDIR /VulcanActivityTracker
+
+
 # Python dependencies
 COPY requirements.txt /tmp/requirements.txt
 RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
 
-# App working directory
-WORKDIR /VulcanActivityTracker
+# Copy application code (THIS WAS MISSING)
+COPY . .
+
 
 EXPOSE 6455
 

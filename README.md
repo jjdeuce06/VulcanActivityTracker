@@ -17,7 +17,17 @@
     - [MSQL or MSSQL] 🗄️
     - [VS Code, Git, GitHub] 🛠️
 
-
+# IMPORTANT! Run Commands
+ ```bash
+docker compose up  #start app, ctrl- C to stop
+ ```
+ ```bash
+docker compose down #stop docker
+ ```
+ ```bash
+docker system prune #remove cache
+ ```
+ - app port is connected to docker
 # 🚦 Status:
     [ IN-PROGRESS 🔄 | COMPLETED ✅ | DEMO READY 🎉 ]
 

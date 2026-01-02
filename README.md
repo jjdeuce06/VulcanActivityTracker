@@ -19,6 +19,9 @@
 
 # IMPORTANT! Run Commands
  ```bash
+docker compose up --build  #compile app
+ ```
+```bash
 docker compose up  #start app, ctrl- C to stop
  ```
  ```bash

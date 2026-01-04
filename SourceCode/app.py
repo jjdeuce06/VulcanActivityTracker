@@ -2,8 +2,8 @@ import flask
 from flask import Flask, jsonify, request, Blueprint
 from server.blueprints.blue import blue, style_folder
 from server.api.login_api import login_api
+from server.database.connect import get_db_connection
 
-import pyodbc
 
 # Import schema initializer
 from server.database import init_or_upgrade_schema
@@ -14,17 +14,6 @@ app = Flask(__name__)
 app.register_blueprint(blue)
 app.register_blueprint(style_folder)
 app.register_blueprint(login_api, url_prefix="/login_api")
-
-def get_db_connection():
-    # Create the database connection
-    return pyodbc.connect(
-    "DRIVER={ODBC Driver 17 for SQL Server};"
-    "SERVER=mssql_server,1433;"  
-    "DATABASE=master;"         
-    "UID=sa;"
-    "PWD=VulcanP@ssw0rd!;"
-    "TrustServerCertificate=yes"
-)
 
 
 # Initialize / upgrade schema on app start

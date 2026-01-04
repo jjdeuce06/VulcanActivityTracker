@@ -1,5 +1,4 @@
 #The init file creates tables, add all creation functions here to be ported to app
-import pyodbc
 def init_or_upgrade_schema(conn):
     print("Starting schema initialization...")
 

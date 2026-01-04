@@ -16,6 +16,7 @@ document.getElementById("loginBtn").addEventListener("click", async () =>{
     try {
         const response = await sendLoginData(username, hash);
         console.log("Response:", response);
+        toDashboard();
     } catch (err) {
         console.error("Error sending login data:", err);
     }
@@ -69,3 +70,5 @@ async function sendLoginData(username, hashPassword){
     if(!response.ok){ throw new Error(`HTTP error ${response.status}`);}
         return await response.json();
 }
+
+function toDashboard(){window.location.href = "/dashboard";}

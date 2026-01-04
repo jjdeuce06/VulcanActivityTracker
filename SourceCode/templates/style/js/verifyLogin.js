@@ -3,7 +3,7 @@
 //possibly hold password hashing functions but prob not
 
 
-document.getElementById("createBtn").addEventListener("click", async () =>{
+document.getElementById("loginBtn").addEventListener("click", async () =>{
     const username = document.getElementById("user_entry").value;
     const password = document.getElementById("pass_entry").value;
 
@@ -54,7 +54,7 @@ async function hashPassword(password){
 //Step 2: API to send hash
 
 async function sendLoginData(username, hashPassword){
-    const response = await fetch("/login_api/login", {
+    const response = await fetch("/login_api/verify", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

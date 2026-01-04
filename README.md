@@ -26,6 +26,7 @@ docker compose up  #start app, ctrl- C to stop
  ```
  ```bash
 docker compose down #stop docker
+docker compose down -v #clear database volumes
  ```
  ```bash
 docker system prune #remove cache

@@ -14,8 +14,6 @@ def create_user_table(conn: pyodbc.Connection) -> None:
                 UserID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
                 Username VARCHAR(255) NOT NULL UNIQUE,
                 PasswordHash NVARCHAR(255) NOT NULL,
-                FirstName VARCHAR(255) NOT NULL,
-                LastName VARCHAR(255) NOT NULL,
                 isActive BIT NOT NULL DEFAULT 1,
                 LastLogin DATETIME2 NULL,
                 FailedLoginAttempted INT DEFAULT 0,

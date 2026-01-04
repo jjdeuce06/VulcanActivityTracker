@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, Blueprint
-#from flask_cors import CORS
 from argon2 import PasswordHasher
-#from blueprints.blue import login_api
+from server.database.connect import get_db_connection
+from server.controllers.login_store import store_login
 login_api = Blueprint('login_api', __name__)
 
 @login_api.route('/login', methods =['POST'])
@@ -15,6 +15,12 @@ def login():
     ph = PasswordHasher()
     stored_hash = ph.hash(password)
     print("stored hash:", stored_hash)
+
+    with get_db_connection() as conn:
+        store_login(conn, username, stored_hash)
+    print("Login Credentails Stored Successfully")
+
+
     return jsonify({"status": "ok"})
 
 

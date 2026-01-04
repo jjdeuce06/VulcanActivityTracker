@@ -3,7 +3,7 @@
 //possibly hold password hashing functions but prob not
 
 
-document.getElementById("loginBtn").addEventListener("click", async () =>{
+document.getElementById("createBtn").addEventListener("click", async () =>{
     const username = document.getElementById("user_entry").value;
     const password = document.getElementById("pass_entry").value;
 

@@ -3,7 +3,7 @@
 //possibly hold password hashing functions but prob not
 
 
-document.getElementById("createBtn").addEventListener("click", async () =>{
+document.getElementById("loginBtn").addEventListener("click", async () =>{
     const username = document.getElementById("user_entry").value;
     const password = document.getElementById("pass_entry").value;
 
@@ -16,6 +16,7 @@ document.getElementById("createBtn").addEventListener("click", async () =>{
     try {
         const response = await sendLoginData(username, hash);
         console.log("Response:", response);
+        toDashboard();
     } catch (err) {
         console.error("Error sending login data:", err);
     }
@@ -54,7 +55,7 @@ async function hashPassword(password){
 //Step 2: API to send hash
 
 async function sendLoginData(username, hashPassword){
-    const response = await fetch("/login_api/login", {
+    const response = await fetch("/login_api/verify", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -69,3 +70,5 @@ async function sendLoginData(username, hashPassword){
     if(!response.ok){ throw new Error(`HTTP error ${response.status}`);}
         return await response.json();
 }
+
+function toDashboard(){window.location.href = "/dashboard";}

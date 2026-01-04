@@ -12,14 +12,13 @@
             <img src="{{ url_for('style_folder.static', filename='img/vulcan.png') }}"
                  alt="Vulcan Logo"
                  class="profile-img">
-                 <label><h2>Welcome</h2></label>
+                 <label><h2>Create Account</h2></label>
 
             <div class="login-form">
                 <input type="text" placeholder="Enter Username" id="user_entry" required>
                 <input type="password" placeholder="Enter Password" id="pass_entry" required>
 
-                <button id="loginBtn">Login</button>
-                <button class="createacc" onclick="createAcc()">Create Account</button>
+                <button id="createBtn" onclick="backToLogin()">Submit</button>
                 <button class="cancelbtn" onclick="backHome()">Cancel</button>
             </div>
 
@@ -32,8 +31,8 @@
 
 <script>
 function backHome() {window.location.href = "/";}
-function createAcc() {window.location.href = "/createacc";}
+function backToLogin() {window.location.href = "/login";}
 </script>
-<script src="{{ url_for('style_folder.static', filename='js/verifyLogin.js') }}"></script>
+<script src="{{ url_for('style_folder.static', filename='js/login.js') }}"></script>
 </body>
 </html>

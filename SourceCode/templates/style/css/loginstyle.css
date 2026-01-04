@@ -66,6 +66,12 @@ h2 {
     color: white;
 }
 
+#createBtn {
+    background: #7c2828;
+    color: white;
+}
+
+
 .cancelbtn {
     background: #555;
     color: white;

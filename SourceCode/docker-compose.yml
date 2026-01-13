@@ -29,6 +29,7 @@ services:
       SA_PASSWORD: "VulcanP@ssw0rd!"
       ACCEPT_EULA: "Y"
       MSSQL_PID: "Developer"
+      MSSQL_TELEMETRY_ENABLED: "false"
     volumes:
       - mssql_data:/var/opt/mssql
     restart: unless-stopped

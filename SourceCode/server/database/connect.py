@@ -6,7 +6,7 @@ import pyodbc
 def get_db_connection():
     # Create the database connection
     conn_str =(
-    "DRIVER={ODBC Driver 17 for SQL Server};"
+    "DRIVER={ODBC Driver 18 for SQL Server};"
     "SERVER=mssql_server,1433;"  
     "DATABASE=master;"         
     "UID=sa;"

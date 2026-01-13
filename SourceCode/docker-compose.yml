@@ -1,6 +1,6 @@
 services:
   platform-dev:
-    platform: linux/amd64
+    #platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile
@@ -20,7 +20,8 @@ services:
       - mssql
 
   mssql:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    #image: mcr.microsoft.com/mssql/server:2022-latest
+    image: mcr.microsoft.com/azure-sql-edge
     container_name: mssql_server
     ports:
       - "1433:1433"
@@ -28,6 +29,7 @@ services:
       SA_PASSWORD: "VulcanP@ssw0rd!"
       ACCEPT_EULA: "Y"
       MSSQL_PID: "Developer"
+      MSSQL_TELEMETRY_ENABLED: "false"
     volumes:
       - mssql_data:/var/opt/mssql
     restart: unless-stopped

@@ -4,8 +4,8 @@ ENV PYTHONUNBUFFERED=1
 ENV VulcanDEV=1
 
 # System deps
-RUN dnf install -y epel-release && \
-    dnf install -y \
+#RUN dnf install -y epel-release && \
+RUN    dnf install -y \
         python3 \
         python3-pip \
         ncurses \
@@ -19,7 +19,7 @@ RUN dnf install -y epel-release && \
 # Microsoft ODBC Driver
 RUN curl -o /etc/yum.repos.d/msprod.repo \
     https://packages.microsoft.com/config/rhel/9/prod.repo && \
-    ACCEPT_EULA=Y dnf install -y msodbcsql17
+    ACCEPT_EULA=Y dnf install -y msodbcsql18
 
 
 # App working directory

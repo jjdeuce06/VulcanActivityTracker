@@ -1,31 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Vulcan Activity Tracker</title>
-    <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/styles.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Vulcan Activity Tracker</title>
+  <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/dashboardStyle.css') }}">
 </head>
 
-<body>
-    <!-- Navigation -->
-    <nav>
-        <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#training">Training</a></li>
-            <li><a href="#logout" id="logoutlink" onclick="logout()" >Login</a></li>
-        </ul>
-    </nav>
-</body>
+<body class="dashboard-page">
 
-<script>
-    function logout()
-    {
-        window.location.href = "/login";
+  <!-- Top Navigation (Strava-like) -->
+  <nav class="top-nav">
+    <div class="nav-inner">
+      <div class="brand">VULCAN</div>
+
+      <ul class="nav-links">
+        <li><a class="active" href="/dashboard">Dashboard</a></li>
+        <li><a href="/training">Training</a></li>
+        <li><a href="/maps">Maps</a></li>
+        <li><a href="/challenges">Challenges</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="cta-button" type="button" onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Dashboard Layout -->
+  <main class="dash-shell">
+    <div class="dash-grid">
+
+      <!-- Left column -->
+      <aside class="dash-col dash-left">
+        <div class="card profile-card">
+          <!-- Replace with your user avatar -->
+          <img class="avatar" src="{{ url_for('style_folder.static', filename='img/default-avatar.png') }}" alt="User avatar">
+          <div class="name">User's name</div>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="value">Following Number</div>
+              <div class="label">Following</div>
+            </div>
+            <div class="stat">
+              <div class="value">Follower number</div>
+              <div class="label">Followers</div>
+            </div>
+            <div class="stat">
+              <div class="value">Number of activities</div>
+              <div class="label">Activities</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom:10px;">Latest Activity</h3>
+          <div style="color:#777;">Latest Activity • Activity date</div>
+        </div>
+      </aside>
+
+      <!-- Center column -->
+      <section class="dash-col dash-center">
+        <div class="card feed-card">
+          <div class="feed-title">15 min Sleep Meditation</div>
+          <div class="feed-meta">Today at 8:32 PM • Peloton App</div>
+
+          <div class="feed-media">
+            <!-- Replace with your activity image -->
+            <img src="{{ url_for('style_folder.static', filename='img/feed-placeholder.jpg') }}" alt="Activity image">
+          </div>
+
+          <div style="margin-top:12px; color:#777; font-size:13px;">
+            Be the first to give kudos!
+          </div>
+        </div>
+      </section>
+
+      <!-- Right column -->
+      <aside class="dash-col dash-right">
+        <div class="card challenges-card">
+          <h3>Your Challenges</h3>
+
+          <div class="challenge-item">
+            <div class="challenge-badge"></div>
+            <div>
+              <div class="challenge-title">Planet Fitness Start 2026 Strong</div>
+              <div class="challenge-meta">113,808 participants</div>
+            </div>
+          </div>
+
+          <div class="challenge-item">
+            <div class="challenge-badge"></div>
+            <div>
+              <div class="challenge-title">January 5K x Brooks Challenge</div>
+              <div class="challenge-meta">1,085,962 participants</div>
+            </div>
+          </div>
+
+          <div class="challenge-item">
+            <div class="challenge-badge"></div>
+            <div>
+              <div class="challenge-title">January 10K Challenge</div>
+              <div class="challenge-meta">1,014,756 participants</div>
+            </div>
+          </div>
+
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <script>
+    function logout() {
+      window.location.href = "/login";
     }
-</script>
+  </script>
 
-
+</body>
 </html>

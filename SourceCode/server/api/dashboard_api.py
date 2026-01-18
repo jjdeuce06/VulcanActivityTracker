@@ -1,6 +1,7 @@
-from flask import Flask, request, jsonify, Blueprint
+from flask import Flask, request, jsonify, Blueprint, redirect, url_for
 dashboard_api = Blueprint('dashboard_api', __name__)
 
-@dashboard_api.route('/dashboard', methods=['GET'])
+@dashboard_api.route('/dashboard_api', methods=['GET'])
 def dashboard():
-    return render_template("dashboard.html")
+    redirect(url_for("blue.dashboard_page"))
+    return jsonify({"message": "Login successful"}), 200

@@ -12,7 +12,8 @@ style_folder = Blueprint('style_folder', __name__,
 )
 ROUTES = {"/": "base_temp/welcome.html",
           "/login": "pages/login.html",
-          "/createacc": "pages/createacc.html"
+          "/createacc": "pages/createacc.html",
+          "/dashboard": "pages/dashboard.html"
         }   
 
 def make_view(tpl):

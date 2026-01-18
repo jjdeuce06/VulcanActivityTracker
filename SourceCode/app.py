@@ -14,8 +14,8 @@ app = Flask(__name__)
 # Register blueprints
 app.register_blueprint(blue)
 app.register_blueprint(style_folder)
-app.register_blueprint(login_api, url_prefix="/login_api")
-app.register_blueprint(dashboard_api, url_prefix="/dashboard_api")
+app.register_blueprint(login_api, url_prefix="/login_api") #login api
+app.register_blueprint(dashboard_api, url_prefix="/dashboard_api") #dash api
 
 
 # Initialize / upgrade schema on app start

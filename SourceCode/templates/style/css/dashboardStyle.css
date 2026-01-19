@@ -17,8 +17,8 @@ html {
 
 body.dashboard-page {
   font-family: Arial, sans-serif;
-  background: #f5f5f5;
-  color: #111;
+  background: #6b1414;
+  color: white;
   line-height: 1.4;
 }
 
@@ -30,6 +30,16 @@ body.dashboard-page section {
   margin: 0;
 }
 
+button.cta-button {
+    font-family: Arial, sans-serif;
+    background: #6b1414;
+    color: white;
+    padding: 15px 32px;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+}
+
 /* =========================
    Top Nav (Strava-like)
    ========================= */
@@ -37,8 +47,8 @@ body.dashboard-page nav.top-nav {
   position: sticky;
   top: 0;
   width: 100%;
-  background: #fff;
-  border-bottom: 1px solid #e6e6e6;
+  background: #070b3f;
+  border-bottom: 1px solid #070b3f;
   padding: 0;
   z-index: 1000;
 }
@@ -55,7 +65,7 @@ body.dashboard-page .nav-inner {
 body.dashboard-page .brand {
   font-weight: 900;
   letter-spacing: 0.5px;
-  color: #fc4c02;
+  color: #6b1414;
 }
 
 body.dashboard-page .nav-links {
@@ -69,7 +79,7 @@ body.dashboard-page .nav-links {
 }
 
 body.dashboard-page .nav-links a {
-  color: #222;
+  color: white;
   text-decoration: none;
   font-weight: 700;
   padding: 10px 6px;
@@ -87,7 +97,7 @@ body.dashboard-page .nav-links a::after {
   bottom: -14px;
   height: 3px;
   width: 0;
-  background: #fc4c02;
+  background: #6b1414;
   transition: width 0.2s ease;
 }
 
@@ -105,9 +115,9 @@ body.dashboard-page .nav-actions {
 /* Buttons (light UI) */
 body.dashboard-page .btn {
   appearance: none;
-  border: 1px solid #d9d9d9;
-  background: #fff;
-  color: #111;
+  border: 1px solid #070b3f;
+  background: #070b3f;
+  color: white;
   padding: 10px 14px;
   border-radius: 8px;
   font-weight: 700;
@@ -115,18 +125,18 @@ body.dashboard-page .btn {
 }
 
 body.dashboard-page .btn:hover {
-  background: #f3f3f3;
+  background: #070b3f;
 }
 
 /* Optional orange button (like Strava accents) */
 body.dashboard-page .btn-primary {
-  border-color: #fc4c02;
-  background: #fc4c02;
-  color: #fff;
+  border-color: #6b1414;
+  background: #6b1414;
+  color: #070b3f;
 }
 
 body.dashboard-page .btn-primary:hover {
-  background: #e34402;
+  background: #6b1414;
 }
 
 /* =========================
@@ -155,8 +165,8 @@ body.dashboard-page .dash-col {
    Cards
    ========================= */
 body.dashboard-page .card {
-  background: #fff;
-  border: 1px solid #e6e6e6;
+  background: #070b3f;
+  border: 1px solid #070b3f;
   border-radius: 10px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
   padding: 16px;
@@ -197,7 +207,7 @@ body.dashboard-page .profile-card .stats {
   gap: 10px;
   margin-top: 10px;
   padding-top: 12px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #070b3f;
 }
 
 body.dashboard-page .profile-card .stat .label {
@@ -209,7 +219,7 @@ body.dashboard-page .profile-card .stat .label {
 body.dashboard-page .profile-card .stat .value {
   font-size: 18px;
   font-weight: 900;
-  color: #111;
+  color: white;
 }
 
 /* Simple info blocks */
@@ -237,8 +247,8 @@ body.dashboard-page .feed-card .feed-media {
   width: 100%;
   border-radius: 8px;
   overflow: hidden;
-  background: #f2f2f2;
-  border: 1px solid #eee;
+  background: #070b3f;
+  border: 1px solid #070b3f;
 }
 
 body.dashboard-page .feed-card .feed-media img {
@@ -260,13 +270,13 @@ body.dashboard-page .icon-btn {
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  border: 1px solid #e6e6e6;
-  background: #fff;
+  border: 1px solid #070b3f;
+  background: #070b3f;
   cursor: pointer;
 }
 
 body.dashboard-page .icon-btn:hover {
-  background: #f3f3f3;
+  background: #070b3f;
 }
 
 /* =========================
@@ -283,7 +293,7 @@ body.dashboard-page .challenge-item {
   grid-template-columns: 42px 1fr;
   gap: 12px;
   padding: 12px 0;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #070b3f;
 }
 
 body.dashboard-page .challenge-item:first-of-type {
@@ -295,13 +305,13 @@ body.dashboard-page .challenge-badge {
   width: 42px;
   height: 42px;
   border-radius: 10px;
-  background: #f2f2f2;
-  border: 1px solid #e8e8e8;
+  background: #070b3f;
+  border: 1px solid #070b3f;
 }
 
 body.dashboard-page .challenge-title {
   font-weight: 900;
-  color: #111;
+  color: white;
   margin-bottom: 4px;
 }
 

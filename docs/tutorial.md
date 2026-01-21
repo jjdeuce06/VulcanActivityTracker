@@ -23,7 +23,7 @@ pip install mkdocs-mermaid2-plugin
 
 - Create a new file in format: YYYY-MM-DD.md in the /docs/progress folder
 - Go to  index.md located in the /docs/progress folder
-    - in this file, add your new file as such -> - [Week #](YYYY-MM-DD.md)
+    - in this file, add your new file as such -> - [Week #] (YYYY-MM-DD.md)
 - Push the changes once completed
 
 

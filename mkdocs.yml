@@ -15,7 +15,8 @@ nav:
 
 plugins:
   - search
-  - mermaid2
+  - mermaid2:
+      javascript: js/mermaid.min.js  
 
 markdown_extensions:
   - pymdownx.superfences:

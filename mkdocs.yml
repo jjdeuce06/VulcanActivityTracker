@@ -10,4 +10,4 @@ theme:
 
 nav:
   - Home: index.md
-  - Weekly Progress: progress/
+  - Weekly Progress: progress/index.md

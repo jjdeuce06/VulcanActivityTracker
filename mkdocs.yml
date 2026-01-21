@@ -10,7 +10,7 @@ theme:
 
 nav:
   - Overview: index.md
-  - Weekly Progress: progress/
+  - Weekly Progress: progress/index.md
   - Gantt Chart: progress/gantt.md
 
 plugins:

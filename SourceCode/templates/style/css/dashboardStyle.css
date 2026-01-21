@@ -1,0 +1,348 @@
+
+/* =========================================================
+   Vulcan Dashboard CSS (Strava-like)
+   Intended for dashboard.html with: <body class="dashboard-page">
+   ========================================================= */
+
+/* Reset / base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body.dashboard-page {
+  font-family: Arial, sans-serif;
+  background: #6b1414;
+  color: white;
+  line-height: 1.4;
+}
+
+/* Keep legacy "section" rules from affecting the dashboard */
+body.dashboard-page section {
+  min-height: unset;
+  padding: 0;
+  max-width: unset;
+  margin: 0;
+}
+
+button.cta-button {
+    font-family: Arial, sans-serif;
+    background: #6b1414;
+    color: white;
+    padding: 15px 32px;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* =========================
+   Top Nav (Strava-like)
+   ========================= */
+body.dashboard-page nav.top-nav {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background: #070b3f;
+  border-bottom: 1px solid #070b3f;
+  padding: 0;
+  z-index: 1000;
+}
+
+body.dashboard-page .nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+body.dashboard-page .brand {
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  color: #6b1414;
+}
+
+body.dashboard-page .nav-links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+}
+
+body.dashboard-page .nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  padding: 10px 6px;
+  position: relative;
+}
+
+body.dashboard-page .nav-links a:hover {
+  color: #000;
+}
+
+body.dashboard-page .nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -14px;
+  height: 3px;
+  width: 0;
+  background: #6b1414;
+  transition: width 0.2s ease;
+}
+
+body.dashboard-page .nav-links a.active::after,
+body.dashboard-page .nav-links a:hover::after {
+  width: 100%;
+}
+
+body.dashboard-page .nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Buttons (light UI) */
+body.dashboard-page .btn {
+  appearance: none;
+  border: 1px solid #070b3f;
+  background: #070b3f;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+body.dashboard-page .btn:hover {
+  background: #070b3f;
+}
+
+/* Optional orange button (like Strava accents) */
+body.dashboard-page .btn-primary {
+  border-color: #6b1414;
+  background: #6b1414;
+  color: #070b3f;
+}
+
+body.dashboard-page .btn-primary:hover {
+  background: #6b1414;
+}
+
+/* =========================
+   Layout
+   ========================= */
+body.dashboard-page .dash-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 18px;
+}
+
+body.dashboard-page .dash-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  gap: 18px;
+  align-items: start;
+}
+
+body.dashboard-page .dash-col {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* =========================
+   Cards
+   ========================= */
+body.dashboard-page .card {
+  background: #070b3f;
+  border: 1px solid #070b3f;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  padding: 16px;
+}
+
+body.dashboard-page .card h3 {
+  font-size: 18px;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+/* =========================
+   Left Profile Card
+   ========================= */
+body.dashboard-page .profile-card {
+  text-align: center;
+}
+
+body.dashboard-page .profile-card .avatar {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 4px auto 10px;
+  display: block;
+  border: 1px solid #e6e6e6;
+}
+
+body.dashboard-page .profile-card .name {
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+body.dashboard-page .profile-card .stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid #070b3f;
+}
+
+body.dashboard-page .profile-card .stat .label {
+  font-size: 12px;
+  color: #777;
+  margin-top: 2px;
+}
+
+body.dashboard-page .profile-card .stat .value {
+  font-size: 18px;
+  font-weight: 900;
+  color: white;
+}
+
+/* Simple info blocks */
+body.dashboard-page .muted {
+  color: #777;
+  font-size: 13px;
+}
+
+/* =========================
+   Center Feed Card
+   ========================= */
+body.dashboard-page .feed-card .feed-title {
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+body.dashboard-page .feed-card .feed-meta {
+  color: #777;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+body.dashboard-page .feed-card .feed-media {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #070b3f;
+  border: 1px solid #070b3f;
+}
+
+body.dashboard-page .feed-card .feed-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Footer actions area under feed */
+body.dashboard-page .feed-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+body.dashboard-page .icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #070b3f;
+  background: #070b3f;
+  cursor: pointer;
+}
+
+body.dashboard-page .icon-btn:hover {
+  background: #070b3f;
+}
+
+/* =========================
+   Right Challenges
+   ========================= */
+body.dashboard-page .challenges-card h3 {
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+
+body.dashboard-page .challenge-item {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid #070b3f;
+}
+
+body.dashboard-page .challenge-item:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+body.dashboard-page .challenge-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #070b3f;
+  border: 1px solid #070b3f;
+}
+
+body.dashboard-page .challenge-title {
+  font-weight: 900;
+  color: white;
+  margin-bottom: 4px;
+}
+
+body.dashboard-page .challenge-meta {
+  font-size: 13px;
+  color: #777;
+}
+
+/* =========================
+   Responsive
+   ========================= */
+@media (max-width: 1100px) {
+  body.dashboard-page .dash-grid {
+    grid-template-columns: 280px 1fr;
+  }
+
+  body.dashboard-page .dash-right {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  body.dashboard-page .dash-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body.dashboard-page .nav-links {
+    display: none; /* optional; replace with hamburger later */
+  }
+
+  body.dashboard-page .nav-inner {
+    padding: 12px 14px;
+  }
+}

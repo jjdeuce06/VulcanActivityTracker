@@ -2,6 +2,7 @@ import flask
 from flask import Flask, jsonify, request, Blueprint
 from server.blueprints.blue import blue, style_folder
 from server.api.login_api import login_api
+
 from server.database.connect import get_db_connection
 
 

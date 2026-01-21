@@ -9,5 +9,21 @@ theme:
   name: material
 
 nav:
-  - Home: index.md
-  - Weekly Progress: progress/index.md
+  - Overview: index.md
+  - Weekly Progress: progress/
+  - Gantt Chart: progress/gantt.md
+
+plugins:
+  - search
+  - mermaid2
+
+markdown_extensions:
+  - pymdownx.superfences:
+        # make exceptions to highlighting of code:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:mermaid2.fence_mermaid_custom
+
+
+

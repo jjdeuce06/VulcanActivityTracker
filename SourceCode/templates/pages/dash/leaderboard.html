@@ -1,5 +1,72 @@
 {% extends "base_temp/dashboard.html" %}
 
 {% block content %}
-<h1> Leaderboard page </h1>
+<style>
+table {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 70%;
+  margin: 0 auto;
+}
+
+td, th {
+  border: 1px solid #000000;
+  padding: 8px;
+  color: white;
+}
+
+/* Table body rows */
+tr {
+  background-color: #000000;   /* black rows */
+}
+
+tr:nth-child(even) {
+  background-color: #555555;   /* gray alternating rows */
+}
+
+tr:hover {
+  background-color: #444444;   /* hover effect */
+}
+
+th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #070b3f;
+  color: white;
+}
+
+h1 {
+  text-align: center;
+}
+</style>
+<body>
+    <h1>Leaderboard</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Alice</td>
+                <td>100</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Bob</td>
+                <td>80</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Charlie</td>
+                <td>60</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
 {% endblock %}

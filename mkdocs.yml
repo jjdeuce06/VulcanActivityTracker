@@ -9,6 +9,7 @@ theme:
   name: material
 
 nav:
+  - Tutorial: tutorial.md
   - Overview: index.md
   - Design: design.md
   - Proposal: proposal.md

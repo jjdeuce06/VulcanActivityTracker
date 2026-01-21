@@ -2,6 +2,7 @@
 
 This site contains project documentation and weekly progress updates.
 
+- [Site Navigation](tutorial.md)
 - [Design](design.md)
 - [Proposal](proposal.md)
 - [Requirements](requirements.md)

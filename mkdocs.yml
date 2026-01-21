@@ -1,0 +1,13 @@
+site_name: Vulcan Activity Tracker Docs
+repo_url: https://github.com/jjdeuce06/VulcanActivityTracker
+repo_name: jjdeuce06/VulcanActivityTracker
+
+# For GitHub Pages project sites:
+site_url: https://jjdeuce06.github.io/VulcanActivityTracker/
+
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+  - Weekly Progress: progress/

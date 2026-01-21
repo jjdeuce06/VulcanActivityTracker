@@ -18,7 +18,7 @@
         <li><a class="active" href="/dashboard">Dashboard</a></li>
         <li><a href="/training">Training</a></li>
         <li><a href="/maps">Maps</a></li>
-        <li><a href="/challenges">Clubs</a></li>
+        <li><a href="/clubs">Clubs</a></li>
         <li><a href="/teams">Teams</a></li>
         <li><a href="/leaderboard">Leaderboard</a></li>
       </ul>
@@ -29,6 +29,7 @@
     </div>
   </nav>
 
+  {% block content %}
   <!-- Main Dashboard Layout -->
   <main class="dash-shell">
     <div class="dash-grid">
@@ -113,6 +114,7 @@
 
     </div>
   </main>
+  {% endblock %}
 
   <script>
     function logout() {

@@ -11,10 +11,10 @@ theme:
 nav:
   - Tutorial: tutorial.md
   - Overview: index.md
-  - Design: design.md
-  - Proposal: proposal.md
-  - Requirements: requirements.md
-  - Specifications: specifications.md
+  # - Design: design.md
+  # - Proposal: proposal.md
+  # - Requirements: requirements.md
+  # - Specifications: specifications.md
   - Weekly Progress: progress/index.md
   - Gantt Chart: progress/gantt.md
 

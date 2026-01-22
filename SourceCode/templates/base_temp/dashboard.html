@@ -15,12 +15,12 @@
       <div class="brand">VULCAN TRACKER</div>
 
       <ul class="nav-links">
-        <li><a class="active" href="/dashboard">Dashboard</a></li>
-        <li><a href="/training">Training</a></li>
-        <li><a href="/maps">Maps</a></li>
-        <li><a href="/clubs">Clubs</a></li>
-        <li><a href="/teams">Teams</a></li>
-        <li><a href="/leaderboard">Leaderboard</a></li>
+        <li><a class="{% if active_page == 'dashboard' %}active{% endif %}" href="/dashboard">Dashboard</a></li>
+        <li><a class="{% if active_page == 'training' %}active{% endif %}" href="/training">Training</a></li>
+        <li><a class="{% if active_page == 'maps' %}active{% endif %}" href="/maps">Maps</a></li>
+        <li><a class="{% if active_page == 'clubs' %}active{% endif %}" href="/clubs">Clubs</a></li>
+        <li><a class="{% if active_page == 'teams' %}active{% endif %}" href="/teams">Teams</a></li>
+        <li><a class="{% if active_page == 'leaderboard' %}active{% endif %}" href="/leaderboard">Leaderboard</a></li>
       </ul>
 
       <div class="nav-actions">

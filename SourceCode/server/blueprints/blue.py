@@ -10,17 +10,16 @@ blue = Blueprint('blue', __name__)
 style_folder = Blueprint('style_folder', __name__,
     static_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "templates", "style") ),static_url_path='/style'
 )
-ROUTES = {
-    "/": ("base_temp/welcome.html", None),
-    "/login": ("pages/login.html", None),
-    "/createacc": ("pages/createacc.html", None),
-    "/dashboard": ("base_temp/dashboard.html", "dashboard"),
-    "/training": ("pages/dash/training.html", "training"),
-    "/clubs": ("pages/dash/clubs.html", "clubs"),
-    "/teams": ("pages/dash/teams.html", "teams"),
-    "/maps": ("pages/dash/maps.html", "maps"),
-    "/leaderboard": ("pages/dash/leaderboard.html", "leaderboard"),
-}  
+ROUTES = {"/": "base_temp/welcome.html",
+          "/login": "pages/login.html",
+          "/createacc": "pages/createacc.html",
+          "/dashboard": "base_temp/dashboard.html",
+          "/training": "pages/dash/training.html",
+          "/clubs": "pages/dash/clubs.html",
+          "/teams": "pages/dash/teams.html",
+          "/maps": "pages/dash/maps.html",
+          "/leaderboard": "pages/dash/leaderboard.html"
+        }   
 
 def make_view(tpl, active_page):
     def view():

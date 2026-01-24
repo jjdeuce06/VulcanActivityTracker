@@ -7,6 +7,7 @@
     text-align: center;
   }
 
+
   .dropbtn {
   background-color: #070b3f;
   color: white;
@@ -120,6 +121,46 @@
   transform: translateY(0);
 }
 
+/* --- Accessibility / radio group cleanup --- */
+.field {
+  margin-top: 12px;
+}
+
+.field-label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 8px;
+  color: #e0e0e0;
+  font-weight: 600;
+}
+
+/* Put options on one row */
+.choice-row {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Override the global label block rule for these labels */
+.activity-form label.choice {
+  display: inline-flex;     /* IMPORTANT */
+  align-items: center;
+  gap: 10px;
+  margin: 0;                /* prevents extra vertical spacing */
+  font-weight: 500;
+  color: #e0e0e0;
+  cursor: pointer;
+}
+
+/* Override the global input width rule for radio buttons */
+.activity-form input[type="radio"] {
+  width: auto;              /* IMPORTANT */
+  padding: 0;
+  margin: 0;
+  accent-color: #070b3f;
+}
+
 /* Dynamic fields spacing */
 #dynamic-fields {
   margin-top: 10px;
@@ -131,19 +172,19 @@
     <div class="dropdown">
         <button class="dropbtn">Activity Selection</button>
         <div class="dropdown-content">
-            <a href="#">Run</a>
-            <a href="#">Weightlifting</a>
-            <a href="#">Bike Ride</a>
-            <a href="#">Swim</a>
-            <a href="#">Yoga</a>
-            <a href="#">Walk</a>
-            <a href="#">Soccer</a>
-            <a href="#">Baseball</a>
-            <a href="#">Football</a>
-            <a href="#">Tennis</a>
-            <a href="#">Volleyball</a>
-            <a href="#">Basketball</a>
-        </div>
+          <a href="#" data-activity="run">Run</a>
+          <a href="#" data-activity="lifting">Weightlifting</a>
+          <a href="#" data-activity="bike">Bike Ride</a>
+          <a href="#" data-activity="swim">Swim</a>
+          <a href="#" data-activity="yoga">Yoga</a>
+          <a href="#" data-activity="walk">Walk</a>
+          <a href="#" data-activity="soccer">Soccer</a>
+          <a href="#" data-activity="baseball">Baseball</a>
+          <a href="#" data-activity="football">Football</a>
+          <a href="#" data-activity="tennis">Tennis</a>
+          <a href="#" data-activity="volleyball">Volleyball</a>
+          <a href="#" data-activity="basketball">Basketball</a>
+</div>
     </div>
     </div>
 
@@ -156,10 +197,33 @@
         <label>Duration (minutes)</label>
         <input type="number" name="duration" min="1" required>
 
+        <label>Calories Burned</label>
+        <input type="number" name="calories_burned" min="0" required>
+
+        <div class="field">
+          <span class="field-label">Accessibility</span>
+
+          <div class="choice-row">
+            <label class="choice">
+              <input type="radio" name="visibility" value="private" checked>
+              <span>Private</span>
+            </label>
+
+            <label class="choice">
+              <input type="radio" name="visibility" value="public">
+              <span>Public</span>
+            </label>
+          </div>
+        </div>
+
+
         <div id="dynamic-fields"></div>
+
 
         <button type="submit">Save Activity</button>
     </form>
 </body>
+
+<script src="{{ url_for('style_folder.static', filename='js/training.js') }}"></script>
 
 {% endblock %}

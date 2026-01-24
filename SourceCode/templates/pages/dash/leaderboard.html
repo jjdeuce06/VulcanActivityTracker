@@ -2,6 +2,30 @@
 
 {% block content %}
 <style>
+  .lb-controls {
+  width: 70%;
+  margin: 15px auto;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-end;
+  color: white;
+}
+
+.lb-controls select,
+.lb-controls button {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #2b2b2b;
+  color: white;
+  cursor: pointer;
+}
+
+.lb-controls button:hover {
+  background: #3a3a3a;
+}
+
 table {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
@@ -39,34 +63,30 @@ th {
 h1 {
   text-align: center;
 }
+
 </style>
-<body>
-    <h1>Leaderboard</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Rank</th>
-                <th>Name</th>
-                <th>Score</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>Alice</td>
-                <td>100</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Bob</td>
-                <td>80</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Charlie</td>
-                <td>60</td>
-            </tr>
-        </tbody>
-    </table>
-</body>
+<h1>Leaderboard</h1>
+
+<div class="lb-controls">
+  <label for="sortBy">Sort by:</label>
+  <select id="sortBy">
+    <option value="score" selected>Score</option>
+    <option value="name">Name</option>
+  </select>
+
+  <button id="sortDir" type="button" data-dir="desc">Desc</button>
+</div>
+
+<table id="leaderboard">
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Name</th>
+      <th>Score</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script src="{{ url_for('style_folder.static', filename='js/leaderboard.js') }}"></script>
 {% endblock %}

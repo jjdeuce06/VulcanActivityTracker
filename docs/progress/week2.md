@@ -1,4 +1,4 @@
-<h1 align="center" style="color:#ffffff;">📆 Weekly Progress – Week 2</h1>
+<h1 align="center" style="color:#000000;">📆 Weekly Progress – Week 2</h1>
 
 <!-- ===================== GOALS ===================== -->
 <div style="

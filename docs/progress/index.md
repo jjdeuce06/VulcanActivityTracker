@@ -1,4 +1,4 @@
-<h1 align="center" style="color:#ffffff;">📆 Weekly Progress</h1>
+<h1 align="center" style="color:#000000;">📆 Weekly Progress</h1>
 <p align="center" style="color:#ffffff;">
 Track development milestones and weekly updates for the Vulcan Activity Tracker.
 </p>
@@ -44,7 +44,7 @@ Example: <code>week2.md</code>
 ">
 
 <h3>📅 Week 2</h3>
-<p><strong>Date:</strong> Jan 28, 2026</p>
+<p><strong>Date:</strong> Jan 26, 2026</p>
 <p>Project setup, Finalizing platform color schemes and initial dashboard concept.</p>
 
 <a href="week2" style="color:#7dd3fc; font-weight:600;">
@@ -57,6 +57,6 @@ View Progress →
 
 </div>
 
-<p align="center" style="color:#ffffff;">
+<p align="center" style="color:#000000;">
 ➕ <em>Add a new card here each week to track progress.</em>
 </p>

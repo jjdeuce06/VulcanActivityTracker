@@ -1,68 +1,171 @@
-
 <p align="center">
-  <img src="app.png" width="320" style="border-radius: 16px;" />
+  <img src="app.png" width="340" style="border-radius: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.35);" />
 </p>
 
-
-Welcome to the **Vulcan Activity Tracker** documentation hub!  
-This site contains project details, weekly progress updates, and planning artifacts for our capstone project.
-
----
-
-## 📌 Quick Links
-- 📚 **[Site Navigation](tutorial.md)**  
-- 📆 **[Weekly Progress Updates](progress/index.md)**  
-- 📊 **[Gantt Chart](progress/gantt.md)**  
+<p align="center">
+  A unified platform for campus athletics, social connection, and goal tracking.
+</p>
 
 ---
 
-## 🏃‍♀️ Project Overview
-The **Vulcan Activity Tracker** is an athletic and social engagement platform designed for campus communities.
+<!-- ===================== QUICK LINKS ===================== -->
+<div style="
+  background: linear-gradient(135deg, #11175a, #070b3f);
+  border-radius: 20px;
+  padding: 24px;
+  margin: 32px 0;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+">
 
-✨ **What it does:**
-- Track and log athletic activities  
-- Support student organizations and clubs  
-- Encourage social interaction  
-- Help users plan and achieve fitness goals  
+<h2>📌 Quick Links</h2>
 
-All in **one free, accessible platform** built with students in mind.
+<div style="display: flex; gap: 16px; flex-wrap: wrap;">
+
+  <div style="
+    flex: 1;
+    min-width: 220px;
+    background: #0b102f;
+    border-radius: 16px;
+    padding: 16px;
+  ">
+    <h3>📚 Tutorial</h3>
+    <p>How to navigate and use the Vulcan platform.</p>
+    <a href="tutorial.md">Open →</a>
+  </div>
+
+  <div style="
+    flex: 1;
+    min-width: 220px;
+    background: #0b102f;
+    border-radius: 16px;
+    padding: 16px;
+  ">
+    <h3>📆 Weekly Progress</h3>
+    <p>Development updates and milestone tracking.</p>
+    <a href="progress/index.md">View →</a>
+  </div>
+
+  <div style="
+    flex: 1;
+    min-width: 220px;
+    background: #0b102f;
+    border-radius: 16px;
+    padding: 16px;
+  ">
+    <h3>📊 Gantt Chart</h3>
+    <p>Project timeline and planning overview.</p>
+    <a href="progress/gantt.md">Explore →</a>
+  </div>
+
+</div>
+</div>
 
 ---
 
-## 👥 Team Members 🏋️🔥
-This project was developed collaboratively by:
+<!-- ===================== PROJECT OVERVIEW ===================== -->
+<div style="
+  background: #0b102f;
+  border-radius: 20px;
+  padding: 28px;
+  margin: 32px 0;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+">
 
-- 🟢 **Margo Bonal** — Backend & infrastructure  
-- 🟡 **John Gerega** — Frontend & UI/UX  
-- 🔵 **Luke Ruffing** — Documentation & testing  
+<h2>🏃‍♀️ Project Overview</h2>
 
+<p>
+The <strong>Vulcan Activity Tracker</strong> is an athletic and social engagement platform
+designed for campus communities.
+</p>
 
+<ul>
+  <li>🏋️ Track and log athletic activities</li>
+  <li>🏫 Support student organizations and clubs</li>
+  <li>💬 Encourage social interaction</li>
+  <li>🎯 Plan and achieve fitness goals</li>
+</ul>
 
----
+<p><strong>All in one free, accessible platform built with students in mind.</strong></p>
 
-## 🛠️ Development Notes
-### ✅ Recommended VS Code Extensions
-- 🐳 **Docker** (Microsoft)  
-- 📦 **Dev Containers** (Microsoft)  
-- 🧩 **WSL** (Microsoft)  
-- 🗄️ **SQL Server** (Microsoft)
-
-### ⚠️ Performance & Setup Tips
-- 💻 Run Docker inside a **Virtual Machine** for laptop safety  
-- 🔐 **SSH into the VM** for code and container management  
-- 🚀 This setup ensures smoother builds and fewer system issues
-
----
-
-## 🙌 Acknowledgments
-We would like to thank everyone who contributed directly or indirectly to this project.
-
-Special thanks to:
-- 🙏 **Mentors** — for guidance and technical insight  
-- 💬 **Peers** — for feedback, testing, and encouragement  
-
-💖 Your support helped shape this project into something we’re proud of!
+</div>
 
 ---
 
-🔥 **Let’s make Vulcan Activity Tracker awesome!** 🔥
+<!-- ===================== TEAM MEMBERS ===================== -->
+<div style="
+  background: linear-gradient(135deg, #070b3f, #11175a);
+  border-radius: 20px;
+  padding: 28px;
+  margin: 32px 0;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+">
+
+<h2>👥 Team Members 🏋️🔥</h2>
+
+<div style="display: flex; gap: 16px; flex-wrap: wrap;">
+
+  <div style="
+    background: #0b102f;
+    padding: 16px;
+    border-radius: 14px;
+    min-width: 140px;
+    text-align: center;
+  ">
+    🟢<br/>
+    <strong>Margo Bonal</strong>
+  </div>
+
+  <div style="
+    background: #0b102f;
+    padding: 16px;
+    border-radius: 14px;
+    min-width: 140px;
+    text-align: center;
+  ">
+    🟡<br/>
+    <strong>John Gerega</strong>
+  </div>
+
+  <div style="
+    background: #0b102f;
+    padding: 16px;
+    border-radius: 14px;
+    min-width: 140px;
+    text-align: center;
+  ">
+    🔵<br/>
+    <strong>Luke Ruffing</strong>
+  </div>
+
+</div>
+</div>
+
+---
+
+<!-- ===================== ACKNOWLEDGMENTS ===================== -->
+<div style="
+  background: #0b102f;
+  border-radius: 20px;
+  padding: 28px;
+  margin: 32px 0;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+">
+
+<h2>🙌 Acknowledgments</h2>
+
+<p>We would like to thank everyone who contributed directly or indirectly to this project.</p>
+
+<ul>
+  <li>🙏 <strong>Mentors</strong> — guidance and technical insight</li>
+  <li>💬 <strong>Peers</strong> — feedback, testing, and encouragement</li>
+</ul>
+
+<p>💖 Your support helped shape this project into something we’re proud of!</p>
+
+</div>
+
+---
+
+<p align="center">
+🔥 <strong>Let’s make Vulcan Activity Tracker awesome!</strong> 🔥
+</p>

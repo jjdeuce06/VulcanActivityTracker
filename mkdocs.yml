@@ -21,7 +21,14 @@ nav:
 plugins:
   - search
   - mermaid2:
-      javascript: js/mermaid.min.js  
+      javascript: js/mermaid.min.js
+  - panzoom:
+      always_show_hint: false
+      hint_location: "top"
+      full_screen: true
+      include_selectors:
+        - ".mermaid"
+        - "img"
 
 markdown_extensions:
   - pymdownx.superfences:

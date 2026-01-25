@@ -5,16 +5,12 @@ ENV VulcanDEV=1
 
 # System deps
 #RUN dnf install -y epel-release && \
-RUN    dnf install -y \
+RUN dnf install -y \
         python3 \
         python3-pip \
-        ncurses \
-        iputils \
-        traceroute \
-        iproute \
-        git \
-        unixODBC && \
-    dnf clean all
+        unixODBC \
+    && dnf clean all \
+    && rm -rf /var/cache/dnf
 
 # Microsoft ODBC Driver
 RUN curl -o /etc/yum.repos.d/msprod.repo \

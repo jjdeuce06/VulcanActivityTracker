@@ -6,18 +6,41 @@
 document.getElementById("createBtn").addEventListener("click", async () =>{
     const username = document.getElementById("user_entry").value;
     const password = document.getElementById("pass_entry").value;
+    const errorDiv = document.getElementById("register-error");
 
     console.log("Username:", username);
     console.log("Password:", password);
 
+
+    // Clear previous messages
+    errorDiv.textContent = "";
+    errorDiv.style.color = "red";
+
+    if (!username || !password) {
+        errorDiv.textContent = "Please enter both username and password.";
+        return;
+    }
+
     //hash password before sending
     const hash = await hashPassword(password);
-    //send to backend
-    try {
+        //send to backend
+        try {
         const response = await sendLoginData(username, hash);
         console.log("Response:", response);
+
+        if (!response.ok) {
+            // show backend error message like "Username already exists"
+            errorDiv.textContent = response.error || "Registration failed";
+            document.getElementById("user_entry").focus();
+        } else {
+            errorDiv.style.color = "green";
+            errorDiv.textContent = "Registration successful!";
+            backToLogin();
+        }
+
     } catch (err) {
         console.error("Error sending login data:", err);
+        errorDiv.textContent = "An unexpected error occurred. Try again.";
     }
 
 });
@@ -64,8 +87,18 @@ async function sendLoginData(username, hashPassword){
             password: hashPassword
         })
     });
+
     console.log("Sending Data", username, hashPassword);
 
-    if(!response.ok){ throw new Error(`HTTP error ${response.status}`);}
-        return await response.json();
+    let data = {};
+    try {
+        data = await response.json(); // parse server response even if error
+    } catch (err) {
+        console.warn("Server did not return JSON:", err);
+    }
+
+    // Return both HTTP status and JSON body
+    return { ok: response.ok, status: response.status, ...data };
 }
+
+function backToLogin() {window.location.href = "/login";}

@@ -7,7 +7,7 @@
         <div class="card profile-card">
           <!-- Replace with your user avatar -->
           <img class="avatar" src="{{ url_for('style_folder.static', filename='img/pfp.jpg') }}" alt="User avatar">
-          <div class="name">User's name</div>
+          <div class="name" id="user-name"></div>
 
           <div class="stats">
             <div class="stat">
@@ -36,11 +36,6 @@
         <div class="card feed-card">
           <div class="feed-title">15 min Sleep Meditation</div>
           <div class="feed-meta">Today at 8:32 PM • Vulcan Tracker</div>
-
-          <div class="feed-media">
-            <!-- Replace with your activity image -->
-           <!--<img src="{{ url_for('style_folder.static', filename='img/feed-placeholder.jpg') }}" alt="Activity image">-->
-          </div>
 
           <div style="margin-top:12px; color:#777; font-size:13px;">
             Be the first to give kudos!
@@ -82,3 +77,4 @@
 
     </div>
   </main>
+<script src="{{ url_for('style_folder.static', filename='js/dash.js') }}"></script>

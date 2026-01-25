@@ -24,9 +24,9 @@ Each entry documents work completed, challenges encountered, and next steps.
 </p>
 
 <p>
-<strong>File naming format:</strong> <code>YYYY-MM-DD.md</code>  
+<strong>File naming format:</strong> <code>weekNumber.md</code>  
 <br/>
-Example: <code>2026-01-21.md</code>
+Example: <code>week2.md</code>
 </p>
 
 </div>

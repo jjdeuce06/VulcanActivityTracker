@@ -31,6 +31,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install mkdocs mkdocs-material mkdocs-awesome-pages-plugin
           pip install mkdocs-mermaid2-plugin
+          pip install mkdocs-panzoom-plugin
 
       - name: Build site
         run: mkdocs build --strict

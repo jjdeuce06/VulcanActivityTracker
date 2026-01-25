@@ -17,3 +17,10 @@ def fetch_login(conn, username):
     print("verify stored hash:", row.PasswordHash)
     return row.PasswordHash if row else None
 
+def fetch_all_users(conn):
+    cursor = conn.cursor()
+    cursor.execute("""SELECT Username FROM [user]""")
+    rows = cursor.fetchall()
+    users = [row.Username for row in rows]  
+    return users
+

@@ -15,7 +15,7 @@ ROUTES = {"/": "base_temp/welcome.html",
           "/createacc": "pages/createacc.html",
           "/dashboard": "base_temp/dashboard.html",
           "/training": "pages/dash/training.html",
-          "/club s": "pages/dash/clubs.html",
+          "/clubs": "pages/dash/clubs.html",
           "/teams": "pages/dash/teams.html",
           "/maps": "pages/dash/maps.html",
           "/leaderboard": "pages/dash/leaderboard.html"

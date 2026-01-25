@@ -17,7 +17,7 @@ html {
 
 body.dashboard-page {
   font-family: Arial, sans-serif;
-  background: #6b1414;
+  background: #ffffff;
   color: white;
   line-height: 1.4;
 }
@@ -36,6 +36,7 @@ button.cta-button {
     color: white;
     padding: 15px 32px;
     border: none;
+    border-radius: 8px;
     font-size: 16px;
     font-weight: bold;
 }
@@ -162,163 +163,140 @@ body.dashboard-page .dash-col {
 }
 
 /* =========================
-   Cards
+   Bubble Card Styles
    ========================= */
 body.dashboard-page .card {
-  background: #070b3f;
-  border: 1px solid #070b3f;
-  border-radius: 10px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-  padding: 16px;
+  background: linear-gradient(135deg, #1b1f5f, #070b3f);
+  border-radius: 20px; /* Bubble look */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  padding: 20px;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-body.dashboard-page .card h3 {
-  font-size: 18px;
-  font-weight: 900;
-  margin-bottom: 10px;
+body.dashboard-page .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
 }
 
-/* =========================
-   Left Profile Card
-   ========================= */
+/* Profile card bubble */
 body.dashboard-page .profile-card {
+  border-radius: 25px;
+  background: linear-gradient(135deg, #070b3f, #1b1f5f);
   text-align: center;
+  padding: 25px;
 }
 
 body.dashboard-page .profile-card .avatar {
-  width: 86px;
-  height: 86px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
-  object-fit: cover;
-  margin: 4px auto 10px;
-  display: block;
-  border: 1px solid #e6e6e6;
+  border: 3px solid #6b1414;
+  margin-bottom: 12px;
 }
 
 body.dashboard-page .profile-card .name {
   font-size: 22px;
   font-weight: 900;
-  margin-bottom: 10px;
+  color: #ffffff;
+  margin-bottom: 15px;
 }
 
 body.dashboard-page .profile-card .stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  margin-top: 10px;
+  margin-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
   padding-top: 12px;
-  border-top: 1px solid #070b3f;
 }
 
 body.dashboard-page .profile-card .stat .label {
   font-size: 12px;
-  color: #777;
-  margin-top: 2px;
+  color: #ccc;
 }
 
 body.dashboard-page .profile-card .stat .value {
   font-size: 18px;
   font-weight: 900;
-  color: white;
+  color: #ffffff;
 }
 
-/* Simple info blocks */
-body.dashboard-page .muted {
-  color: #777;
-  font-size: 13px;
+/* Feed card bubble */
+body.dashboard-page .feed-card {
+  border-radius: 20px;
+  background: linear-gradient(135deg, #1a1c3f, #070b3f);
+  padding: 20px;
 }
 
-/* =========================
-   Center Feed Card
-   ========================= */
 body.dashboard-page .feed-card .feed-title {
   font-size: 22px;
   font-weight: 900;
-  margin-bottom: 8px;
+  color: #ffffff;
+  margin-bottom: 6px;
 }
 
 body.dashboard-page .feed-card .feed-meta {
-  color: #777;
   font-size: 13px;
+  color: #ccc;
   margin-bottom: 12px;
 }
 
-body.dashboard-page .feed-card .feed-media {
-  width: 100%;
-  border-radius: 8px;
-  overflow: hidden;
-  background: #070b3f;
-  border: 1px solid #070b3f;
-}
-
-body.dashboard-page .feed-card .feed-media img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* Footer actions area under feed */
-body.dashboard-page .feed-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-body.dashboard-page .icon-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  border: 1px solid #070b3f;
-  background: #070b3f;
-  cursor: pointer;
-}
-
-body.dashboard-page .icon-btn:hover {
-  background: #070b3f;
-}
-
-/* =========================
-   Right Challenges
-   ========================= */
-body.dashboard-page .challenges-card h3 {
-  font-size: 22px;
-  font-weight: 900;
-  margin-bottom: 12px;
+/* Challenges card bubble */
+body.dashboard-page .challenges-card {
+  border-radius: 20px;
+  background: linear-gradient(135deg, #070b3f, #1b1f5f);
+  padding: 20px;
 }
 
 body.dashboard-page .challenge-item {
   display: grid;
-  grid-template-columns: 42px 1fr;
+  grid-template-columns: 50px 1fr;
   gap: 12px;
   padding: 12px 0;
-  border-top: 1px solid #070b3f;
+  border-top: 1px solid rgba(255,255,255,0.1);
 }
 
 body.dashboard-page .challenge-item:first-of-type {
   border-top: none;
-  padding-top: 0;
 }
 
 body.dashboard-page .challenge-badge {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  background: #070b3f;
-  border: 1px solid #070b3f;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%; /* Circular badges */
+  background: #6b1414;
+  border: 2px solid #ffffff;
 }
 
 body.dashboard-page .challenge-title {
   font-weight: 900;
-  color: white;
+  color: #ffffff;
   margin-bottom: 4px;
 }
 
 body.dashboard-page .challenge-meta {
   font-size: 13px;
-  color: #777;
+  color: #ccc;
 }
+
+/* Friends, latest activity, etc. */
+body.dashboard-page .card p,
+body.dashboard-page .card div.muted {
+  color: #ccc;
+  font-size: 14px;
+}
+
+/* Optional: subtle floating animation for fun */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0px); }
+}
+
+body.dashboard-page .card:hover {
+  animation: float 1s ease-in-out;
+}
+
 
 /* =========================
    Responsive

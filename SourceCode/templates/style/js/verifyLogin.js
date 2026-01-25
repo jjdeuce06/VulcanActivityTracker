@@ -2,27 +2,30 @@
 //will serve as api for login user account set up
 //possibly hold password hashing functions but prob not
 
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("loginBtn").addEventListener("click", async () =>{
+        const username = document.getElementById("user_entry").value;
+        const password = document.getElementById("pass_entry").value;
 
-document.getElementById("loginBtn").addEventListener("click", async () =>{
-    const username = document.getElementById("user_entry").value;
-    const password = document.getElementById("pass_entry").value;
+        console.log("Username:", username);
+        console.log("Password:", password);
 
-    console.log("Username:", username);
-    console.log("Password:", password);
+        //hash password before sending
+        const hash = await hashPassword(password);
+        //send to backend
+        try {
+            const response = await sendLoginData(username, hash);
+            console.log("Response:", response);
+            if (response.username) {
+                localStorage.setItem("currentUser", response.username);
+            }
+            toDashboard();
+        } catch (err) {
+            console.error("Error sending login data:", err);
+        }
 
-    //hash password before sending
-    const hash = await hashPassword(password);
-    //send to backend
-    try {
-        const response = await sendLoginData(username, hash);
-        console.log("Response:", response);
-        toDashboard();
-    } catch (err) {
-        console.error("Error sending login data:", err);
-    }
-
+    });
 });
-
 
 
 /**Hash Process:

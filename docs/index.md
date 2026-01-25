@@ -15,7 +15,8 @@
   padding: 24px;
   margin: 32px 0;
   box-shadow: 0 6px 18px rgba(0,0,0,0.3);
-">
+  color: #ffffff;"
+>
 
 <h2>📌 Quick Links</h2>
 
@@ -27,6 +28,7 @@
     background: #0b102f;
     border-radius: 16px;
     padding: 16px;
+    color: #ffffff;
   ">
     <h3>📚 Tutorial</h3>
     <p>How to navigate and use the Vulcan platform.</p>
@@ -39,6 +41,7 @@
     background: #0b102f;
     border-radius: 16px;
     padding: 16px;
+    color: #ffffff;
   ">
     <h3>📆 Weekly Progress</h3>
     <p>Development updates and milestone tracking.</p>
@@ -51,6 +54,7 @@
     background: #0b102f;
     border-radius: 16px;
     padding: 16px;
+    color: #ffffff;
   ">
     <h3>📊 Gantt Chart</h3>
     <p>Project timeline and planning overview.</p>
@@ -69,6 +73,7 @@
   padding: 28px;
   margin: 32px 0;
   box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  color: #ffffff;
 ">
 
 <h2>🏃‍♀️ Project Overview</h2>
@@ -98,6 +103,7 @@ designed for campus communities.
   padding: 28px;
   margin: 32px 0;
   box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  color: #ffffff;
 ">
 
 <h2>👥 Team Members 🏋️🔥</h2>
@@ -110,6 +116,7 @@ designed for campus communities.
     border-radius: 14px;
     min-width: 140px;
     text-align: center;
+    color: #ffffff;
   ">
     🟢<br/>
     <strong>Margo Bonal</strong>
@@ -121,6 +128,7 @@ designed for campus communities.
     border-radius: 14px;
     min-width: 140px;
     text-align: center;
+    color: #ffffff;
   ">
     🟡<br/>
     <strong>John Gerega</strong>
@@ -132,6 +140,7 @@ designed for campus communities.
     border-radius: 14px;
     min-width: 140px;
     text-align: center;
+    color: #ffffff;
   ">
     🔵<br/>
     <strong>Luke Ruffing</strong>
@@ -149,6 +158,7 @@ designed for campus communities.
   padding: 28px;
   margin: 32px 0;
   box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  color: #ffffff;
 ">
 
 <h2>🙌 Acknowledgments</h2>

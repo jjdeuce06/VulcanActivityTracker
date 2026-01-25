@@ -32,7 +32,7 @@
   ">
     <h3>📚 Tutorial</h3>
     <p>How to navigate and use the Vulcan platform.</p>
-    <a href="tutorial.md">Open →</a>
+    <a href="tutorial">Open →</a>
   </div>
 
   <div style="
@@ -45,7 +45,7 @@
   ">
     <h3>📆 Weekly Progress</h3>
     <p>Development updates and milestone tracking.</p>
-    <a href="progress/index.md">View →</a>
+    <a href="progress/index">View →</a>
   </div>
 
   <div style="
@@ -58,7 +58,7 @@
   ">
     <h3>📊 Gantt Chart</h3>
     <p>Project timeline and planning overview.</p>
-    <a href="progress/gantt.md">Explore →</a>
+    <a href="progress/gantt">Explore →</a>
   </div>
 
 </div>

@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const fieldsContainer = document.getElementById("dynamic-fields");
   const activityTypeInput = document.getElementById("activity_type");
   const form = document.getElementById("activity-form");
+  const selectedActivityBtn = document.querySelector(".selected-activity");
+  const clearBtn = document.querySelector(".clr-dropbtn");
 
   const templates = {
     run: `
@@ -222,6 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Selected:", activityKey);
 
     setFields(activityKey);
+    selectedActivityBtn.textContent = link.textContent;
   });
 
   // OPTIONAL: stop default submit while you're testing
@@ -233,5 +236,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Optional default state
   // setFields("run");
+
+  //Clear button
+  clearBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    activityTypeInput.value = "";
+    fieldsContainer.innerHTML = "";
+    form.reset();
+    selectedActivityBtn.textContent = "None Selected";
+  });
+
 });
+
+
+
 

@@ -280,7 +280,7 @@ async function sendActivityData(data, username){
             username: username
         })
     });
-    console.log("Sending Data", form);
+    console.log("Sending Data", data);
 
     if(!response.ok){ throw new Error(`HTTP error ${response.status}`);}
         return await response.json();

@@ -270,7 +270,7 @@ function collectSportData(form) {
 
 
 async function sendActivityData(data, username){
-    const response = await fetch("/dash_api/enteractivity", {
+    const response = await fetch("/activity_api/enteractivity", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

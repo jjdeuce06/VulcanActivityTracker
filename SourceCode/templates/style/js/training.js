@@ -234,7 +234,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = collectSportData(form);
     console.log("Form submit data:", data);
     try {
-            const response = await sendActivityData(data);
+            const username = localStorage.getItem("currentUser");
+            console.log(username);
+            const response = await sendActivityData(data, username);
             console.log("Response:", response);
         } catch (err) {
             console.error("Error sending activity data:", err);
@@ -267,14 +269,15 @@ function collectSportData(form) {
 }
 
 
-async function sendActivityData(form){
-    const response = await fetch("/dash_api/activity", {
+async function sendActivityData(data, username){
+    const response = await fetch("/dash_api/enteractivity", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            form: form
+            form: data,
+            username: username
         })
     });
     console.log("Sending Data", form);

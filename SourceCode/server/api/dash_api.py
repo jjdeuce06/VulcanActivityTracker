@@ -19,6 +19,10 @@ def enter_activity():
 
         if not user_id:
             return jsonify({"error": "User not found"}), 404
+        
+        if "form" in data: #unwrap
+            data = data["form"]
+            print(data)
 
         insert_activity(user_id, data)
         return jsonify({"status": "success"}), 201

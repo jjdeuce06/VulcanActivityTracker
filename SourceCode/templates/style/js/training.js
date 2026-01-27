@@ -228,14 +228,18 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // OPTIONAL: stop default submit while you're testing
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const data = Object.fromEntries(new FormData(form).entries());
+    //const data = Object.fromEntries(new FormData(form).entries());
+    const data = collectSportData(form);
     console.log("Form submit data:", data);
+    try {
+            const response = await sendActivityData(data);
+            console.log("Response:", response);
+        } catch (err) {
+            console.error("Error sending activity data:", err);
+        }
   });
-
-  // Optional default state
-  // setFields("run");
 
   //Clear button
   clearBtn.addEventListener("click", (e) => {
@@ -246,8 +250,37 @@ document.addEventListener("DOMContentLoaded", () => {
     selectedActivityBtn.textContent = "None Selected";
   });
 
+
+
 });
 
+function collectSportData(form) {
+  if (!form) throw new Error("Form element not provided");
 
+  const data = {};
+  form.querySelectorAll("input, textarea, select").forEach(field => {
+    if (field.type === "number") data[field.name] = field.value ? parseFloat(field.value) : null;
+    else data[field.name] = field.value || "";
+  });
+
+  return data;
+}
+
+
+async function sendActivityData(form){
+    const response = await fetch("/dash_api/activity", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            form: form
+        })
+    });
+    console.log("Sending Data", form);
+
+    if(!response.ok){ throw new Error(`HTTP error ${response.status}`);}
+        return await response.json();
+}
 
 

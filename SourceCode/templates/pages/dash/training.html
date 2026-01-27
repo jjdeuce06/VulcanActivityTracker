@@ -1,176 +1,13 @@
 {% extends "base_temp/dashboard.html" %}
 
 {% block content %}
-<style>
-  h1 
-  {
-    text-align: center;
-  }
-
-
-  .dropbtn {
-  background-color: #070b3f;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
- .dropdown-content a:hover {background-color: #ddd;}
-
- .dropdown:hover .dropdown-content {display: block;}
-
- .dropdown:hover .dropbtn {background-color: grey;}
-
- .dropdown-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
- /* Activity Form Container */
-.activity-form {
-  max-width: 420px;
-  margin: 40px auto;
-  padding: 25px;
-  background-color: #1f1f1f;
-  border-radius: 10px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
-}
-
-/* Labels */
-.activity-form label {
-  display: block;
-  margin-top: 12px;
-  margin-bottom: 5px;
-  color: #e0e0e0;
-  font-weight: 600;
-}
-
-/* Inputs & Textareas */
-.activity-form input,
-.activity-form textarea,
-.activity-form select {
-  width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #444;
-  background-color: #2b2b2b;
-  color: #ffffff;
-  font-size: 14px;
-}
-
-/* Input focus state */
-.activity-form input:focus,
-.activity-form textarea:focus,
-.activity-form select:focus {
-  outline: none;
-  border-color: #4f7cff;
-  box-shadow: 0 0 5px rgba(79, 124, 255, 0.6);
-}
-
-/* Textarea resize control */
-.activity-form textarea {
-  resize: vertical;
-}
-
-/* Submit Button */
-.activity-form button {
-  width: 100%;
-  margin-top: 20px;
-  padding: 12px;
-  background-color: #070b3f;
-  color: #ffffff;
-  border: none;
-  border-radius: 6px;
-  font-size: 15px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-/* Button hover */
-.activity-form button:hover {
-  background-color: #0c1370;
-  transform: translateY(-1px);
-}
-
-/* Button active */
-.activity-form button:active {
-  transform: translateY(0);
-}
-
-/* --- Accessibility / radio group cleanup --- */
-.field {
-  margin-top: 12px;
-}
-
-.field-label {
-  display: block;
-  margin-top: 12px;
-  margin-bottom: 8px;
-  color: #e0e0e0;
-  font-weight: 600;
-}
-
-/* Put options on one row */
-.choice-row {
-  display: flex;
-  gap: 18px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-/* Override the global label block rule for these labels */
-.activity-form label.choice {
-  display: inline-flex;     /* IMPORTANT */
-  align-items: center;
-  gap: 10px;
-  margin: 0;                /* prevents extra vertical spacing */
-  font-weight: 500;
-  color: #e0e0e0;
-  cursor: pointer;
-}
-
-/* Override the global input width rule for radio buttons */
-.activity-form input[type="radio"] {
-  width: auto;              /* IMPORTANT */
-  padding: 0;
-  margin: 0;
-  accent-color: #070b3f;
-}
-
-/* Dynamic fields spacing */
-#dynamic-fields {
-  margin-top: 10px;
-}
-</style>
 <body>
     <h1> Add Activity </h1>
     <div class="dropdown-wrapper">
     <div class="dropdown">
         <button class="dropbtn">Activity Selection</button>
+        <button class="selected-activity">None Selected</button>
+        <button class="clr-dropbtn">Clear</button>
         <div class="dropdown-content">
           <a href="#" data-activity="run">Run</a>
           <a href="#" data-activity="lifting">Weightlifting</a>
@@ -184,6 +21,7 @@
           <a href="#" data-activity="tennis">Tennis</a>
           <a href="#" data-activity="volleyball">Volleyball</a>
           <a href="#" data-activity="basketball">Basketball</a>
+          <a href="#" data-activity="equestrian">Equestrian</a>
 </div>
     </div>
     </div>
@@ -222,6 +60,25 @@
 
         <button type="submit">Save Activity</button>
     </form>
+    <!-- Right-side Activities Card -->
+    <div class="activities-wrapper">
+      <div class="card activities-card">
+        <h3>Activities</h3>
+        <table class="activities-table">
+          <thead>
+            <tr>
+              <th>Activity Name</th>
+              <th>Date</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody id="activities-body">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
 </body>
 
 <script src="{{ url_for('style_folder.static', filename='js/training.js') }}"></script>

@@ -161,6 +161,49 @@ document.addEventListener("DOMContentLoaded", () => {
       <label>Notes</label>
       <textarea name="notes" rows="3"></textarea>
     `,
+    equestrian: `
+      <label>Discipline</label>
+      <select name="discipline">
+        <option>Trail Riding</option>
+        <option>Dressage</option>
+        <option>Jumping</option>
+        <option>Eventing</option>
+        <option>Barrel Racing</option>
+        <option>Western Pleasure</option>
+        <option>Endurance</option>
+        <option>Other</option>
+      </select>
+
+      <label>Duration (minutes)</label>
+      <input type="number" name="duration" required>
+
+      <label>Distance (miles)</label>
+      <input type="number" step="0.01" name="distance">
+
+      <label>Elevation Gain (ft)</label>
+      <input type="number" name="elevation">
+
+      <label>Route / Location</label>
+      <input type="text" name="route">
+
+      <label>Notes</label>
+      <textarea name="notes" rows="3"></textarea>
+
+      <label>Horse Name</label>
+      <input type="text" name="horse_name" required>
+
+      <label>Horse Condition</label>
+      <select name="horse_condition">
+        <option>Excellent</option>
+        <option>Good</option>
+        <option>Okay</option>
+        <option>Tired</option>
+        <option>Off</option>
+      </select>
+
+      <label>Tack Used</label>
+      <input type="text" name="tack">
+    `,
   };
 
   function setFields(activityKey) {

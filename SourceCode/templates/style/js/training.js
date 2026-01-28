@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const dropdown = document.querySelector(".dropdown");
   const fieldsContainer = document.getElementById("dynamic-fields");
   const activityTypeInput = document.getElementById("activity_type");
@@ -177,14 +177,8 @@ document.addEventListener("DOMContentLoaded", () => {
         <option>Other</option>
       </select>
 
-      <label>Duration (minutes)</label>
-      <input type="number" name="duration" required>
-
       <label>Distance (miles)</label>
       <input type="number" step="0.01" name="distance">
-
-      <label>Elevation Gain (ft)</label>
-      <input type="number" name="elevation">
 
       <label>Route / Location</label>
       <input type="text" name="route">
@@ -203,9 +197,6 @@ document.addEventListener("DOMContentLoaded", () => {
         <option>Tired</option>
         <option>Off</option>
       </select>
-
-      <label>Tack Used</label>
-      <input type="text" name="tack">
     `,
   };
 
@@ -236,6 +227,11 @@ document.addEventListener("DOMContentLoaded", () => {
             //const username = localStorage.getItem("currentUser");
             const response = await sendActivityData(data, username);
             console.log("Response:", response);
+            e.preventDefault();
+            activityTypeInput.value = "";
+            fieldsContainer.innerHTML = "";
+            form.reset();
+            selectedActivityBtn.textContent = "None Selected";
         } catch (err) {
             console.error("Error sending activity data:", err);
         }
@@ -250,7 +246,7 @@ document.addEventListener("DOMContentLoaded", () => {
     selectedActivityBtn.textContent = "None Selected";
   });
 
-  fillActivityTable(username);
+  await fillActivityTable(username);
 });
 
 
@@ -305,6 +301,7 @@ async function fillActivityTable(username) {
       : data.activities;
 
     populateActivityTable(data.activities);
+
 
     return activities;
 

@@ -60,3 +60,59 @@ def insert_activity(conn, user_id: str, data: dict):
 
     finally:
         cursor.close()
+
+
+
+def get_user_activities(conn, user_id: str):
+    print("enter fill A table")
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("""
+            SELECT
+                ActivityType,
+                ActivityDate,
+                Duration,
+                CaloriesBurned,
+                Visibility,
+                Notes,
+                Details
+            FROM activity
+            WHERE UserID = ?
+            ORDER BY ActivityDate DESC
+        """, (user_id,))
+
+        rows = cursor.fetchall()
+        activities = []
+
+        for row in rows:
+            details = {}
+
+            # Parse sport-specific JSON safely
+            if row.Details:
+                try:
+                    details = json.loads(row.Details)
+                except json.JSONDecodeError:
+                    print("Invalid JSON in Details column")
+
+            activity = {
+                "activity_type": row.ActivityType,
+                "date": row.ActivityDate.isoformat(),
+                "duration": row.Duration,
+                "calories_burned": row.CaloriesBurned,
+                "visibility": row.Visibility,
+                "notes": row.Notes,
+            }
+
+            activity.update(details)
+
+            activities.append(activity)
+
+        return activities
+
+    except Exception as e:
+        print("Fetch activity error:", e)
+        raise
+
+    finally:
+        cursor.close()

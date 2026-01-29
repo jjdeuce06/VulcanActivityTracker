@@ -116,11 +116,22 @@ h1 {
     inset 0 1px 0 rgba(255,255,255,0.15);
 }
 
+.activity-layout {
+  display: flex;            /* puts children side-by-side */
+  align-items: flex-start;
+  gap: 60px;                /* space between form and table */
+  padding: 0 60px;
+}
+
+
+
+
  /* Activity Form Container */
 .activity-form {
   max-width: 420px;
   /*margin: 40px auto;*/
-  margin: 40px 0 40px 60px;
+  /*margin: 40px 0 40px 60px;*/
+  margin: 40px 0;
   padding: 26px;
   background: linear-gradient(135deg, #1b1f5f, #070b3f);
   border-radius: 22px;
@@ -261,11 +272,13 @@ h1 {
 
 /* Activity Table */
 .activities-wrapper {
-  position: absolute; /* so it can float on the right */
-  top: 200px;          /* same vertical alignment as your activity card */
-  right: 90px;        /* space from the right edge */
-  width: 1200px;       /* fixed width for bubble card */
+  flex: 1;               
+  margin-top: 40px;
+  max-width: 1200px;
 }
+
+
+
 
 /* Activities Card Bubble Style */
 .activities-card {
@@ -284,11 +297,11 @@ h1 {
   text-align: center;
 }
 
-/* Table styling (bubble rows) */
+/* Table styling (bubble) */
 .activities-table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 8px; /* space between rows for bubble effect */
+  border-spacing: 0 8px;
 }
 
 .activities-table th {
@@ -315,10 +328,24 @@ h1 {
   border-bottom-right-radius: 12px;
 }
 
-/* Hover effect for rows */
+/* Hover effect rows */
 .activities-table tbody tr:hover td {
   background: rgba(255,255,255,0.15);
   cursor: pointer;
   transform: translateY(-1px);
   transition: 0.2s ease;
+}
+
+
+@media (max-width: 1100px) {
+  .activity-layout {
+    flex-direction: column;  
+    padding: 0 24px;
+  }
+
+  .activity-form,
+  .activities-wrapper {
+    width: 100%;
+    max-width: none;
+  }
 }

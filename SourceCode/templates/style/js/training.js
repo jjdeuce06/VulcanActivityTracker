@@ -336,7 +336,6 @@ function populateActivityTable(data){
       <td>${common.activity_type}</td>
       <td>${common.duration} min</td>
       <td>${common.calories_burned}</td>
-      <td>${extra}</td>
       <td>${common.visibility}</td>
       <td>${common.notes ?? ""}</td>
     `;

@@ -120,7 +120,7 @@ h1 {
   display: flex;            /* puts children side-by-side */
   align-items: flex-start;
   gap: 60px;                /* space between form and table */
-  padding: 0 60px;
+  padding: 0 100px;
 }
 
 
@@ -129,6 +129,7 @@ h1 {
  /* Activity Form Container */
 .activity-form {
   max-width: 420px;
+  min-width: 420px;
   /*margin: 40px auto;*/
   /*margin: 40px 0 40px 60px;*/
   margin: 40px 0;
@@ -272,9 +273,10 @@ h1 {
 
 /* Activity Table */
 .activities-wrapper {
-  flex: 1;               
+  /*flex: 1; **/   
+  flex: 0 0 650px;           
   margin-top: 40px;
-  max-width: 1200px;
+  max-width: 1100px;
 }
 
 

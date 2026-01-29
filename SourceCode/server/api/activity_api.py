@@ -22,7 +22,7 @@ def enter_activity():
             # unwrap form if present
             if "form" in data:
                 data = data["form"]
-                print("Activity data:", data)
+                #print("Activity data:", data)
 
             # insert activity
             insert_activity(conn, user_id, data)
@@ -51,7 +51,7 @@ def fill_activity():
                 return jsonify({"error": "User not found"}), 404
             
             activities = get_user_activities(conn, user_id)
-            print(activities)
+            #print(activities)
         finally:
             conn.close()  #close conn
     except Exception as e:

@@ -213,7 +213,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     e.preventDefault();
 
     const activityKey = link.dataset.activity;
-    console.log("Selected:", activityKey);
+    //console.log("Selected:", activityKey);
 
     setFields(activityKey);
     selectedActivityBtn.textContent = link.textContent;

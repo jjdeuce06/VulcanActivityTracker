@@ -213,7 +213,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     e.preventDefault();
 
     const activityKey = link.dataset.activity;
-    console.log("Selected:", activityKey);
+    //console.log("Selected:", activityKey);
 
     setFields(activityKey);
     selectedActivityBtn.textContent = link.textContent;
@@ -336,7 +336,6 @@ function populateActivityTable(data){
       <td>${common.activity_type}</td>
       <td>${common.duration} min</td>
       <td>${common.calories_burned}</td>
-      <td>${extra}</td>
       <td>${common.visibility}</td>
       <td>${common.notes ?? ""}</td>
     `;

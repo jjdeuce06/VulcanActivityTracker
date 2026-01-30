@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, Blueprint
 from argon2 import PasswordHasher
 from server.database.connect import get_db_connection
-from server.controllers.login_store import store_login, fetch_login
+from server.controllers.login_store import store_login, fetch_login, fetch_all_users
 login_api = Blueprint('login_api', __name__)
 
 @login_api.route('/login', methods =['POST'])
@@ -16,11 +16,17 @@ def login():
     stored_hash = ph.hash(password)
     print("stored hash:", stored_hash)
 
+
+
     with get_db_connection() as conn:
-        store_login(conn, username, stored_hash)
-    print("Login Credentails Stored Successfully")
 
-
+        #check if usrname exists already
+        existing_users = fetch_all_users(conn)
+        if username in existing_users:
+            return jsonify({"error": "Username already exists"}), 400
+        else:
+            store_login(conn, username, stored_hash)
+            print("Login Credentails Stored Successfully")
     return jsonify({"status": "ok"})
 
 
@@ -42,7 +48,7 @@ def verify():
     ph = PasswordHasher()
     try:
         if ph.verify(stored_hash, password):
-            return jsonify({"message": "Login successful"}), 200
+            return jsonify({"message": "Login successful", "username": username}), 200
     except:
         return jsonify({"error": "Invalid username or password"}), 401
 

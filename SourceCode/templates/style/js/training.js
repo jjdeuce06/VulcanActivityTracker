@@ -1,8 +1,11 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const dropdown = document.querySelector(".dropdown");
   const fieldsContainer = document.getElementById("dynamic-fields");
   const activityTypeInput = document.getElementById("activity_type");
   const form = document.getElementById("activity-form");
+  const selectedActivityBtn = document.querySelector(".selected-activity");
+  const clearBtn = document.querySelector(".clr-dropbtn");
+  const username = localStorage.getItem("currentUser");
 
   const templates = {
     run: `
@@ -161,6 +164,40 @@ document.addEventListener("DOMContentLoaded", () => {
       <label>Notes</label>
       <textarea name="notes" rows="3"></textarea>
     `,
+    equestrian: `
+      <label>Discipline</label>
+      <select name="discipline">
+        <option>Trail Riding</option>
+        <option>Dressage</option>
+        <option>Jumping</option>
+        <option>Eventing</option>
+        <option>Barrel Racing</option>
+        <option>Western Pleasure</option>
+        <option>Endurance</option>
+        <option>Other</option>
+      </select>
+
+      <label>Distance (miles)</label>
+      <input type="number" step="0.01" name="distance">
+
+      <label>Route / Location</label>
+      <input type="text" name="route">
+
+      <label>Notes</label>
+      <textarea name="notes" rows="3"></textarea>
+
+      <label>Horse Name</label>
+      <input type="text" name="horse_name" required>
+
+      <label>Horse Condition</label>
+      <select name="horse_condition">
+        <option>Excellent</option>
+        <option>Good</option>
+        <option>Okay</option>
+        <option>Tired</option>
+        <option>Off</option>
+      </select>
+    `,
   };
 
   function setFields(activityKey) {
@@ -176,19 +213,134 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
 
     const activityKey = link.dataset.activity;
-    console.log("Selected:", activityKey);
+    //console.log("Selected:", activityKey);
 
     setFields(activityKey);
+    selectedActivityBtn.textContent = link.textContent;
   });
 
-  // OPTIONAL: stop default submit while you're testing
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const data = Object.fromEntries(new FormData(form).entries());
+    const data = collectSportData(form);
     console.log("Form submit data:", data);
+    try {
+            //const username = localStorage.getItem("currentUser");
+            const response = await sendActivityData(data, username);
+            console.log("Response:", response);
+            e.preventDefault();
+            activityTypeInput.value = "";
+            fieldsContainer.innerHTML = "";
+            form.reset();
+            selectedActivityBtn.textContent = "None Selected";
+        } catch (err) {
+            console.error("Error sending activity data:", err);
+        }
   });
 
-  // Optional default state
-  // setFields("run");
+  //Clear button
+  clearBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    activityTypeInput.value = "";
+    fieldsContainer.innerHTML = "";
+    form.reset();
+    selectedActivityBtn.textContent = "None Selected";
+  });
+
+  await fillActivityTable(username);
 });
 
+
+function collectSportData(form) {
+  if (!form) throw new Error("Form element not provided");
+
+  const data = {};
+  form.querySelectorAll("input, textarea, select").forEach(field => {
+    if (field.type === "number") data[field.name] = field.value ? parseFloat(field.value) : null;
+    else data[field.name] = field.value || "";
+  });
+  return data;
+}
+
+
+async function sendActivityData(data, username){
+    const response = await fetch("/activity_api/enteractivity", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            form: data,
+            username: username
+        })
+    });
+    if(!response.ok){ throw new Error(`HTTP error ${response.status}`);}
+        return await response.json();
+}
+
+
+//fill activities data
+async function fillActivityTable(username) {
+  try {
+    const response = await fetch("/activity_api/fillactivity", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ username })
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    //ensure array
+    const activities = Array.isArray(data)
+      ? data
+      : data.activities;
+
+    populateActivityTable(data.activities);
+
+
+    return activities;
+
+  } catch (err) {
+    console.error("Failed to load activities:", err);
+  }
+}
+
+
+function populateActivityTable(data){
+  const activityTable = document.querySelector("#activities-body");
+  activityTable.innerHTML = "";
+
+  data.forEach(activity => {
+    // Support merged OR split payloads
+    const common = activity.common ?? activity;
+    const sport  = activity.sport  ?? activity;
+
+    let extra = "";
+
+    // Sport-specific display
+    if (common.activity_type === "swim" && sport.distance) {
+      extra = `${sport.distance} ${sport.unit}`;
+    }
+    const dateObj = new Date(common.date);
+    const formattedDate = dateObj.toLocaleDateString("en-US", { year:"numeric", month:"short", day:"numeric" });
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${formattedDate}</td>
+      <td>${common.activity_type}</td>
+      <td>${common.duration} min</td>
+      <td>${common.calories_burned}</td>
+      <td>${common.visibility}</td>
+      <td>${common.notes ?? ""}</td>
+    `;
+
+    activityTable.appendChild(row);
+  });
+
+}

@@ -41,15 +41,15 @@ td, th {
 
 /* Table body rows */
 tr {
-  background-color: #000000;   /* black rows */
+  background-color: #6b1414;   /* black rows */
 }
 
 tr:nth-child(even) {
-  background-color: #555555;   /* gray alternating rows */
+  background-color: #070b3f;   /* gray alternating rows */
 }
 
 tr:hover {
-  background-color: #444444;   /* hover effect */
+  background-color: #808080;   /* hover effect */
 }
 
 th {
@@ -72,6 +72,8 @@ h1 {
   <select id="sortBy">
     <option value="score" selected>Score</option>
     <option value="name">Name</option>
+    <option value="totalMinutes">Duration</option>"
+    <option value="totalActivities">Activities</option>
   </select>
 
   <button id="sortDir" type="button" data-dir="desc">Desc</button>
@@ -83,6 +85,8 @@ h1 {
       <th>Rank</th>
       <th>Name</th>
       <th>Score</th>
+      <th>Total Duration (minutes)</th>
+      <th>Total Activities</th>
     </tr>
   </thead>
   <tbody></tbody>

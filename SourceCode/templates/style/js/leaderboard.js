@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function getActivityData(username) {
     try {
-      const response = await fetch("/actiivity_api/fillacitivity", {
+      const response = await fetch("/activity_api/fillactivity", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

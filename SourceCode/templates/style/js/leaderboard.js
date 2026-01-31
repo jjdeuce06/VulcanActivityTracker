@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function getActivityData(username) {
     try {
-      const response = await fetch("/actiivity_api/fillacitivity", {
+      const response = await fetch("/activity_api/fillactivity", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -64,12 +64,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   
     activities = await getActivityData(username);
-    activities.forEach(activity => {
+    activities.forEach((activity, idx) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
+        <td>${idx + 1}</td>
         <td>${username}</td>
         <td>${activity.name}</td>
-        <td>${activity.minutes}</td>
+        <td>${activity.duration}</td>
         <td>${activity.date}</td>
       `;
       tbody.appendChild(tr);

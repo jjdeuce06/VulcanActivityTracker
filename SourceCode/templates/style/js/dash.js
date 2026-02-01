@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const username = localStorage.getItem("currentUser");
-    const activity_count = null;
     console.log("user from dash:", username);
     if (username) {
         document.getElementById("user-name").textContent = username;
@@ -52,6 +51,10 @@ function populateDashActivity(data) {
   const feedContainer = document.querySelector("#activity-feed");
   feedContainer.innerHTML = ""; // clear old feed
 
+  // Fill the activity count using the array length
+  const activityCountDiv = document.querySelector("#activity-count");
+  activityCountDiv.textContent = data?.length ?? 0;
+
   if (!data || data.length === 0) {
     feedContainer.innerHTML = `
       <div class="feed-card">
@@ -77,7 +80,7 @@ function populateDashActivity(data) {
 
     // Create card without inline styles
     const card = document.createElement("div");
-    card.className = "card feed-card"; // ← add 'card'
+    card.className = "card feed-card";
     card.innerHTML = `
     <div class="feed-title">${common.activity_type.toUpperCase()}</div>
     <div class="feed-meta">${formattedDate} • ${common.visibility}</div>
@@ -89,7 +92,5 @@ function populateDashActivity(data) {
 
 
     feedContainer.appendChild(card);
-    //activity_count ++;
-
   });
 }

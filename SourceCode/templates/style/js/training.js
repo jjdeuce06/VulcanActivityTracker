@@ -213,7 +213,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     e.preventDefault();
 
     const activityKey = link.dataset.activity;
-    //console.log("Selected:", activityKey);
 
     setFields(activityKey);
     selectedActivityBtn.textContent = link.textContent;
@@ -232,6 +231,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             fieldsContainer.innerHTML = "";
             form.reset();
             selectedActivityBtn.textContent = "None Selected";
+
+            await fillActivityTable(username);//refresh to show immediate change
         } catch (err) {
             console.error("Error sending activity data:", err);
         }

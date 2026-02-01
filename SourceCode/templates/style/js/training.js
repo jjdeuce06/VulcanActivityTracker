@@ -223,7 +223,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const data = collectSportData(form);
     console.log("Form submit data:", data);
     try {
-            //const username = localStorage.getItem("currentUser");
             const response = await sendActivityData(data, username);
             console.log("Response:", response);
             e.preventDefault();

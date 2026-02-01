@@ -59,3 +59,27 @@ def fill_activity():
         return jsonify({"error": str(e)}), 500
 
     return jsonify({"status": "success","activities": activities}), 200
+
+
+@activity_api.route('/fillDashAct', methods=['POST'])
+def fill_Dashactivity():
+
+    try:
+        data = request.get_json()
+        username = data.pop("username", None)
+        conn = get_db_connection()
+        try:
+            user_id = get_user_id(conn, username)
+        
+            if not user_id:
+                return jsonify({"error": "User not found"}), 404
+            
+            activities = get_user_activities(conn, user_id)
+            print(activities)
+        finally:
+            conn.close()  #close conn
+    except Exception as e:
+        print("Error in enter_activity route:", e)
+        return jsonify({"error": str(e)}), 500
+
+    return jsonify({"status": "success","activities": activities}), 200

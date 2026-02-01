@@ -47,12 +47,12 @@
   box-shadow:0 6px 16px rgba(0,0,0,0.3);
 ">
 <h2>⚠️ Challenges / Issues</h2>
-<p><strong>Problem:</strong> Team device chip configuration not considered when choosing a database driver.</p>
 <ul>
-  <li>MSSQL 2022 server version 17 is not compatible with ARM64 chips (Intel specific)</li>
-  <li>VM implementation is too extensive</li>
+    <li>Activity API architechture/ database complexity</li>
+    <li>Username per session storage</li>
+    <li>DOM and API render timing</li>
+    <li>Laptop vs PC formatting</li>
 </ul>
-<p><strong>Solution:</strong> Use <strong>MSSQL-Azure Edge v18</strong></p>
 </div>
 
 <!-- ===================== NEXT WEEK ===================== -->

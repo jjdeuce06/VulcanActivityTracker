@@ -221,7 +221,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const data = collectSportData(form);
-    console.log("Form submit data:", data);
     try {
             const response = await sendActivityData(data, username);
             console.log("Response:", response);

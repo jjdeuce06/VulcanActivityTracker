@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const username = localStorage.getItem("currentUser");
-    console.log("user from dash:", username);
     if (username) {
         document.getElementById("user-name").textContent = username;
     }
@@ -11,8 +10,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 });
-
-
 
 async function fillDashActivity(username) {
   try {
@@ -29,7 +26,6 @@ async function fillDashActivity(username) {
     }
 
     const data = await response.json();
-    console.log(data);
 
     //ensure array
     const activities = Array.isArray(data)

@@ -51,7 +51,6 @@ def fill_activity():
                 return jsonify({"error": "User not found"}), 404
             
             activities = get_user_activities(conn, user_id)
-            #print(activities)
         finally:
             conn.close()  #close conn
     except Exception as e:
@@ -75,7 +74,6 @@ def fill_Dashactivity():
                 return jsonify({"error": "User not found"}), 404
             
             activities = get_user_activities(conn, user_id)
-            print(activities)
         finally:
             conn.close()  #close conn
     except Exception as e:

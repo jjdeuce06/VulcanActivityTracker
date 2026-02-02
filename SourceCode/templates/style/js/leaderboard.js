@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const sortBy = document.getElementById("sortBy");
   const sortSport = document.getElementById("filterSport");
   const sortDirBtn = document.getElementById("sortDir");
-  const username = localStorage.getItem("currentUser");
 
   // Defaults
   sortBy.value = "score";
@@ -66,39 +65,17 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   }
 
-  
+  async function getLeaderboardData() {
+    const response = await fetch("/activity_api/publicleaderboard", { method: "GET" });
+    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
 
-  async function getActivityData(username) {
-    try {
-      const response = await fetch("/activity_api/fillactivity", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ username })
-      });
+    const payload = await response.json();
+    console.log("Fetched leaderboard:", payload);
 
-      if (!response.ok) {
-      throw new Error(`HTTP error ${response.status}`);
-    }
-
-    const test_data = await response.json();
-
-    //ensure array
-    const activities = Array.isArray(test_data)
-      ? test_data
-      : test_data.activities;
-
-      return activities;
-    }
-    catch (err) 
-    {
-      console.error("Failed to load activities:", err);
-    }
-    
-
+    return payload.leaderboard || [];
   }
-  async function render(rows) {
+
+  function render(rows) {
     tbody.innerHTML = "";
     const sport = sortSport.value;
 
@@ -139,7 +116,6 @@ document.addEventListener("DOMContentLoaded", () => {
     
     });
   }
-  
 
   function sortAndRender() {
     const key = sortBy.value;

@@ -5,113 +5,87 @@ document.addEventListener("DOMContentLoaded", () => {
   const tbody = table.querySelector("tbody");
   const sortBy = document.getElementById("sortBy");
   const sortDirBtn = document.getElementById("sortDir");
-  const username = localStorage.getItem("currentUser");
 
+  // Defaults
+  sortBy.value = "score";
+  sortDirBtn.dataset.dir = "desc";
+  sortDirBtn.textContent = "Desc";
 
-  // Replace this later with a fetch() call to API endpoint
-  let data = [
-    { name: "Alice", score: 100, totalMinutes: 250, totalActivities: 15 },
-    { name: "Bob", score: 80, totalMinutes: 180, totalActivities: 10 },
-    { name: "Charlie", score: 60, totalMinutes: 120, totalActivities: 8 },
-    { name: "Diana", score: 120, totalMinutes: 300, totalActivities: 20 },
-  ];
+  // This holds the fetched leaderboard rows
+  let data = [];
 
-  
+  async function getLeaderboardData() {
+    const response = await fetch("/activity_api/publicleaderboard", { method: "GET" });
+    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
 
-  async function getActivityData(username) {
-    try {
-      const response = await fetch("/activity_api/fillactivity", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ username })
-      });
+    const payload = await response.json();
+    console.log("Fetched leaderboard:", payload);
 
-      if (!response.ok) {
-      throw new Error(`HTTP error ${response.status}`);
-    }
-
-    const test_data = await response.json();
-
-    //ensure array
-    const activities = Array.isArray(test_data)
-      ? test_data
-      : test_data.activities;
-
-      return activities;
-    }
-    catch (err) 
-    {
-      console.error("Failed to load activities:", err);
-    }
-    
-
+    return payload.leaderboard || [];
   }
-  async function render(rows) {
+
+  function render(rows) {
     tbody.innerHTML = "";
 
     rows.forEach((row, idx) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${idx + 1}</td>
-        <td>${row.name}</td>
-        <td>${row.score}</td>
-        <td>${row.totalMinutes}</td>
-        <td>${row.totalActivities}</td>
-      `;
-      tbody.appendChild(tr);
-    });
-  
-    activities = await getActivityData(username);
-    activities.forEach((activity, idx) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${idx + 1}</td>
-        <td>${username}</td>
-        <td>${activity.name}</td>
-        <td>${activity.duration}</td>
-        <td>${activity.date}</td>
+        <td>${row.name ?? ""}</td>
+        <td>${row.score ?? 0}</td>
+        <td>${row.totalMinutes ?? 0}</td>
+        <td>${row.totalActivities ?? 0}</td>
       `;
       tbody.appendChild(tr);
     });
   }
-  
 
   function sortAndRender() {
-    const key = sortBy.value;            // "score" or "name"
-    const dir = sortDirBtn.dataset.dir;  // "asc" or "desc"
+    const key = sortBy.value;
+
+    const dir = sortDirBtn.dataset.dir || "desc";
+    sortDirBtn.dataset.dir = dir;
 
     const sorted = [...data].sort((a, b) => {
       let av = a[key];
       let bv = b[key];
 
+      // name sort
       if (key === "name") {
-        av = String(av).toLowerCase();
-        bv = String(bv).toLowerCase();
-        const res = av.localeCompare(bv);
+        const res = String(av ?? "").localeCompare(String(bv ?? ""), undefined, {
+          sensitivity: "base",
+        });
         return dir === "asc" ? res : -res;
       }
 
-      // numeric
-      const res = (Number(av) || 0) - (Number(bv) || 0);
-      return dir === "asc" ? res : -res;
+      // numeric sort
+      const numA = Number(av) || 0;
+      const numB = Number(bv) || 0;
+      return dir === "asc" ? numA - numB : numB - numA;
     });
 
     render(sorted);
   }
 
-  // Sort dropdown changes
   sortBy.addEventListener("change", sortAndRender);
 
-  // Asc/Desc toggle
   sortDirBtn.addEventListener("click", () => {
-    const next = sortDirBtn.dataset.dir === "desc" ? "asc" : "desc";
+    const current = sortDirBtn.dataset.dir || "desc";
+    const next = current === "desc" ? "asc" : "desc";
+
     sortDirBtn.dataset.dir = next;
     sortDirBtn.textContent = next === "desc" ? "Desc" : "Asc";
+
     sortAndRender();
   });
 
-  // Initial render
-  sortAndRender();
+  // ✅ Initial load: fetch -> store -> sort -> render
+  (async function init() {
+    try {
+      data = await getLeaderboardData();
+      sortAndRender();
+    } catch (err) {
+      console.error("Failed to load leaderboard:", err);
+    }
+  })();
 });

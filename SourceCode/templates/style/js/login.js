@@ -8,10 +8,6 @@ document.getElementById("createBtn").addEventListener("click", async () =>{
     const password = document.getElementById("pass_entry").value;
     const errorDiv = document.getElementById("register-error");
 
-    console.log("Username:", username);
-    console.log("Password:", password);
-
-
     // Clear previous messages
     errorDiv.textContent = "";
     errorDiv.style.color = "red";
@@ -26,8 +22,6 @@ document.getElementById("createBtn").addEventListener("click", async () =>{
         //send to backend
         try {
         const response = await sendLoginData(username, hash);
-        console.log("Response:", response);
-
         if (!response.ok) {
             // show backend error message like "Username already exists"
             errorDiv.textContent = response.error || "Registration failed";
@@ -68,10 +62,7 @@ async function hashPassword(password){
     const encoder = new TextEncoder().encode(password);
     const hashBuff = await crypto.subtle.digest("SHA-256", encoder);
 
-    console.log("Hashed Pass:", hashBuff);
-
     return Array.from(new Uint8Array(hashBuff)).map(b=>b.toString(16).padStart(2, "0")).join("");
-
 }
 
 //Step 2: API to send hash
@@ -87,8 +78,6 @@ async function sendLoginData(username, hashPassword){
             password: hashPassword
         })
     });
-
-    console.log("Sending Data", username, hashPassword);
 
     let data = {};
     try {

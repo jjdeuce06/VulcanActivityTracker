@@ -213,7 +213,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     e.preventDefault();
 
     const activityKey = link.dataset.activity;
-    //console.log("Selected:", activityKey);
 
     setFields(activityKey);
     selectedActivityBtn.textContent = link.textContent;
@@ -222,9 +221,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const data = collectSportData(form);
-    console.log("Form submit data:", data);
     try {
-            //const username = localStorage.getItem("currentUser");
             const response = await sendActivityData(data, username);
             console.log("Response:", response);
             e.preventDefault();
@@ -232,6 +229,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             fieldsContainer.innerHTML = "";
             form.reset();
             selectedActivityBtn.textContent = "None Selected";
+
+            await fillActivityTable(username);//refresh to show immediate change
         } catch (err) {
             console.error("Error sending activity data:", err);
         }

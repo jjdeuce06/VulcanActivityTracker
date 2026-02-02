@@ -7,9 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const username = document.getElementById("user_entry").value;
         const password = document.getElementById("pass_entry").value;
 
-        console.log("Username:", username);
-        console.log("Password:", password);
-
         //hash password before sending
         const hash = await hashPassword(password);
         //send to backend
@@ -49,8 +46,6 @@ async function hashPassword(password){
     const encoder = new TextEncoder().encode(password);
     const hashBuff = await crypto.subtle.digest("SHA-256", encoder);
 
-    console.log("Hashed Pass:", hashBuff);
-
     return Array.from(new Uint8Array(hashBuff)).map(b=>b.toString(16).padStart(2, "0")).join("");
 
 }
@@ -68,7 +63,6 @@ async function sendLoginData(username, hashPassword){
             password: hashPassword
         })
     });
-    console.log("Sending Data", username, hashPassword);
 
     if(!response.ok){ throw new Error(`HTTP error ${response.status}`);}
         return await response.json();

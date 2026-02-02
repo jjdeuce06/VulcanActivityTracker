@@ -159,7 +159,7 @@ body.dashboard-page .dash-grid {
 body.dashboard-page .dash-col {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 25px;
 }
 
 /* =========================
@@ -226,6 +226,7 @@ body.dashboard-page .feed-card {
   border-radius: 20px;
   background: linear-gradient(135deg, #1a1c3f, #070b3f);
   padding: 20px;
+  margin-bottom: 20px;
 }
 
 body.dashboard-page .feed-card .feed-title {

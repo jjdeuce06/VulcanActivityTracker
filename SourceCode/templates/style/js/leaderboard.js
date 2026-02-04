@@ -75,6 +75,43 @@ document.addEventListener("DOMContentLoaded", () => {
     return payload.leaderboard || [];
   }
 
+  // async function getSpecificSportData(sport){
+  //   pass;
+  // }
+  
+  function sortTableBySport(sport){
+    const headersBySport = {
+    all: ["Rank", "Name", "Score", "Total Duration (minutes)", "Total Activities"],
+    running: ["Rank", "Name", "Miles Run", "Total Duration (minutes)", "Total Activities"],
+    cycling: ["Rank", "Name", "Miles Cycled", "Total Duration (minutes)", "Total Activities"],
+    swimming: ["Rank", "Name", "Miles Swam", "Total Duration (minutes)", "Total Activities"],
+    lifting: ["Rank", "Name", "Total Sets", "Total Duration (minutes)", "Total Activities"],
+    yoga: ["Rank", "Name", "Total Intensity", "Total Duration (minutes)", "Total Activities"],
+    walking: ["Rank", "Name", "Total Steps", "Total Duration (minutes)", "Total Activities"],
+    soccer: ["Rank", "Name", "Total Goals", "Total Assists", "Total Duration (minutes)", "Total Activities"],
+    baseball: ["Rank", "Name", "Total Hits", "Total Runs", "Total Duration (minutes)", "Total Activities"],
+    football: ["Rank", "Name", "Total Touchdowns", "Total Duration (minutes)", "Total Activities"],
+    tennis: ["Rank", "Name", "Total Score", "Total Duration (minutes)", "Total Activities"],
+    volleyball: ["Rank", "Name", "Total Kills", "Total Duration (minutes)", "Total Activities"],
+    basketball: ["Rank", "Name", "Total Points", "Total Rebounds", "Total Duration (minutes)", "Total Activities"],
+    equestrian: ["Rank", "Name", "Total Distance (miles)", "Total Duration (minutes)", "Total Activities"],
+  };
+
+  console.log("Setting headers for sport:", sport);
+
+  const headers = headersBySport[sport] || headersBySport.all;
+
+  // Clear existing header cells
+  headRow.innerHTML = "";
+
+  // Build header cells
+  headers.forEach(text => {
+    const th = document.createElement("th");
+    th.textContent = text;
+    headRow.appendChild(th);
+  });
+  }
+
   function render(rows) {
     tbody.innerHTML = "";
     const sport = sortSport.value;
@@ -283,7 +320,11 @@ document.addEventListener("DOMContentLoaded", () => {
   (async function init() {
     try {
       sortTableBySport(sortSport.value || "all");
+<<<<<<< HEAD
       data = await getLeaderboardData(sortSport.value || "all");
+=======
+      data = await getLeaderboardData();
+>>>>>>> a7e5fcf (table headers on leaderboard change based on sport picked)
       sortAndRender();
     } catch (err) {
       console.error("Failed to load leaderboard:", err);

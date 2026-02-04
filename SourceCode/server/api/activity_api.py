@@ -83,7 +83,6 @@ def public_leaderboard():
         return jsonify({"error": str(e)}), 500
 
 def get_public_leaderboard(conn, sport_type=None):
-<<<<<<< HEAD
     print("sport type: ", sport_type)
     params = []
     sql = """
@@ -108,27 +107,6 @@ def get_public_leaderboard(conn, sport_type=None):
             AND a.Visibility = 'public'
             GROUP BY u.Username, u.UserID
             ORDER BY totalMinutes DESC;
-=======
-    sql = """
-        SELECT
-            u.Username AS name,
-            COUNT(*) AS totalActivities,
-            COALESCE(SUM(a.Duration), 0) AS totalMinutes
-        FROM [user] u
-        LEFT JOIN activity a
-          ON a.UserID = u.UserID
-         AND a.Visibility = 'public'
-    """
-    params = []
-
-    if sport_type:
-        sql += " AND a.ActivityType = ?"
-        params.append(sport_type)
-
-    sql += """
-        GROUP BY u.Username
-        ORDER BY totalMinutes DESC;
->>>>>>> 9139340 (Leaderboard work)
     """
 
     cur = conn.cursor()
@@ -137,7 +115,14 @@ def get_public_leaderboard(conn, sport_type=None):
     return [dict(zip(cols, row)) for row in cur.fetchall()]
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 def get_specific_sport_data(conn, sport):
     pass
 =======
 >>>>>>> 9139340 (Leaderboard work)
+=======
+def get_specific_sport_data(conn, sport):
+    pass
+
+
+>>>>>>> a7e5fcf (table headers on leaderboard change based on sport picked)

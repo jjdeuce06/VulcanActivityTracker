@@ -87,11 +87,15 @@ def get_public_leaderboard(conn, sport_type=None):
         SELECT
             u.Username AS name,
             COUNT(*) AS totalActivities,
-            COALESCE(SUM(a.Duration), 0) AS totalMinutes
+            COALESCE(SUM(a.Duration), 0) AS totalMinutes,
+            STRING_AGG(
+                CONCAT('[', a.ActivityType, '] ', COALESCE(a.Details, '')),
+                ' | '
+            ) AS allDetails
         FROM [user] u
         LEFT JOIN activity a
-          ON a.UserID = u.UserID
-         AND a.Visibility = 'public'
+        ON a.UserID = u.UserID
+        AND a.Visibility = 'public'
     """
     params = []
 
@@ -108,4 +112,8 @@ def get_public_leaderboard(conn, sport_type=None):
     cur.execute(sql, params)
     cols = [c[0] for c in cur.description]
     return [dict(zip(cols, row)) for row in cur.fetchall()]
+
+def get_specific_sport_data(conn, sport):
+    pass
+
 

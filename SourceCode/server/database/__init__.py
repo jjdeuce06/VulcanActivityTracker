@@ -9,3 +9,7 @@ def init_or_upgrade_schema(conn):
     from server.database.schema.activitySchema import create_activity_table
     create_activity_table(conn)
     print("activity table schema initialized or updated.")
+    
+    from server.database.schema.clubSchema import create_clubs_table
+    create_clubs_table(conn)
+    print("clubs table schema initialized or updated.")

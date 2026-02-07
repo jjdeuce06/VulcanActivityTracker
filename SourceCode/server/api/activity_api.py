@@ -83,29 +83,30 @@ def public_leaderboard():
         return jsonify({"error": str(e)}), 500
 
 def get_public_leaderboard(conn, sport_type=None):
+    print("sport type: ", sport_type)
+    params = []
     sql = """
         SELECT
             u.Username AS name,
-            COUNT(*) AS totalActivities,
+            COUNT(a.ActivityID) AS totalActivities,
             COALESCE(SUM(a.Duration), 0) AS totalMinutes,
-            STRING_AGG(
-                CONCAT('[', a.ActivityType, '] ', COALESCE(a.Details, '')),
-                ' | '
-            ) AS allDetails
-        FROM [user] u
-        LEFT JOIN activity a
-        ON a.UserID = u.UserID
-        AND a.Visibility = 'public'
-    """
-    params = []
 
-    if sport_type:
-        sql += " AND a.ActivityType = ?"
-        params.append(sport_type)
-
-    sql += """
-        GROUP BY u.Username
-        ORDER BY totalMinutes DESC;
+            (
+                SELECT
+                a.ActivityType AS activityType,
+                a.Duration AS duration,
+                a.Details AS details
+                FROM activity a
+                WHERE a.UserID = u.UserID
+                AND a.Visibility = 'public'
+                FOR JSON PATH
+            ) AS activities
+            FROM [user] u
+            LEFT JOIN activity a
+            ON a.UserID = u.UserID
+            AND a.Visibility = 'public'
+            GROUP BY u.Username, u.UserID
+            ORDER BY totalMinutes DESC;
     """
 
     cur = conn.cursor()

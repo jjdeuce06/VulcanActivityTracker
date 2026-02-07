@@ -5,12 +5,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   await fillDashActivity(username);
-
   await fillDashFriends(username); // pass current user for filtering
 
   const fBtn = document.getElementById("friendBtn");
   const dropdown = document.getElementById("friendDropdown");
-  const list = document.getElementById("friends-list");
 
   // toggle dropdown visibility
   fBtn.addEventListener("click", () => {
@@ -18,30 +16,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       dropdown.style.display === "none" ? "block" : "none";
   });
 
-  // when a user is selected from the dropdown
+  // when a user is selected from the dropdown, call addFriend()
   dropdown.addEventListener("change", (e) => {
     const selectedUser = e.target.value;
-    if (!selectedUser) return;
-
-    // remove placeholder if present
-    if (list.textContent.trim() === "show friends") {
-      list.textContent = "";
-    }
-
-    // add selected user to the UI list
-    const div = document.createElement("div");
-    div.textContent = selectedUser;
-    list.appendChild(div);
-
-    // remove selected user from dropdown so it can't be added again
-    const optionToRemove = Array.from(dropdown.options).find(opt => opt.value === selectedUser);
-    if (optionToRemove) optionToRemove.remove();
-
-    // hide dropdown and reset selection
-    dropdown.style.display = "none";
-    dropdown.value = "";
+    addFriend(selectedUser); // <--- use the function
   });
 });
+
 
 // single GET to populate dropdown
 async function fillDashFriends(currentUser) {
@@ -71,6 +52,50 @@ async function fillDashFriends(currentUser) {
     console.error("Failed to load users:", err);
   }
 }
+
+async function addFriend(selectedUser) {
+  if (!selectedUser) return;
+
+  const list = document.getElementById("friends-list");
+  const dropdown = document.getElementById("friendDropdown");
+
+  // Add selected user to UI
+  if (list.textContent.trim() === "show friends") list.textContent = "";
+  const div = document.createElement("div");
+  div.textContent = selectedUser;
+  list.appendChild(div);
+
+  // Remove from dropdown
+  const optionToRemove = Array.from(dropdown.options).find(opt => opt.value === selectedUser);
+  if (optionToRemove) optionToRemove.remove();
+
+  // Hide dropdown and reset selection
+  dropdown.style.display = "none";
+  dropdown.value = "";
+
+  // Send to backend
+  const currentUser = localStorage.getItem("currentUser");
+  if (!currentUser) return;
+
+  try {
+    const response = await fetch("/dash_api/addFriend", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ currentUser, friendUser: selectedUser })
+    });
+
+    const result = await response.json();
+    console.log("result", result);
+    if (result.status !== "ok") {
+      console.error("Failed to save friend:", result.message);
+    } else {
+      console.log("Friend saved:", selectedUser);
+    }
+  } catch (err) {
+    console.error("Error saving friend:", err);
+  }
+}
+
 
 async function fillDashActivity(username) {
   try {

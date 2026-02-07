@@ -61,11 +61,34 @@ async function fillDashFriends(currentUser) {
     if (existingFriends.length === 0) {
       friendsList.textContent = "No Friends yet.";
     } else {
+      // existingFriends.forEach(f => {
+      //   const div = document.createElement("div");
+      //   div.textContent = f;
+      //   friendsList.appendChild(div);
+      // });
       existingFriends.forEach(f => {
-        const div = document.createElement("div");
-        div.textContent = f;
-        friendsList.appendChild(div);
+        const friendDiv = document.createElement("div");
+        friendDiv.classList.add("friend-item");
+
+        const avatar = document.createElement("div");
+        avatar.classList.add("friend-avatar");
+
+        const nameDiv = document.createElement("div");
+        nameDiv.classList.add("friend-name");
+        nameDiv.textContent = f;
+
+        const viewBtn = document.createElement("button");
+        viewBtn.classList.add("friend-view-btn");
+        viewBtn.textContent = "View";
+        viewBtn.onclick = () => alert(`Viewing friend: ${f}`);
+
+        friendDiv.appendChild(avatar);
+        friendDiv.appendChild(nameDiv);
+        friendDiv.appendChild(viewBtn);
+
+        friendsList.appendChild(friendDiv);
       });
+
     }
 
     // Add click event to dropdown to add a friend
@@ -74,9 +97,30 @@ async function fillDashFriends(currentUser) {
       const selectedUser = dropdown.value;
 
       // Add to friends list
-      const div = document.createElement("div");
-      div.textContent = selectedUser;
-      friendsList.appendChild(div);
+      // const div = document.createElement("div");
+      // div.textContent = selectedUser;
+      // friendsList.appendChild(div);
+      const friendDiv = document.createElement("div");
+      friendDiv.classList.add("friend-item");
+
+      const avatar = document.createElement("div");
+      avatar.classList.add("friend-avatar");
+
+      const nameDiv = document.createElement("div");
+      nameDiv.classList.add("friend-name");
+      nameDiv.textContent = selectedUser;
+
+      const viewBtn = document.createElement("button");
+      viewBtn.classList.add("friend-view-btn");
+      viewBtn.textContent = "View";
+      viewBtn.onclick = () => alert(`Viewing friend: ${selectedUser}`);
+
+      friendDiv.appendChild(avatar);
+      friendDiv.appendChild(nameDiv);
+      friendDiv.appendChild(viewBtn);
+
+      friendsList.appendChild(friendDiv);
+
 
       // Remove from dropdown so it can't be added again
       const optionToRemove = Array.from(dropdown.options).find(opt => opt.value === selectedUser);
@@ -107,13 +151,34 @@ async function addFriend(selectedUser) {
   const list = document.getElementById("friends-list");
   const dropdown = document.getElementById("friendDropdown");
 
-  // Add selected user to UI
-  if (list.textContent.trim() === "show friends") list.textContent = "";
-  const div = document.createElement("div");
-  div.textContent = selectedUser;
-  list.appendChild(div);
+  // Remove placeholder if present
+  if (list.textContent.trim() === "show friends" || list.textContent.trim() === "No Friends yet.") {
+    list.textContent = "";
+  }
 
-  // Remove from dropdown
+  // Create friend bubble
+  const friendDiv = document.createElement("div");
+  friendDiv.classList.add("friend-item");
+
+  const avatar = document.createElement("div");
+  avatar.classList.add("friend-avatar");
+
+  const nameDiv = document.createElement("div");
+  nameDiv.classList.add("friend-name");
+  nameDiv.textContent = selectedUser;
+
+  const viewBtn = document.createElement("button");
+  viewBtn.classList.add("friend-view-btn");
+  viewBtn.textContent = "View";
+  viewBtn.onclick = () => alert(`Viewing friend: ${selectedUser}`);
+
+  friendDiv.appendChild(avatar);
+  friendDiv.appendChild(nameDiv);
+  friendDiv.appendChild(viewBtn);
+
+  list.appendChild(friendDiv);
+
+  // Remove from dropdown so it can't be added again
   const optionToRemove = Array.from(dropdown.options).find(opt => opt.value === selectedUser);
   if (optionToRemove) optionToRemove.remove();
 
@@ -143,6 +208,7 @@ async function addFriend(selectedUser) {
     console.error("Error saving friend:", err);
   }
 }
+
 
 
 async function fillDashActivity(username) {

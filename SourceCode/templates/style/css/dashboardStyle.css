@@ -358,6 +358,41 @@ body.dashboard-page .friend-view-btn:hover {
   background: #1b1f5f;
   transform: translateY(-2px);
 }
+/* Add Friend button style */
+body.dashboard-page #friendBtn {
+  padding: 8px 16px;
+  background: #070b3f;
+  color: #ffffff;
+  font-weight: bold;
+  border: 2px solid #6b1414;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  margin-top: 10px;
+}
+
+body.dashboard-page #friendBtn:hover {
+  background: #1b1f5f;
+  transform: translateY(-2px);
+}
+
+/* Dropdown style */
+body.dashboard-page #friendDropdown {
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 2px solid #6b1414;
+  background: #070b3f;
+  color: #ffffff;
+  font-weight: bold;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+body.dashboard-page #friendDropdown option {
+  background: #1b1f5f;
+  color: #ffffff;
+}
 
 
 

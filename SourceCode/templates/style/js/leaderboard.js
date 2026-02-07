@@ -75,10 +75,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return payload.leaderboard || [];
   }
 
-  // async function getSpecificSportData(sport){
-  //   pass;
-  // }
-  
   function sortTableBySport(sport){
     const headersBySport = {
     all: ["Rank", "Name", "Score", "Total Duration (minutes)", "Total Activities"],
@@ -96,6 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
     basketball: ["Rank", "Name", "Total Points", "Total Rebounds", "Total Duration (minutes)", "Total Activities"],
     equestrian: ["Rank", "Name", "Total Distance (miles)", "Total Duration (minutes)", "Total Activities"],
   };
+ 
 
   console.log("Setting headers for sport:", sport);
 
@@ -321,10 +318,14 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       sortTableBySport(sortSport.value || "all");
 <<<<<<< HEAD
+<<<<<<< HEAD
       data = await getLeaderboardData(sortSport.value || "all");
 =======
       data = await getLeaderboardData();
 >>>>>>> a7e5fcf (table headers on leaderboard change based on sport picked)
+=======
+      data = await getLeaderboardData(sortSport.value || "all");
+>>>>>>> faf13a3 (Leaderboard can filter by time, stil struggling with specific stats)
       sortAndRender();
     } catch (err) {
       console.error("Failed to load leaderboard:", err);

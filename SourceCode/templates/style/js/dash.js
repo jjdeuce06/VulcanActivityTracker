@@ -24,34 +24,82 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 
-// single GET to populate dropdown
 async function fillDashFriends(currentUser) {
   try {
-    const response = await fetch("/dash_api/sendFriendsList");
+    const response = await fetch("/dash_api/sendFriendsList", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ currentUser })
+    });
+
     if (!response.ok) throw new Error(`HTTP error ${response.status}`);
 
-    const users = await response.json(); // array of usernames
+    const data = await response.json(); 
+    const existingFriends = data.existing_friends || [];
+    const allUsers = data.all_users || [];
+
     const dropdown = document.getElementById("friendDropdown");
     dropdown.innerHTML = `<option value="">Select a user</option>`; // reset
 
-    // filter out current user
-    const filteredUsers = users.filter(u => u !== currentUser);
+    // filter out current user and already added friends
+    const addableUsers = allUsers.filter(u => u !== currentUser && !existingFriends.includes(u));
 
-    filteredUsers.forEach(user => {
+    addableUsers.forEach(user => {
       const opt = document.createElement("option");
       opt.value = user;
       opt.textContent = user;
       dropdown.appendChild(opt);
     });
 
-    // show button only if users exist
+    // Show button even if some users were added; hide only if nothing to add
     const fBtn = document.getElementById("friendBtn");
-    fBtn.style.display = filteredUsers.length ? "inline-block" : "none";
+    fBtn.style.display = addableUsers.length || existingFriends.length ? "inline-block" : "none";
+
+    // populate friends card with existing friends
+    const friendsList = document.getElementById("friends-list");
+    friendsList.innerHTML = "";
+    if (existingFriends.length === 0) {
+      friendsList.textContent = "No Friends yet.";
+    } else {
+      existingFriends.forEach(f => {
+        const div = document.createElement("div");
+        div.textContent = f;
+        friendsList.appendChild(div);
+      });
+    }
+
+    // Add click event to dropdown to add a friend
+    fBtn.onclick = () => {
+      if (!dropdown.value) return;
+      const selectedUser = dropdown.value;
+
+      // Add to friends list
+      const div = document.createElement("div");
+      div.textContent = selectedUser;
+      friendsList.appendChild(div);
+
+      // Remove from dropdown so it can't be added again
+      const optionToRemove = Array.from(dropdown.options).find(opt => opt.value === selectedUser);
+      if (optionToRemove) optionToRemove.remove();
+
+      // Reset dropdown selection
+      dropdown.value = "";
+
+      // Optional: POST to backend to save immediately
+      fetch("/dash_api/addFriend", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentUser, friendUser: selectedUser })
+      }).then(res => res.json()).then(res => {
+        console.log("Friend added:", res);
+      }).catch(err => console.error("Failed to add friend:", err));
+    };
 
   } catch (err) {
-    console.error("Failed to load users:", err);
+    console.error("Failed to load friends:", err);
   }
 }
+
 
 async function addFriend(selectedUser) {
   if (!selectedUser) return;

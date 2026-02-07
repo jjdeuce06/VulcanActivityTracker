@@ -21,3 +21,18 @@ def insert_friend(conn, current_user: str, friend_user: str) -> None:
         INSERT INTO [friend] (UserID, friend_id, created_at)
         VALUES (?, ?, ?)
     """, (current_user, friend_user, datetime.now()))
+
+def get_users_friends(conn, user_id: str) -> list:
+    """
+    Returns a list of friend usernames for the given user_id.
+    """
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT friend_id 
+        FROM [friend]
+        WHERE UserID = ?
+    """, (user_id,))
+    
+    friends = [row[0] for row in cursor.fetchall()]  
+    return friends
+

@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // when a user is selected from the dropdown, call addFriend()
   dropdown.addEventListener("change", (e) => {
     const selectedUser = e.target.value;
-    addFriend(selectedUser); // <--- use the function
+    addFriend(selectedUser);
   });
 });
 
@@ -61,11 +61,6 @@ async function fillDashFriends(currentUser) {
     if (existingFriends.length === 0) {
       friendsList.textContent = "No Friends yet.";
     } else {
-      // existingFriends.forEach(f => {
-      //   const div = document.createElement("div");
-      //   div.textContent = f;
-      //   friendsList.appendChild(div);
-      // });
       existingFriends.forEach(f => {
         const friendDiv = document.createElement("div");
         friendDiv.classList.add("friend-item");
@@ -95,11 +90,6 @@ async function fillDashFriends(currentUser) {
     fBtn.onclick = () => {
       if (!dropdown.value) return;
       const selectedUser = dropdown.value;
-
-      // Add to friends list
-      // const div = document.createElement("div");
-      // div.textContent = selectedUser;
-      // friendsList.appendChild(div);
       const friendDiv = document.createElement("div");
       friendDiv.classList.add("friend-item");
 

@@ -317,15 +317,12 @@ document.addEventListener("DOMContentLoaded", () => {
   (async function init() {
     try {
       sortTableBySport(sortSport.value || "all");
-<<<<<<< HEAD
-<<<<<<< HEAD
+
       data = await getLeaderboardData(sortSport.value || "all");
-=======
+
       data = await getLeaderboardData();
->>>>>>> a7e5fcf (table headers on leaderboard change based on sport picked)
-=======
+
       data = await getLeaderboardData(sortSport.value || "all");
->>>>>>> faf13a3 (Leaderboard can filter by time, stil struggling with specific stats)
       sortAndRender();
     } catch (err) {
       console.error("Failed to load leaderboard:", err);

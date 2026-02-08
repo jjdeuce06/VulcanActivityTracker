@@ -5,11 +5,7 @@ from server.api.login_api import login_api
 from server.api.activity_api import activity_api
 from server.api.dash_api import dash_api
 from server.api.club_api import club_api
-
 from server.database.connect import get_db_connection
-
-
-# Import schema initializer
 from server.database import init_or_upgrade_schema
 
 app = Flask(__name__)

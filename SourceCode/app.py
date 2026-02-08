@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request, Blueprint
 from server.blueprints.blue import blue, style_folder
 from server.api.login_api import login_api
 from server.api.activity_api import activity_api
+from server.api.dash_api import dash_api
 
 from server.database.connect import get_db_connection
 
@@ -17,6 +18,7 @@ app.register_blueprint(blue)
 app.register_blueprint(style_folder)
 app.register_blueprint(login_api, url_prefix="/login_api")
 app.register_blueprint(activity_api, url_prefix="/activity_api")
+app.register_blueprint(dash_api, url_prefix="/dash_api")
 
 
 # Initialize / upgrade schema on app start

@@ -7,6 +7,7 @@
   <link rel="icon" type="image" href="../style/img/vulcan.png">
   <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/dashboardStyle.css') }}">
   <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/activity.css') }}">
+  {% block page_css %}{% endblock %} /* For page-specific CSS */
 </head>
 
 <body class="dashboard-page">

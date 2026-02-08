@@ -1,5 +1,68 @@
 {% extends "base_temp/dashboard.html" %}
 
+{% block page_css %}
+<link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/clubs.css') }}">
+{% endblock %}
+
 {% block content %}
-<h1> Clubs page </h1>
+
+<div class="clubs-page">
+
+  <h1>Clubs</h1>
+  <p class="page-description">
+    Join clubs, track group activity, and stay motivated together.
+  </p>
+
+  <!--
+  <div class="create-club">
+    <h2>Create Club</h2>
+
+   <input type="text" id="club-name" placeholder="Club Name" required>
+    <textarea id="club-description" placeholder="Description"></textarea>
+
+    <button id="create-club-btn">Create Club</button>
+  </div>
+
+  /*
+  <div class="clubs-actions">
+    <button class="cta-button" id="create-club-btn">
+      Create Club
+    </button>
+  </div>
+*/
+-->
+
+  <div class="clubs-layout">
+
+    <form id="clubs-form" class="clubs-form">
+
+          <label>Club Name</label>
+          <input type="text" name="club_name" id="club-name" required>
+
+          <label>Club Description</label>
+          <textarea name="description" id="club-description"></textarea>
+
+          <button type="submit">Create Club</button>
+    </form>
+    
+    <div class="card clubs-card">
+      <h3>My Clubs</h3>
+      <div class="clubs-list" id="my-clubs-list">
+        <!-- club cards will be injected here -->
+      </div>
+    </div>
+
+   
+    <div class="card clubs-card">
+        <h3>Find a Club</h3>
+        <div class="clubs-list" id="all-clubs-list">
+            <!-- club cards will be injected here -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="{{ url_for('style_folder.static', filename='js/clubs.js') }}"></script>
+
 {% endblock %}

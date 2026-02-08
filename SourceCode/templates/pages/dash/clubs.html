@@ -14,16 +14,37 @@
     Join clubs, track group activity, and stay motivated together.
   </p>
 
-  
+  <!--
+  <div class="create-club">
+    <h2>Create Club</h2>
+
+   <input type="text" id="club-name" placeholder="Club Name" required>
+    <textarea id="club-description" placeholder="Description"></textarea>
+
+    <button id="create-club-btn">Create Club</button>
+  </div>
+
+  /*
   <div class="clubs-actions">
     <button class="cta-button" id="create-club-btn">
       Create Club
     </button>
   </div>
+*/
+-->
 
-  
   <div class="clubs-layout">
 
+    <form id="clubs-form" class="clubs-form">
+
+          <label>Club Name</label>
+          <input type="text" name="club_name" id="club-name" required>
+
+          <label>Club Description</label>
+          <textarea name="description" id="club-description"></textarea>
+
+          <button type="submit">Create Club</button>
+    </form>
     
     <div class="card clubs-card">
       <h3>My Clubs</h3>

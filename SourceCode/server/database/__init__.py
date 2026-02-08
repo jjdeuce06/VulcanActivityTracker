@@ -13,3 +13,7 @@ def init_or_upgrade_schema(conn):
     from server.database.schema.friendSchema import create_friends_table
     create_friends_table(conn)
     print("activity table schema initialized or updated.")
+    
+    from server.database.schema.clubSchema import create_clubs_table
+    create_clubs_table(conn)
+    print("clubs table schema initialized or updated.")

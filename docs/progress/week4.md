@@ -1,4 +1,4 @@
-<h1 align="center" style="color:#000000;">📆 Weekly Progress – Week 2</h1>
+<h1 align="center" style="color:#000000;">📆 Weekly Progress – Week 4</h1>
 
 <!-- ===================== GOALS ===================== -->
 <div style="
@@ -29,12 +29,12 @@
   box-shadow:0 6px 16px rgba(0,0,0,0.3);
 ">
 <h2>✅ Work Completed</h2>
-<!-- <ul>
+<ul>
   <li>Goal 1 - completed</li>
   <li>Goal 2 - completed</li>
   <li>Goal 3 - completed</li>
   <li>Goal 4 - completed</li>
-</ul> -->
+</ul>
 </div>
 
 <!-- ===================== ISSUES / BLOCKERS ===================== -->
@@ -47,12 +47,10 @@
   box-shadow:0 6px 16px rgba(0,0,0,0.3);
 ">
 <h2>⚠️ Challenges / Issues</h2>
-<!-- <ul>
-    <li>Activity API architechture/ database complexity</li>
-    <li>Username per session storage</li>
-    <li>DOM and API render timing</li>
-    <li>Laptop vs PC formatting</li>
-</ul> -->
+<ul>
+    <li>Club owner able to join their own club</li>
+    <li>Trouble filtering sport specific data</li>
+</ul>
 </div>
 
 <!-- ===================== NEXT WEEK ===================== -->
@@ -65,13 +63,12 @@
   box-shadow:0 6px 16px rgba(0,0,0,0.3);
 ">
 <h2>🔜 Next Week / Team Plan</h2>
-<!-- <ul>
-  <li>Development of Key features</li>
-  <li>Leaderboard page development</li>
-  <li>Club Page Development</li>
-  <li>Display Activities on Dashboard</li>
-  <li>Data filtering and Validation</li>
-</ul> -->
+<ul>
+  <li>Further Development of Clubs Page</li>
+  <li>Further Development of Leaderboards Page</li>
+  <li>Intial Development of Challenges</li>
+  <li>Intial Development of Friends Feature</li>
+</ul> 
 </div>
 
 <!-- ===================== LINKS ===================== -->

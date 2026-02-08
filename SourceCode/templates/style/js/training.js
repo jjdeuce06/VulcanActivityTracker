@@ -340,6 +340,8 @@ function populateActivityTable(data){
     `;
 
     activityTable.appendChild(row);
+    
+    
   });
 
 }

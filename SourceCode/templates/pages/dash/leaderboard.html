@@ -41,15 +41,15 @@ td, th {
 
 /* Table body rows */
 tr {
-  background-color: #000000;   /* black rows */
+  background-color: #6b1414;   /* black rows */
 }
 
 tr:nth-child(even) {
-  background-color: #555555;   /* gray alternating rows */
+  background-color: #070b3f;   /* gray alternating rows */
 }
 
 tr:hover {
-  background-color: #444444;   /* hover effect */
+  background-color: #808080;   /* hover effect */
 }
 
 th {
@@ -72,19 +72,32 @@ h1 {
   <select id="sortBy">
     <option value="score" selected>Score</option>
     <option value="name">Name</option>
+    <option value="totalMinutes">Duration</option>"
+    <option value="totalActivities">Activities</option>
+  </select>
+  <label for="filterSport">Filter by Sport:</label>
+  <select id="filterSport">
+    <option value="all" selected>All Sports</option>
+    <option value="running">Running</option>
+    <option value="lifting">Lifting</option>
+    <option value="cycling">Cycling</option>
+    <option value="swimming">Swimming</option>
+    <option value="yoga">Yoga</option>
+    <option value="walking">Walking</option>
+    <option value="soccer">Soccer</option>
+    <option value="basketball">Basketball</option>
+    <option value="tennis">Tennis</option>
+    <option value="volleyball">Volleyball</option>
+    <option value="equestrian">Equestrian</option>
+    <option value="football">Football</option>
+    <option value="baseball">Baseball</option>
   </select>
 
   <button id="sortDir" type="button" data-dir="desc">Desc</button>
 </div>
 
 <table id="leaderboard">
-  <thead>
-    <tr>
-      <th>Rank</th>
-      <th>Name</th>
-      <th>Score</th>
-    </tr>
-  </thead>
+  <thead></thead>
   <tbody></tbody>
 </table>
 

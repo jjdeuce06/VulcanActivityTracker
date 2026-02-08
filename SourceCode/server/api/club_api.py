@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from server.database.connect import get_db_connection
 from server.controllers.user_store import get_user_id
-from server.controllers.club_store import insert_club, get_all_clubs, get_user_clubs, add_member_to_club, remove_member_from_club
+from server.controllers.club_store import insert_club, get_all_clubs,get_not_user_clubs, get_user_clubs, add_member_to_club, remove_member_from_club
 
 club_api = Blueprint('club_api', __name__)
 
@@ -33,16 +33,25 @@ def create_club():
         return jsonify({"error": str(e)}), 500
 
 
-@club_api.route('/listclubs', methods=['GET']) #lists every club in the database
+@club_api.route('/listclubs', methods=['POST']) #lists every club in the database user is not a member or creator of and calls the get not user clubs function
 def list_clubs():
     try:
+        data = request.get_json() or {}
+        username = data.get("username")
+        if not username:
+            return jsonify({"error": "Missing username"}), 400
+
         conn = get_db_connection()
         try:
-            clubs = get_all_clubs(conn)
+            user_id = get_user_id(conn, username)
+            if not user_id:
+                return jsonify({"error": "User not found"}), 404
+
+            clubs = get_not_user_clubs(conn, user_id)
         finally:
             conn.close()
     except Exception as e:
-        print("Error listing clubs:", e)
+        print("Error fetching user clubs:", e)
         return jsonify({"error": str(e)}), 500
 
     return jsonify({"status": "success", "clubs": clubs}), 200

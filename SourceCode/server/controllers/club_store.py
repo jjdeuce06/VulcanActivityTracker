@@ -50,6 +50,16 @@ def get_all_clubs(conn):    #gets all clubs from the database
     finally:
         cursor.close()
 
+def get_not_user_clubs(conn, user_id): #gets clubs in which the current user is not a member or creator from database
+    try:
+        all_clubs = get_all_clubs(conn)
+        uid = str(user_id)
+        not_user_clubs = [c for c in all_clubs if c["creator_user_id"] != uid and uid not in c.get("members", [])]
+        return not_user_clubs
+    except Exception as e:
+        print("Get not user clubs error:", e)
+        raise
+
 def get_user_clubs(conn, user_id): #gets club in which the current user is a member or creator from database... For now creator isnt in member list
     try:
         all_clubs = get_all_clubs(conn)

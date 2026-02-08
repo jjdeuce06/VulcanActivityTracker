@@ -6,38 +6,48 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function loadClubs() {
-    try {
-      // Fetch all clubs
-      const allResp = await fetch("/club_api/listclubs");
-      if (allResp.ok) {
-        const data = await allResp.json();
-        renderClubs("all-clubs-list", data.clubs || [], false);
-      } else {
-        console.error("Failed to load all clubs", allResp.status);
-      }
+  try {
+    const username = localStorage.getItem("currentUser");
 
-      //fsetchs the user's clubs
-      const username = localStorage.getItem("currentUser") || null;
-      if (username) {
-        const myResp = await fetch("/club_api/myclubs", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username })
-        });
-        if (myResp.ok) {
-          const data = await myResp.json();
-          renderClubs("my-clubs-list", data.clubs || [], true);
-        } else {
-          console.error("Failed to load my clubs", myResp.status);
-        }
-      } else {
-        //users list is empty if theyre not loggged in
-        renderClubs("my-clubs-list", [], true);
-      }
-    } catch (err) {
-      console.error("Error loading clubs:", err);
+    if (!username) {
+      console.warn("No logged-in user");
+      renderClubs("all-clubs-list", [], false);
+      renderClubs("my-clubs-list", [], true);
+      return;
     }
+
+    // Fetch clubs user is NOT part of
+    const allResp = await fetch("/club_api/listclubs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username })
+    });
+
+    if (allResp.ok) {
+      const data = await allResp.json();
+      renderClubs("all-clubs-list", data.clubs || [], false);
+    } else {
+      console.error("Failed to load clubs", allResp.status);
+    }
+
+    // Fetch user's clubs
+    const myResp = await fetch("/club_api/myclubs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username })
+    });
+
+    if (myResp.ok) {
+      const data = await myResp.json();
+      renderClubs("my-clubs-list", data.clubs || [], true);
+    } else {
+      console.error("Failed to load my clubs", myResp.status);
+    }
+
+  } catch (err) {
+    console.error("Error loading clubs:", err);
   }
+}
 
   window.loadClubs = loadClubs;//
 

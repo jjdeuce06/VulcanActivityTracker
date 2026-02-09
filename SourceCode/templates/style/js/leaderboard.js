@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     basketball: ["Rank", "Name", "Total Points", "Total Rebounds", "Total Duration (minutes)", "Total Activities"],
     equestrian: ["Rank", "Name", "Total Distance (miles)", "Total Duration (minutes)", "Total Activities"],
   };
- 
+
 
   console.log("Setting headers for sport:", sport);
 
@@ -115,21 +115,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
     rows.forEach((row, idx) => {
       const activities = parseActivities(row);
-      console.log("Parsed activities for", row.name, activities);
       const filtered = filterBySport(activities, sport);
+      console.log("Sport filter in render:", filtered);
 
-      const score = computeScore(filtered, sport);
+      console.log("Filtered activities (render) for sport:", sport, filtered);
+
+
+      const score = computeScore(row, sport);
       const minutes = totalDuration(filtered);
       const count = filtered.length;
       const bodytr = document.createElement("tr");
 
-      bodytr.innerHTML = `
+      if (sport === "soccer") {
+        console.log("Soccer stats: ", score);
+        bodytr.innerHTML = `
+        <td>${idx + 1}</td>
+        <td>${row.name ?? ""}</td>
+        <td>${score.goals ?? 0}</td>
+        <td>${score.assists ?? 0}</td>
+        <td>${minutes ?? 0}</td>
+        <td>${count ?? 0}</td>
+        `;
+      }
+
+      else{
+        bodytr.innerHTML = `
         <td>${idx + 1}</td>
         <td>${row.name ?? ""}</td>
         <td>${score ?? 0}</td>
         <td>${minutes ?? 0}</td>
         <td>${count ?? 0}</td>
         `;
+      }
       tbody.appendChild(bodytr);
       // if (sortSport.value == "running")
       // {
@@ -206,46 +223,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Map DB values -> dropdown values
     const aliases = {
-      run: "running",
-      bike: "cycling",
-      cycle: "cycling",
+      running: "run",
+      cycling: "cycling",
       swim: "swimming",
-      lift: "lifting",
+      lifting: "lift",
+      yoga: "yoga",
+      walking: "walk",
+      soccer: "soccer",
+      baseball: "baseball",
+      football: "football"
     };
 
     return aliases[v] || v;
   }
 
   function parseActivities(row) {
-    if (!row.activities) return [];
-    try {
-      const arr = JSON.parse(row.activities);
+      if (!row.activities) return [];
+      try {
+        const arr = JSON.parse(row.activities);
 
-      // Ensure each activity has parsed details + normalized type
-      return arr.map(act => {
-        let details = act.details;
+        return arr.map(a => {
+          let details = a.details ?? a.Details ?? {};
+          if (typeof details === "string") {
+            try { details = JSON.parse(details); } catch { details = {}; }
+          }
 
-        // If details is a JSON string (common with FOR JSON PATH), parse it
-        if (typeof details === "string") {
-          try { details = JSON.parse(details); } catch { details = {}; }
-        }
-
-        return {
-          ...act,
-          activityType: normalizeSport(act.activityType || act.ActivityType || act.activity_type),
-          details: details || {}
-        };
-      });
-    } catch (e) {
-      console.error("Failed to parse activities for:", row.name, e);
-      return [];
-    }
+          return {
+            activityType: normalizeSport(a.activityType ?? a.ActivityType ?? a.activity_type),
+            duration: Number(a.duration ?? a.Duration ?? 0) || 0,
+            details
+          };
+        });
+      } catch (e) {
+        console.error("Failed to parse activities for:", row.name, e);
+        return [];
+      }
   }
 
   function filterBySport(activities, sport) {
-    const s = normalizeSport(sport);
-    if (s === "all") return activities;
-    return activities.filter(act => act.activityType === s);
+    const target = normalizeSport(sport);
+    console.log("Filtering activities for sport:", sport, "normalized:", target);
+    if (target === "all") return activities;
+    return activities.filter(a => a.activityType === target);
   }
 
   //activity computation of totals
@@ -261,10 +280,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function totalDistance(activities) {
-    return activities.reduce(
-      (sum, a) => sum + (a.details?.distance || 0),
-      0
-    );
+    return activities.reduce((sum, a) => sum + (Number(a.details?.distance) || 0), 0);
   }
 
   function totalSteps(activities) {
@@ -279,26 +295,37 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function soccerStats(activities) {
-    return activities.reduce(
+    const goals = activities.reduce(
       (acc, a) => {
         acc.goals += a.details?.goals || 0;
+        return acc;
+      },
+      {goals: 0, assists: 0}
+    );
+
+    const assists = activities.reduce( 
+      (acc, a) => {
         acc.assists += a.details?.assists || 0;
         return acc;
       },
       {goals: 0, assists: 0}
     );
+    return {goals: goals.goals, assists: assists.assists};
   }
 
   function computeScore(row, sport) {
     const activities = parseActivities(row);
     const filtered = filterBySport(activities, sport);
+    console.log("Sport filter in computeScore:", sport);
+    console.log("Filtered activities for sport:", sport, filtered);
 
     switch (sport) {
       case "running":
-      case "cycling":
-      case "swimming":
+      case "bike":
+      case "swim":
       case "equestrian":
-        console.log("Computing distance score for", row.name, filtered);
+        console.log("sport dropdown:", sport);
+        console.log("activityType values:", activities);
         console.log("Distance", totalDistance(filtered));
         return totalDistance(filtered);
       case "walking":
@@ -306,7 +333,7 @@ document.addEventListener("DOMContentLoaded", () => {
       case "lifting":
         return totalSets(filtered);
       case "soccer":
-        return soccerStats(filtered).goals;
+        return soccerStats(filtered);
 
       default:
         return totalDuration(filtered);

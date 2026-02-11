@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     football: ["Rank", "Name", "Total Touchdowns", "Total Duration (minutes)", "Total Activities"],
     tennis: ["Rank", "Name", "Total Score", "Total Duration (minutes)", "Total Activities"],
     volleyball: ["Rank", "Name", "Total Kills", "Total Duration (minutes)", "Total Activities"],
-    basketball: ["Rank", "Name", "Total Points", "Total Rebounds", "Total Duration (minutes)", "Total Activities"],
+    basketball: ["Rank", "Name", "Total Points", "Total Rebounds", "Total Assists", "Total Duration (minutes)", "Total Activities"],
     equestrian: ["Rank", "Name", "Total Distance (miles)", "Total Duration (minutes)", "Total Activities"],
   };
 
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
     football: ["Rank", "Name", "Total Touchdowns", "Total Duration (minutes)", "Total Activities"],
     tennis: ["Rank", "Name", "Total Score", "Total Duration (minutes)", "Total Activities"],
     volleyball: ["Rank", "Name", "Total Kills", "Total Duration (minutes)", "Total Activities"],
-    basketball: ["Rank", "Name", "Total Points", "Total Rebounds", "Total Duration (minutes)", "Total Activities"],
+    basketball: ["Rank", "Name", "Total Points", "Total Rebounds", "Total Assists", "Total Duration (minutes)", "Total Activities"],
     equestrian: ["Rank", "Name", "Total Distance (miles)", "Total Duration (minutes)", "Total Activities"],
   };
  
@@ -133,6 +133,76 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>${row.name ?? ""}</td>
         <td>${score.goals ?? 0}</td>
         <td>${score.assists ?? 0}</td>
+        <td>${minutes ?? 0}</td>
+        <td>${count ?? 0}</td>
+        `;
+      }
+
+      else if (sport === "baseball") 
+        {
+        console.log("Baseball stats: ", score);
+        bodytr.innerHTML = `
+        <td>${idx + 1}</td>
+        <td>${row.name ?? ""}</td>
+        <td>${score.hits ?? 0}</td>
+        <td>${score.runs ?? 0}</td>
+        <td>${minutes ?? 0}</td>
+        <td>${count ?? 0}</td>
+        `;
+      }
+
+      else if (sport === "basketball") {
+        console.log("Basketball stats: ", score);
+        bodytr.innerHTML = `
+        <td>${idx + 1}</td>
+        <td>${row.name ?? ""}</td>
+        <td>${score.points ?? 0}</td>
+        <td>${score.rebounds ?? 0}</td>
+        <td>${score.assists ?? 0}</td>
+        <td>${minutes ?? 0}</td>
+        <td>${count ?? 0}</td>
+        `;
+      }
+
+      else if (sport === "yoga") 
+      {        
+        bodytr.innerHTML = `
+        <td>${idx + 1}</td>
+        <td>${row.name ?? ""}</td>
+        <td>${score.intensity ?? 0}</td>
+        <td>${minutes ?? 0}</td>
+        <td>${count ?? 0}</td>
+        `;
+      }
+
+      else if (sport === "football") 
+      {
+        bodytr.innerHTML = `
+        <td>${idx + 1}</td>
+        <td>${row.name ?? ""}</td>
+        <td>${score.touchdowns ?? 0}</td>
+        <td>${minutes ?? 0}</td>
+        <td>${count ?? 0}</td>
+        `;
+      }
+
+      else if (sport === "volleyball")
+      {
+        bodytr.innerHTML = `
+        <td>${idx + 1}</td>
+        <td>${row.name ?? ""}</td>
+        <td>${score.kills ?? 0}</td>
+        <td>${minutes ?? 0}</td>
+        <td>${count ?? 0}</td>
+        `;
+      }
+
+      else if (sport === "walking")
+      {
+        bodytr.innerHTML = `
+        <td>${idx + 1}</td>
+        <td>${row.name ?? ""}</td>  
+        <td>${score.steps ?? 0}</td>
         <td>${minutes ?? 0}</td>
         <td>${count ?? 0}</td>
         `;
@@ -224,7 +294,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Map DB values -> dropdown values
     const aliases = {
       running: "run",
-      cycling: "cycling",
+      cycling: "bike",
       swim: "swimming",
       lifting: "lift",
       yoga: "yoga",
@@ -294,6 +364,14 @@ document.addEventListener("DOMContentLoaded", () => {
     return activities.reduce((sum, a) => sum + (a.details?.sets || 0), 0);
   }
 
+  function yogaStats(activities) {
+    const intensity = activities.reduce((acc, a) => {
+      acc.intensity += a.details?.intensity || 0;
+      return acc;
+    }, {intensity: 0});
+    return {intensity: intensity.intensity};
+}
+
   function soccerStats(activities) {
     const goals = activities.reduce(
       (acc, a) => {
@@ -313,6 +391,86 @@ document.addEventListener("DOMContentLoaded", () => {
     return {goals: goals.goals, assists: assists.assists};
   }
 
+  function baseballStats(activities) {
+    const hits = activities.reduce(
+      (acc, a) => {
+        acc.hits += a.details?.hits || 0;
+        return acc;
+      },
+      {hits: 0, runs: 0}
+    );
+
+    const runs = activities.reduce(
+      (acc, a) => {
+        acc.runs += a.details?.runs || 0;
+        return acc;
+      },
+      {hits: 0, runs: 0}
+    );
+    return {hits: hits.hits, runs: runs.runs};
+  }
+
+  function footballStats(activities) {
+    const touchdowns = activities.reduce(
+      (acc, a) => {
+        acc.touchdowns += a.details?.touchdowns || 0;
+        return acc;
+      },
+      {touchdowns: 0}
+    );
+    return {touchdowns: touchdowns.touchdowns};
+  }
+
+  function tennisStats(activities) {
+  }
+
+  function volleyballStats(activities) {
+    const kills = activities.reduce(
+      (acc, a)=> {
+        acc.kills += a.details?.kills || 0;
+        return acc;
+      },
+      {kills: 0}
+    );
+    return {kills: kills.kills};
+  }
+
+  function basketballStats(activities) {
+    const points = activities.reduce(
+      (acc, a) => {
+        acc.points += a.details?.points || 0;
+        return acc;
+      }, {points: 0, rebounds: 0, assists: 0}
+    );
+
+    const rebounds = activities.reduce(
+      (acc, a) => {
+        acc.rebounds += a.details?.rebounds || 0;
+        return acc;
+      }, {points: 0, rebounds: 0, assists: 0}
+    );
+
+    const assists = activities.reduce(
+      (acc, a) => {
+        acc.assists += a.details?.assists || 0;
+        return acc;
+      }, {points: 0, rebounds: 0, assists: 0}
+    );
+
+    return {points: points.points, rebounds: rebounds.rebounds, assists: assists.assists};
+  }
+
+  function walkingStats(activities) {
+    const steps = activities.reduce(
+      (acc, a) => {
+        acc.steps += a.details?.steps || 0;
+        return acc;
+      },
+      {steps: 0}
+    );
+    return {steps: steps.steps};
+  }
+
   function computeScore(row, sport) {
     const activities = parseActivities(row);
     const filtered = filterBySport(activities, sport);
@@ -321,8 +479,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     switch (sport) {
       case "running":
-      case "bike":
-      case "swim":
+      case "cycling":
+      case "swimming":
       case "equestrian":
         console.log("sport dropdown:", sport);
         console.log("activityType values:", activities);
@@ -330,10 +488,23 @@ document.addEventListener("DOMContentLoaded", () => {
         return totalDistance(filtered);
       case "walking":
         return totalSteps(filtered);
+      case "yoga":
+        return yogaStats(filtered);
       case "lifting":
         return totalSets(filtered);
       case "soccer":
         return soccerStats(filtered);
+      case "baseball":
+        return baseballStats(filtered);
+      case "football":
+        return footballStats(filtered);
+      case "tennis":
+        //return tennisStats(filtered);
+        return totalDuration(filtered);
+      case "volleyball":
+        return volleyballStats(filtered);
+      case "basketball":
+        return basketballStats(filtered);
 
       default:
         return totalDuration(filtered);

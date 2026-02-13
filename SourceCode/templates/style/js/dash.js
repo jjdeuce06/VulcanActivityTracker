@@ -210,7 +210,6 @@ async function addFriend(selectedUser) {
 }
 
 
-
 async function fillDashActivity(username) {
   try {
     const response = await fetch("/activity_api/fillDashAct", {
@@ -305,6 +304,7 @@ async function openFriendModal(friendData) {
         }
     };
     await fillFriendActivity(friendData);
+    await fillFriendsClub(friendData);
 
 }
 async function fillFriendActivity(friendUsername) {
@@ -343,8 +343,8 @@ function populateFriendActivities(activities) {
   }
 
    // Fill the activity count using the array length
-  const FactivityCountDiv = document.querySelector("Factivity-count");
-  FactivityCountDiv.textContent = data?.length ?? 0;
+  const FactivityCountDiv = document.querySelector("#Factivity-count");
+  FactivityCountDiv.textContent = activities?.length ?? 0;
 
   activities.forEach(act => {
     let extra = "";
@@ -376,4 +376,30 @@ function populateFriendActivities(activities) {
     `;
     feedContainer.appendChild(card);
   });
+}
+
+
+async function fillFriendsClub(friendUsername){
+  try {
+    const response = await fetch("/club_api/myclubs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: friendUsername })
+    });
+
+    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+
+    const data = await response.json();
+    const clubs = Array.isArray(data.clubs) ? data.clubs : [];
+
+    console.log("friends clubs:", clubs);
+
+    populateFriendClubs(clubs);
+
+    return clubs;
+
+  } catch (err) {
+    console.error("Failed to load friend clubs:", err);
+  }
+
 }

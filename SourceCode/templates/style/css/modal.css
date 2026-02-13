@@ -16,17 +16,37 @@
 }
 
 body.dashboard-page .modal-content {
-  background: #ffffff; /* visible modal */
-  width: 70%;
-  max-width: 900px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 20px;
+  width: 80%;
+  max-width: 1000px;
   margin: 5% auto;
   padding: 20px;
-  display: flex;           /* row layout */
-  flex-direction: row;     /* side by side */
-  align-items: flex-start; /* top align */
-  gap: 20px;               /* spacing between friend card and activities */
+  background: #111;
   border-radius: 12px;
 }
+
+.friend-view-card {
+  flex: 0 0 30%; /* fixed-ish width */
+}
+
+.friend-activities {
+  flex: 0 0 40%; /* middle column */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.friend-clubs {
+  flex: 0 0 25%; /* right column */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
 
 body.dashboard-page .profile-card.friend-view-card {
   box-shadow: 0 10px 25px rgba(0,0,0,0.5); /* make it pop */
@@ -34,15 +54,4 @@ body.dashboard-page .profile-card.friend-view-card {
 
 body.dashboard-page .feed-card {
   margin-top: 15px; /* spacing between activities */
-}
-
-.friend-view-card {
-  width: 35%;  /* left side */
-}
-
-.friend-activities {
-  width: 65%;  /* right side, stack activities vertically */
-  display: flex;
-  flex-direction: column;
-  gap: 15px;   /* spacing between activity cards */
 }

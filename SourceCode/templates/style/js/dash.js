@@ -76,7 +76,9 @@ async function fillDashFriends(currentUser) {
         viewBtn.classList.add("friend-view-btn");
         viewBtn.textContent = "View";
         viewBtn.onclick = () => {
-          openFriendModal();
+          const friendname = f;
+          console.log("Viewing f:", friendname);
+          openFriendModal(friendname);
         };
 
         friendDiv.appendChild(avatar);
@@ -106,7 +108,8 @@ async function fillDashFriends(currentUser) {
       viewBtn.classList.add("friend-view-btn");
       viewBtn.textContent = "View";
        viewBtn.onclick = () => {
-          openFriendModal();
+          console.log("Viewing User:", selectedUser);
+          openFriendModal(selectedUser);
         };
 
       friendDiv.appendChild(avatar);
@@ -279,26 +282,22 @@ function populateDashActivity(data) {
     </div>
     ${common.notes ? `<div class="feed-notes">Notes: ${common.notes}</div>` : ""}
     `;
-
-
     feedContainer.appendChild(card);
   });
 }
 
 
-
-
 function openFriendModal(friendData) {
     const modal = document.getElementById("friendModal");
     const closeBtn = modal.querySelector(".close");
+    const nameDiv = modal.querySelector("#friend-name");
 
     modal.style.display = "block";
 
     closeBtn.onclick = () => modal.style.display = "none";
 
 
-    modal.querySelector(".name").textContent = friendData.name;
-    //modal.querySelector(".avatar").src = friendData.avatarUrl;
+    nameDiv.textContent = friendData;
 
     modal.onclick = (event) => {
         if (event.target === modal) {

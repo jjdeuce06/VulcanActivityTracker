@@ -68,7 +68,13 @@ h1 {
 <h1>Leaderboard</h1>
 
 <div class="lb-controls">
-  <label for="filterSport">Filter by Sport:</label>
+  <select id="sortBy">
+    <option value="score" selected>Score</option>
+    <option value="name">Name</option>
+    <option value="totalMinutes">Duration</option>
+    <option value="totalActivities">Activities</option>
+  </select>
+
   <select id="filterSport">
     <option value="all" selected>All Sports</option>
     <option value="running">Running</option>
@@ -84,13 +90,6 @@ h1 {
     <option value="equestrian">Equestrian</option>
     <option value="football">Football</option>
     <option value="baseball">Baseball</option>
-  </select>
-  <label for="sortBy">Sort by:</label>
-  <select id="sortBy">
-    <option value="score" selected>Score</option>
-    <option value="name">Name</option>
-    <option value="totalMinutes">Duration</option>"
-    <option value="totalActivities">Activities</option>
   </select>
 
   <button id="sortDir" type="button" data-dir="desc">Desc</button>

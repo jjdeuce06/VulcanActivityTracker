@@ -396,10 +396,40 @@ async function fillFriendsClub(friendUsername){
 
     populateFriendClubs(clubs);
 
-    return clubs;
-
   } catch (err) {
     console.error("Failed to load friend clubs:", err);
   }
 
+}
+
+
+function populateFriendClubs(clubs) {
+    const container = document.getElementById("friendClubsContainer");
+
+    if (!container) return;
+
+    // Clear old content
+    container.innerHTML = "";
+
+    if (!clubs || clubs.length === 0) {
+        container.innerHTML = "<p>No clubs found.</p>";
+        return;
+    }
+
+    clubs.forEach(club => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+
+        const name = document.createElement("div");
+        name.classList.add("club-name");
+        name.textContent = club.name;
+
+        const meta = document.createElement("div");
+        meta.classList.add("club-meta");
+        meta.textContent = `${club.members.length} Members`;
+
+        card.appendChild(name);
+        card.appendChild(meta);
+        container.appendChild(card);
+    });
 }

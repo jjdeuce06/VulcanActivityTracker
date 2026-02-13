@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, Blueprint
 from server.database.connect import get_db_connection
 from server.controllers.user_store import get_user_id
-from server.controllers.activity_store import insert_activity, get_user_activities
+from server.controllers.activity_store import insert_activity, get_user_activities, get_public_activities
 import pyodbc
 activity_api = Blueprint('activity_api', __name__)
 
@@ -83,6 +83,33 @@ def fill_Dashactivity():
 
     return jsonify({"status": "success","activities": activities}), 200
 
+
+@activity_api.route('/fillFrAct', methods=['POST'])
+def fill_FriendActivity():
+
+    try:
+        data = request.get_json()
+        username = data.pop("username", None)
+        conn = get_db_connection()
+        try:
+            user_id = get_user_id(conn, username)
+        
+            if not user_id:
+                return jsonify({"error": "User not found"}), 404
+            
+            activities = get_public_activities(conn, user_id)
+
+        finally:
+            conn.close()  #close conn
+    except Exception as e:
+        print("Error in enter_activity route:", e)
+        return jsonify({"error": str(e)}), 500
+
+    return jsonify({"status": "success","activities": activities}), 200
+
+
+
+#----------------MAKE OWN API FILE-----------------
 @activity_api.route('/publicleaderboard', methods=['GET'])
 def public_leaderboard():
     try:

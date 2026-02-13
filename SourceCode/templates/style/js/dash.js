@@ -167,7 +167,10 @@ async function addFriend(selectedUser) {
   const viewBtn = document.createElement("button");
   viewBtn.classList.add("friend-view-btn");
   viewBtn.textContent = "View";
-  viewBtn.onclick = () => alert(`Viewing friend: ${selectedUser}`);
+  viewBtn.onclick = () => {
+          console.log("Viewing User:", selectedUser);
+          openFriendModal(selectedUser);
+        };
 
   friendDiv.appendChild(avatar);
   friendDiv.appendChild(nameDiv);
@@ -239,7 +242,6 @@ async function fillDashActivity(username) {
   }
 }
 
-
 function populateDashActivity(data) {
   const feedContainer = document.querySelector("#activity-feed");
   feedContainer.innerHTML = ""; // clear old feed
@@ -287,7 +289,7 @@ function populateDashActivity(data) {
 }
 
 
-function openFriendModal(friendData) {
+async function openFriendModal(friendData) {
     const modal = document.getElementById("friendModal");
     const closeBtn = modal.querySelector(".close");
     const nameDiv = modal.querySelector("#friend-name");
@@ -295,8 +297,6 @@ function openFriendModal(friendData) {
     modal.style.display = "block";
 
     closeBtn.onclick = () => modal.style.display = "none";
-
-
     nameDiv.textContent = friendData;
 
     modal.onclick = (event) => {
@@ -304,4 +304,76 @@ function openFriendModal(friendData) {
             modal.style.display = "none";
         }
     };
+    await fillFriendActivity(friendData);
+
+}
+async function fillFriendActivity(friendUsername) {
+  try {
+    const response = await fetch("/activity_api/fillFrAct", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: friendUsername })
+    });
+
+    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+
+    const data = await response.json();
+    const activities = Array.isArray(data.activities) ? data.activities : [];
+
+    populateFriendActivities(activities);
+
+    return activities;
+
+  } catch (err) {
+    console.error("Failed to load friend activities:", err);
+  }
+}
+
+function populateFriendActivities(activities) {
+  const feedContainer = document.getElementById("friend-activity-feed");
+  feedContainer.innerHTML = ""; // clear previous content
+
+  if (!activities || activities.length === 0) {
+    feedContainer.innerHTML = `
+      <div class="card feed-card">
+        <div class="no-activities">No public activities.</div>
+      </div>
+    `;
+    return;
+  }
+
+   // Fill the activity count using the array length
+  const FactivityCountDiv = document.querySelector("Factivity-count");
+  FactivityCountDiv.textContent = data?.length ?? 0;
+
+  activities.forEach(act => {
+    let extra = "";
+
+    // handle swim details if present
+    if (act.ActivityType.toLowerCase() === "swim" && act.Details) {
+      try {
+        const details = JSON.parse(act.Details);
+        if (details.distance && details.unit) extra = `${details.distance} ${details.unit}`;
+      } catch (e) {
+        console.warn("Invalid JSON in activity details:", act.Details);
+      }
+    }
+
+    const dateObj = new Date(act.ActivityDate);
+    const formattedDate = !isNaN(dateObj)
+      ? dateObj.toLocaleDateString("en-US", { year:"numeric", month:"short", day:"numeric" })
+      : "Unknown Date";
+
+    const card = document.createElement("div");
+    card.className = "card feed-card";
+    card.innerHTML = `
+      <div class="feed-title">${act.ActivityType.toUpperCase()}</div>
+      <div class="feed-meta">${formattedDate}</div>
+      <div class="feed-details">
+        Duration: ${act.Duration ?? "N/A"} min • Calories: ${act.CaloriesBurned ?? "N/A"}${extra ? " • " + extra : ""}
+      </div>
+      ${act.Notes ? `<div class="feed-notes">Notes: ${act.Notes}</div>` : ""}
+    `;
+    feedContainer.appendChild(card);
+  });
 }

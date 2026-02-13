@@ -27,15 +27,54 @@
         </div>
         
         <div class="card" id="friends-card">
-        <h3 style="margin-bottom:10px;">My Friends</h3>
-        <div id="friends-list" style="color:#777;">show friends</div>
-        <button id="friendBtn">Add Friend</button>
-        <select id="friendDropdown" style="display:none;">
-        <option value="">Select a user</option>
-      </select>
+          <h3 style="margin-bottom:10px;">My Friends</h3>
+          <div id="friends-list" style="color:#777;">show friends</div>
+          <button id="friendBtn">Add Friend</button>
+          <select id="friendDropdown" style="display:none;">
+            <option value="">Select a user</option>
+          </select>
+        </div>
+      </aside>
+      <div class="modal" id="friendModal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+
+          <!-- Friend Card (Left) -->
+          <div class="card profile-card friend-view-card">
+              <img class="avatar" src="{{ url_for('style_folder.static', filename='img/pfp.jpg') }}">
+              <div class="name">Friend Name</div>
+              <div class="stats">
+                  <div class="stat">
+                      <div class="label">Posts</div>
+                      <div class="value">12</div>
+                  </div>
+                  <div class="stat">
+                      <div class="label">Friends</div>
+                      <div class="value">8</div>
+                  </div>
+                  <div class="stat">
+                      <div class="label">Points</div>
+                      <div class="value">320</div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Activities (Right) -->
+          <div class="friend-activities">
+              <div class="card feed-card">
+                  <div class="feed-title">Morning Run</div>
+                  <div class="feed-meta">2 hours ago</div>
+              </div>
+
+              <div class="card feed-card">
+                  <div class="feed-title">Workout Complete</div>
+                  <div class="feed-meta">Yesterday</div>
+              </div>
+          </div>
+
+        </div>
       </div>
 
-      </aside>
 
       <!-- Center column -->
       <section class="dash-col dash-center">

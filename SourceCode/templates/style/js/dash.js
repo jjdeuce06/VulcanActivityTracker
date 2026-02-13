@@ -75,7 +75,9 @@ async function fillDashFriends(currentUser) {
         const viewBtn = document.createElement("button");
         viewBtn.classList.add("friend-view-btn");
         viewBtn.textContent = "View";
-        viewBtn.onclick = () => alert(`Viewing friend: ${f}`);
+        viewBtn.onclick = () => {
+          openFriendModal();
+        };
 
         friendDiv.appendChild(avatar);
         friendDiv.appendChild(nameDiv);
@@ -103,7 +105,9 @@ async function fillDashFriends(currentUser) {
       const viewBtn = document.createElement("button");
       viewBtn.classList.add("friend-view-btn");
       viewBtn.textContent = "View";
-      viewBtn.onclick = () => alert(`Viewing friend: ${selectedUser}`);
+       viewBtn.onclick = () => {
+          openFriendModal();
+        };
 
       friendDiv.appendChild(avatar);
       friendDiv.appendChild(nameDiv);
@@ -279,4 +283,26 @@ function populateDashActivity(data) {
 
     feedContainer.appendChild(card);
   });
+}
+
+
+
+
+function openFriendModal(friendData) {
+    const modal = document.getElementById("friendModal");
+    const closeBtn = modal.querySelector(".close");
+
+    modal.style.display = "block";
+
+    closeBtn.onclick = () => modal.style.display = "none";
+
+
+    modal.querySelector(".name").textContent = friendData.name;
+    //modal.querySelector(".avatar").src = friendData.avatarUrl;
+
+    modal.onclick = (event) => {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
 }

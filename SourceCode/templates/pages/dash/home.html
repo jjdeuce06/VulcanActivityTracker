@@ -54,6 +54,14 @@
                   <div class="label">Friends</div>
                   <div class="label" id="Ffriend-count">number</div>
                 </div>
+                <div class="stat">
+                <div class="label">Likes</div>
+                <div class="like-container">
+                  <button id="like-friend-btn">❤️</button>
+                  <span id="like-friend-count">0</span>
+                </div>
+              </div>
+
               </div>
             </div>
 
@@ -123,3 +131,4 @@
     </div>
   </main>
 <script src="{{ url_for('style_folder.static', filename='js/dash.js') }}"></script>
+<script src="{{ url_for('style_folder.static', filename='js/like.js') }}"></script>

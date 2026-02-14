@@ -412,8 +412,12 @@ function populateFriendClubs(clubs) {
     container.innerHTML = "";
 
     if (!clubs || clubs.length === 0) {
-        container.innerHTML = "<p>No clubs found.</p>";
-        return;
+      container.innerHTML = `
+       <div class="card feed-card">
+        <div class="no-clubs">No Clubs.</div>
+      </div>
+      `;
+      return;
     }
 
     clubs.forEach(club => {

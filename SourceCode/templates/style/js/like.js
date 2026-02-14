@@ -1,73 +1,63 @@
-// document.addEventListener("DOMContentLoaded", () => {
-//   const username = localStorage.getItem("currentUser");
+async function likeFeature(username, friendName) {
+  const likeBtn = document.getElementById("like-friend-btn");
+  const likeCount = document.getElementById("like-friend-count");
 
-//   if (username) {
-//     const nameEl = document.getElementById("user-name");
-//     if (nameEl) nameEl.textContent = username;
-//   }
+  if (!likeBtn || !likeCount || !friendName) return;
 
-//   likeFeature(username);
-// });
+  let isLiked = false;
+  let totalLikes = 0;
 
+  function updateLikeUI() {
+    likeBtn.textContent = isLiked ? "💔" : "❤️";
+    likeCount.textContent = totalLikes;
+  }
 
-// function likeFeature(username) {
-//   const likeBtn = document.getElementById("like-friend-btn");
-//   const likeCount = document.getElementById("like-friend-count");
+  //STEP 1: LOAD current likes (no toggle)
+  try {
+    const res = await fetch("/dash_api/like", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username,
+        friend: friendName,
+        action: "get"
+      })
+    });
 
-//   if (!likeBtn || !likeCount) return; // safety
+    const data = await res.json();
 
-//   let isLiked = false;
-//   let totalLikes = parseInt(likeCount.textContent) || 0;
+    if (res.ok) {
+      isLiked = data.liked;
+      totalLikes = data.total_likes;
+      updateLikeUI();
+    }
 
-//   // If you have the friend info in a data attribute
-//   // e.g., <div id="friend-profile" data-username="friendUsername">
-//   const friendProfileEl = document.getElementById("friend-profile");
-//   let currentFriend = null;
-//   if (friendProfileEl) {
-//     currentFriend = friendProfileEl.dataset.username;
-//   }
+  } catch (err) {
+    console.error("Initial load error:", err);
+  }
 
-//   if (!currentFriend) {
-//     console.warn("No friend info found! Add data-username attribute.");
-//     return;
-//   }
+  // STEP 2: TOGGLE on click
+  likeBtn.addEventListener("click", async () => {
+    try {
+      const res = await fetch("/dash_api/like", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username,
+          friend: friendName
+        })
+      });
 
-//   // Initialize UI (optional, in case initial likes are loaded)
-//   updateLikeUI();
+      const data = await res.json();
 
-//   function updateLikeUI() {
-//     likeBtn.textContent = isLiked ? "💔" : "❤️";
-//     likeCount.textContent = totalLikes;
-//   }
+      if (res.ok) {
+        isLiked = data.liked;
+        totalLikes = data.total_likes;
+        updateLikeUI();
+      }
 
-//   likeBtn.addEventListener("click", async () => {
-//     if (!currentFriend) return;
-
-//     console.log("Like clicked for:", currentFriend);
-
-//     try {
-//       const res = await fetch("/dash_api/like", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({
-//           username,
-//           friend: currentFriend
-//         })
-//       });
-
-//       const data = await res.json();
-//       console.log("Like API response:", data);
-
-//       if (res.ok) {
-//         isLiked = data.liked;
-//         totalLikes = data.total_likes;
-//         updateLikeUI();
-//       } else {
-//         console.error(data.message);
-//       }
-
-//     } catch (err) {
-//       console.error("Like error:", err);
-//     }
-//   });
-// }
+    } catch (err) {
+      console.error("Like error:", err);
+    }
+  });
+}

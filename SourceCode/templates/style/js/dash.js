@@ -292,6 +292,7 @@ async function openFriendModal(friendData) {
     const modal = document.getElementById("friendModal");
     const closeBtn = modal.querySelector(".close");
     const nameDiv = modal.querySelector("#friend-name");
+    const username = localStorage.getItem("currentUser");
 
     modal.style.display = "block";
 
@@ -305,6 +306,7 @@ async function openFriendModal(friendData) {
     };
     await fillFriendActivity(friendData);
     await fillFriendsClub(friendData);
+    await likeFeature(username, friendData);
 
 }
 async function fillFriendActivity(friendUsername) {

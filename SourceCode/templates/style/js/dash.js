@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   await fillDashActivity(username);
   await fillDashFriends(username); // pass current user for filtering
+  await dashLikes(username);
+
 
   const fBtn = document.getElementById("friendBtn");
   const dropdown = document.getElementById("friendDropdown");
@@ -438,4 +440,25 @@ function populateFriendClubs(clubs) {
         card.appendChild(meta);
         container.appendChild(card);
     });
+}
+
+
+async function dashLikes(username){
+  const likes = document.querySelector("#main-like-count");
+
+  try {
+    const response = await fetch("/dash_api/likesCount", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: username })
+    });
+
+    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+
+    const data = await response.json();
+    console.log("likes data:", data);
+    likes.textContent = data.total_likes || 0;
+  } catch (err) {
+    console.error("Failed to load dashboard likes:", err);
+  }
 }

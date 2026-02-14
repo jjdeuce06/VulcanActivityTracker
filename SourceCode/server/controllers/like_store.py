@@ -44,3 +44,34 @@ def toggle_like_friend(conn, user_id, friend_id):
 
     finally:
         cursor.close()
+
+
+def check_if_liked(conn, user_id, friend_id):
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT 1
+        FROM likes
+        WHERE LikerUserID = ? AND LikedUserID = ?
+    """, (user_id, friend_id))
+
+    result = cursor.fetchone()
+    cursor.close()
+
+    return result is not None
+
+
+def get_total_likes(conn, friend_id):
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM likes
+        WHERE LikedUserID = ?
+    """, (friend_id,))
+
+    result = cursor.fetchone()
+    cursor.close()
+
+    return result[0] if result else 0
+

@@ -18,6 +18,12 @@
               <div class="value">Activities</div>
               <div class="label" id="activity-count">Number</div>
             </div>
+              <div class="stat">
+                  <div class="label">❤️</div>
+                  <div class="main-like-container">
+                    <span id="main-like-count">0</span>
+                  </div>
+              </div>
           </div>
         </div>
 
@@ -27,15 +33,60 @@
         </div>
         
         <div class="card" id="friends-card">
-        <h3 style="margin-bottom:10px;">My Friends</h3>
-        <div id="friends-list" style="color:#777;">show friends</div>
-        <button id="friendBtn">Add Friend</button>
-        <select id="friendDropdown" style="display:none;">
-        <option value="">Select a user</option>
-      </select>
-      </div>
-
+          <h3 style="margin-bottom:10px;">My Friends</h3>
+          <div id="friends-list" style="color:#777;">show friends</div>
+          <button id="friendBtn">Add Friend</button>
+          <select id="friendDropdown" style="display:none;">
+            <option value="">Select a user</option>
+          </select>
+        </div>
       </aside>
+
+
+        <div class="modal" id="friendModal">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+
+            <!-- Friend Card (Left) -->
+            <div class="card profile-card friend-view-card">
+              <img class="avatar" src="{{ url_for('style_folder.static', filename='img/pfp.jpg') }}">
+              <div class="name" id="friend-name"></div>
+              <div class="stats">
+                <div class="stat">
+                  <div class="label">Activities</div>
+                  <div class="label" id="Factivity-count">Number</div>
+                </div>
+                <div class="stat">
+                  <div class="label">Friends</div>
+                  <div class="label" id="Ffriend-count">number</div>
+                </div>
+                <div class="stat">
+                <div class="label">Likes</div>
+                <div class="like-container">
+                  <button style="background: none; border: none; padding: 0; margin: 0;"  id="like-friend-btn">❤️</button>
+                  <span id="like-friend-count">0</span>
+                </div>
+              </div>
+
+              </div>
+            </div>
+
+            <!-- Friend Activities (Middle) -->
+            <div class="friend-activities">
+              <h4 style="color:#000; margin-bottom:10px;">Public Activities</h4>
+              <div id="friend-activity-feed"></div>
+            </div>
+
+           <!-- Friend Clubs (Right) -->
+            <div class="friend-clubs">
+              <h4 style="color:#000; margin-bottom:10px;">Clubs</h4>
+              <div id="friendClubsContainer">
+                <!-- Club cards will be inserted here dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+
 
       <!-- Center column -->
       <section class="dash-col dash-center">
@@ -86,3 +137,4 @@
     </div>
   </main>
 <script src="{{ url_for('style_folder.static', filename='js/dash.js') }}"></script>
+<script src="{{ url_for('style_folder.static', filename='js/like.js') }}"></script>

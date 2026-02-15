@@ -1,0 +1,153 @@
+/* =========================
+   Modal Overlay & Close
+   ========================= */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.792); /* overlay */
+  overflow-y: auto;
+}
+
+.close {
+  font-size: 28px;
+  cursor: pointer;
+  color: #000;
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  transition: 0.2s;
+}
+
+.close:hover {
+  color: #ff0000;
+  transform: scale(1.2);
+}
+
+/* =========================
+   Modal Content Layout
+   ========================= */
+body.dashboard-page .modal-content {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 20px;
+  width: 80%;
+  max-width: 1000px;
+  margin: 5% auto;
+  padding: 20px;
+  background: #ffffff;       /* white modal background */
+  border-radius: 12px;
+  position: relative;        /* for close button */
+  box-shadow: none;          /* no extra shadow */
+}
+
+/* =========================
+   Friend Card (Left)
+   ========================= */
+.friend-view-card {
+  flex: 0 0 30%;
+  /* keep dashboard shadow */
+}
+
+/* =========================
+   Public Activities (Middle)
+   ========================= */
+.friend-activities {
+  flex: 0 0 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* =========================
+   Clubs (Right)
+   ========================= */
+.friend-clubs {
+  flex: 0 0 25%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* =========================
+   Cards inside modal
+   ========================= */
+
+/* Profile card keeps dashboard shadow */
+body.dashboard-page .profile-card.friend-view-card {
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* Feed cards & club cards: remove shadow to avoid gray halo */
+body.dashboard-page .feed-card,
+.friend-clubs .card {
+  box-shadow: none;
+  border-radius: 20px;
+  transition: transform 0.3s;
+}
+
+/* optional lift on hover */
+body.dashboard-page .feed-card:hover,
+.friend-clubs .card:hover {
+  transform: translateY(-2px);
+}
+
+/* Feed Card Content */
+body.dashboard-page .feed-card {
+  background: linear-gradient(135deg, #1a1c3f, #070b3f);
+  padding: 15px;
+}
+
+body.dashboard-page .feed-card .feed-title {
+  font-size: 18px;
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+body.dashboard-page .feed-card .feed-meta {
+  font-size: 13px;
+  color: #ccc;
+}
+
+/* Club Card Content */
+.friend-clubs .card {
+  background: linear-gradient(135deg, #070b3f, #1b1f5f);
+  padding: 12px;
+  color: #fff;
+  text-align: center;
+}
+
+.friend-clubs .club-name {
+  font-weight: 900;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.friend-clubs .club-meta {
+  font-size: 13px;
+  color: #ccc;
+}
+
+/* =========================
+   Scrollbars
+   ========================= */
+.friend-activities::-webkit-scrollbar,
+.friend-clubs::-webkit-scrollbar {
+  width: 6px;
+}
+
+.friend-activities::-webkit-scrollbar-thumb,
+.friend-clubs::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.2);
+  border-radius: 3px;
+}

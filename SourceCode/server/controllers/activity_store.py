@@ -116,3 +116,25 @@ def get_user_activities(conn, user_id: str):
 
     finally:
         cursor.close()
+
+
+
+def get_public_activities(conn, user_id):
+    cursor = conn.cursor()
+    query = """
+        SELECT ActivityID, ActivityType, ActivityDate, Duration,
+               CaloriesBurned, Visibility, Notes, Details, CreatedDate, UpdatedDate
+        FROM activity
+        WHERE UserID = ? AND Visibility = 'public'
+        ORDER BY ActivityDate DESC
+    """
+    cursor.execute(query, (user_id,))
+    rows = cursor.fetchall()
+
+    # Convert to list of dicts
+    activities = []
+    columns = [column[0] for column in cursor.description]
+    for row in rows:
+        activities.append(dict(zip(columns, row)))
+
+    return activities

@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   await fillDashActivity(username);
   await fillDashFriends(username); // pass current user for filtering
+  await dashLikes(username);
+
 
   const fBtn = document.getElementById("friendBtn");
   const dropdown = document.getElementById("friendDropdown");
@@ -75,7 +77,11 @@ async function fillDashFriends(currentUser) {
         const viewBtn = document.createElement("button");
         viewBtn.classList.add("friend-view-btn");
         viewBtn.textContent = "View";
-        viewBtn.onclick = () => alert(`Viewing friend: ${f}`);
+        viewBtn.onclick = () => {
+          const friendname = f;
+          console.log("Viewing f:", friendname);
+          openFriendModal(friendname);
+        };
 
         friendDiv.appendChild(avatar);
         friendDiv.appendChild(nameDiv);
@@ -103,7 +109,10 @@ async function fillDashFriends(currentUser) {
       const viewBtn = document.createElement("button");
       viewBtn.classList.add("friend-view-btn");
       viewBtn.textContent = "View";
-      viewBtn.onclick = () => alert(`Viewing friend: ${selectedUser}`);
+       viewBtn.onclick = () => {
+          console.log("Viewing User:", selectedUser);
+          openFriendModal(selectedUser);
+        };
 
       friendDiv.appendChild(avatar);
       friendDiv.appendChild(nameDiv);
@@ -160,7 +169,10 @@ async function addFriend(selectedUser) {
   const viewBtn = document.createElement("button");
   viewBtn.classList.add("friend-view-btn");
   viewBtn.textContent = "View";
-  viewBtn.onclick = () => alert(`Viewing friend: ${selectedUser}`);
+  viewBtn.onclick = () => {
+          console.log("Viewing User:", selectedUser);
+          openFriendModal(selectedUser);
+        };
 
   friendDiv.appendChild(avatar);
   friendDiv.appendChild(nameDiv);
@@ -200,7 +212,6 @@ async function addFriend(selectedUser) {
 }
 
 
-
 async function fillDashActivity(username) {
   try {
     const response = await fetch("/activity_api/fillDashAct", {
@@ -231,7 +242,6 @@ async function fillDashActivity(username) {
     console.error("Failed to load activities:", err);
   }
 }
-
 
 function populateDashActivity(data) {
   const feedContainer = document.querySelector("#activity-feed");
@@ -275,8 +285,180 @@ function populateDashActivity(data) {
     </div>
     ${common.notes ? `<div class="feed-notes">Notes: ${common.notes}</div>` : ""}
     `;
-
-
     feedContainer.appendChild(card);
   });
+}
+
+
+async function openFriendModal(friendData) {
+    const modal = document.getElementById("friendModal");
+    const closeBtn = modal.querySelector(".close");
+    const nameDiv = modal.querySelector("#friend-name");
+    const username = localStorage.getItem("currentUser");
+
+    modal.style.display = "block";
+
+    closeBtn.onclick = () => modal.style.display = "none";
+    nameDiv.textContent = friendData;
+
+    modal.onclick = (event) => {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+    await fillFriendActivity(friendData);
+    await fillFriendsClub(friendData);
+    await likeFeature(username, friendData);
+
+}
+async function fillFriendActivity(friendUsername) {
+  try {
+    const response = await fetch("/activity_api/fillFrAct", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: friendUsername })
+    });
+
+    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+
+    const data = await response.json();
+    const activities = Array.isArray(data.activities) ? data.activities : [];
+
+    populateFriendActivities(activities);
+
+    return activities;
+
+  } catch (err) {
+    console.error("Failed to load friend activities:", err);
+  }
+}
+
+function populateFriendActivities(activities) {
+  const feedContainer = document.getElementById("friend-activity-feed");
+  feedContainer.innerHTML = ""; // clear previous content
+
+  if (!activities || activities.length === 0) {
+    feedContainer.innerHTML = `
+      <div class="card feed-card">
+        <div class="no-activities">No public activities.</div>
+      </div>
+    `;
+    return;
+  }
+
+   // Fill the activity count using the array length
+  const FactivityCountDiv = document.querySelector("#Factivity-count");
+  FactivityCountDiv.textContent = activities?.length ?? 0;
+
+  activities.forEach(act => {
+    let extra = "";
+
+    // handle swim details if present
+    if (act.ActivityType.toLowerCase() === "swim" && act.Details) {
+      try {
+        const details = JSON.parse(act.Details);
+        if (details.distance && details.unit) extra = `${details.distance} ${details.unit}`;
+      } catch (e) {
+        console.warn("Invalid JSON in activity details:", act.Details);
+      }
+    }
+
+    const dateObj = new Date(act.ActivityDate);
+    const formattedDate = !isNaN(dateObj)
+      ? dateObj.toLocaleDateString("en-US", { year:"numeric", month:"short", day:"numeric" })
+      : "Unknown Date";
+
+    const card = document.createElement("div");
+    card.className = "card feed-card";
+    card.innerHTML = `
+      <div class="feed-title">${act.ActivityType.toUpperCase()}</div>
+      <div class="feed-meta">${formattedDate}</div>
+      <div class="feed-details">
+        Duration: ${act.Duration ?? "N/A"} min • Calories: ${act.CaloriesBurned ?? "N/A"}${extra ? " • " + extra : ""}
+      </div>
+      ${act.Notes ? `<div class="feed-notes">Notes: ${act.Notes}</div>` : ""}
+    `;
+    feedContainer.appendChild(card);
+  });
+}
+
+
+async function fillFriendsClub(friendUsername){
+  try {
+    const response = await fetch("/club_api/myclubs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: friendUsername })
+    });
+
+    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+
+    const data = await response.json();
+    const clubs = Array.isArray(data.clubs) ? data.clubs : [];
+
+    console.log("friends clubs:", clubs);
+
+    populateFriendClubs(clubs);
+
+  } catch (err) {
+    console.error("Failed to load friend clubs:", err);
+  }
+
+}
+
+
+function populateFriendClubs(clubs) {
+    const container = document.getElementById("friendClubsContainer");
+
+    if (!container) return;
+
+    // Clear old content
+    container.innerHTML = "";
+
+    if (!clubs || clubs.length === 0) {
+      container.innerHTML = `
+       <div class="card feed-card">
+        <div class="no-clubs">No Clubs.</div>
+      </div>
+      `;
+      return;
+    }
+
+    clubs.forEach(club => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+
+        const name = document.createElement("div");
+        name.classList.add("club-name");
+        name.textContent = club.name;
+
+        const meta = document.createElement("div");
+        meta.classList.add("club-meta");
+        meta.textContent = `${club.members.length} Members`;
+
+        card.appendChild(name);
+        card.appendChild(meta);
+        container.appendChild(card);
+    });
+}
+
+
+async function dashLikes(username){
+  const likes = document.querySelector("#main-like-count");
+
+  try {
+    const response = await fetch("/dash_api/likesCount", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: username })
+    });
+
+    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+
+    const data = await response.json();
+    console.log("likes data:", data);
+    likes.textContent = data.total_likes || 0;
+  } catch (err) {
+    console.error("Failed to load dashboard likes:", err);
+  }
 }

@@ -24,9 +24,10 @@ def get_all_clubs(conn):    #gets all clubs from the database
     cursor = conn.cursor()
     try:
         cursor.execute("""
-            SELECT ClubID, ClubName, Description, CreatorUserID, Members
-            FROM clubs
-            ORDER BY ClubName
+            SELECT c.ClubID, c.ClubName, c.Description, c.CreatorUserID, u.Username AS CreatorUsername, c.Members
+            FROM clubs c
+            JOIN [user] u ON c.CreatorUserID = u.UserID
+            ORDER BY c.ClubName
         """)
         rows = cursor.fetchall()
         clubs = []
@@ -41,6 +42,7 @@ def get_all_clubs(conn):    #gets all clubs from the database
                 "name": row.ClubName,
                 "description": row.Description or "",
                 "creator_user_id": str(row.CreatorUserID),
+                "creator_username": row.CreatorUsername,
                 "members": [str(m) for m in members]
             })
         return clubs
@@ -127,5 +129,29 @@ def remove_member_from_club(conn, club_id, user_id): #removes the user from the 
     except Exception as e:
         print("Error removing member:", e)
         raise
+    finally:
+        cursor.close()
+        
+def remove_club_from_database(conn, club_id, user_id):
+    cursor = conn.cursor()
+    
+    try:
+        cursor.execute("SELECT CreatorUserID FROM clubs WHERE ClubID = ?", (club_id, ))
+        row = cursor.fetchone()
+        if not row:
+            raise ValueError("Club Not Found")
+        if str(row.CreatorUserID) != str(user_id):
+            raise ValueError("Only Club Owner can Delete Club")
+        
+        cursor.execute("DELETE FROM clubs WHERE ClubID = ? AND CreatorUserID = ?", (club_id, user_id,))
+    
+        conn.commit()
+        print("Club deleted successfully")
+        return True
+
+    except Exception as e:
+        print("Delete club error:", e)
+        raise
+
     finally:
         cursor.close()

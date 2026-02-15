@@ -50,6 +50,7 @@
 <ul>
     <li>Leaderboard Filtering</li>
     <li>Friend Display</li>
+    <li>Dynamic Routing</li>
 </ul>
 </div>
 
@@ -81,10 +82,10 @@
 ">
 <h2>🔗 Links</h2>
 <ul>
-  <li><strong>PRs:</strong> 4 Merged Pull Requests</li>
+  <li><strong>PRs:</strong> 6 Merged Pull Requests</li>
   <li><strong>Tickets / Issues:</strong>
     <ul>
-      <li>#23, #24, #26, #27</li>
+      <li>#23, #24, #26, #27, #29, #30</li>
     </ul>
   </li>
 </ul>

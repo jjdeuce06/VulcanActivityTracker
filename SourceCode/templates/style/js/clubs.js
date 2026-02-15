@@ -101,60 +101,83 @@ function renderClubs(containerId, clubs, isMember) {
     return;
   }
 
+  const currentUser = localStorage.getItem("currentUser");
+
   clubs.forEach(club => {
     const card = document.createElement("div");
     card.className = "club-item";
 
     const members = club.members !== undefined ? club.members : [];
+    const isOwner = isMember && club.creator_username === currentUser;
 
     card.innerHTML = `
       <h4>${club.name}</h4>
       <p>${club.description || ""}</p>
       <p>${members.length} members</p>
-      <button class="secondary-btn" data-club-id="${club.id}">
-        ${isMember ? "Leave" : "Join"}
+      <div style="display: flex; gap: 8px;">
+      <button class="secondary-btn view-club-btn" data-club-id="${club.id}">
+        View
       </button>
+      <button class="secondary-btn" data-club-id="${club.id}" data-action="${isOwner ? 'delete' : (isMember ? 'leave' : 'join')}">
+        ${isOwner ? "Delete" : (isMember ? "Leave" : "Join")}
+      </button>
+      </div>
     `;
 
     container.appendChild(card);
 
-    const btn = card.querySelector("button.secondary-btn");
-    if (btn) {
-      btn.addEventListener("click", async () => {
-        const username = localStorage.getItem("currentUser");
-        if (!username) {
-          alert("Please log in to continue.");
-          return;
-        }
-        const clubId = btn.dataset.clubId;
-        const endpoint = isMember ? "/club_api/leave" : "/club_api/join";
-        try {
-          const resp = await fetch(endpoint, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, club_id: clubId })
-          });
+   
 
-          const payload = await resp.json().catch(() => null);
-          console.log(endpoint, resp.status, payload);
+    const actionBtn = card.querySelectorAll("button.secondary-btn")[1];  // Get the second button
+if (actionBtn) {
+  actionBtn.addEventListener("click", async () => {
+    const username = localStorage.getItem("currentUser");
+    if (!username) {
+      alert("Please log in to continue.");
+      return;
+    }
+    
+    const clubId = actionBtn.dataset.clubId;
+    const action = actionBtn.dataset.action;
+    let endpoint = "";
 
-          if (!resp.ok) {
-            const msg = payload && payload.error ? payload.error : `HTTP ${resp.status}`;
-            alert((isMember ? "Failed to leave: " : "Failed to join: ") + msg);
-            return;
-          }
+    if (action === "delete") {
+      if (!confirm(`Delete "${club.name}"? This cannot be undone.`)) return;
+      endpoint = "/club_api/deleteclub";
+    } else if (action === "leave") {
+      endpoint = "/club_api/leave";
+    } else {
+      endpoint = "/club_api/join";
+    }
 
-          //refreshs the lists after joining or leaving or creating a club
-          try {
-            await (window.loadClubs ? window.loadClubs() : Promise.resolve());
-          } catch (err) {
-            console.error("loadClubs failed after action:", err);
-            location.reload();
-          }
-        } catch (err) {
-          console.error((isMember ? "Leave" : "Join") + " club error:", err);
-          alert((isMember ? "Failed to leave club." : "Failed to join club."));
-        }
+    try {
+      const resp = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, club_id: clubId })
+      });
+
+      const payload = await resp.json().catch(() => null);
+      console.log(endpoint, resp.status, payload);
+
+      if (!resp.ok) {
+        const msg = payload && payload.error ? payload.error : `HTTP ${resp.status}`;
+        alert("Action failed: " + msg);
+        return;
+      }
+
+      await (window.loadClubs ? window.loadClubs() : Promise.resolve());
+    } catch (err) {
+      console.error("Club action error:", err);
+      alert("An error occurred.");
+    }
+  });
+}
+
+    const viewBtn = card.querySelector("button.view-club-btn");
+    if (viewBtn) {
+      viewBtn.addEventListener("click", () => {
+        window.location.href = `/club/${club.id}`;
       });
     }
   });

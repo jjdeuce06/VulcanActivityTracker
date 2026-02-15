@@ -31,4 +31,7 @@ for rule, (tpl, active_page) in ROUTES.items():
     endpoint = f"page_{tpl.replace('/', '_').replace('.', '_')}"
     blue.add_url_rule(rule, endpoint, make_view(tpl, active_page))
 
-
+#Adds the dynamic route for the club details page
+@blue.route('/club/<club_id>')
+def club_detail(club_id):
+    return render_template('pages/dash/club_details.html', active_page='clubs')

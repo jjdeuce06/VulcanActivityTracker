@@ -1,0 +1,31 @@
+{% extends "base_temp/dashboard.html" %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/clubs.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="clubs-page">
+  <h1 class="page-description"id="club-name-heading">Club Name</h1>
+  
+  <div class="clubs-layout">
+    <div class="clubs-form">
+      <h2>About</h2>
+      <p id="club-description"></p>
+      <p><strong>Members: </strong><span id="member-count">0</span></p>
+      <button onclick="history.back()" class="secondary-btn" style="margin-top: 14px; width: auto; padding: 10px 20px;">Back</button>
+    </div>
+    
+    <div class="card clubs-card">
+      <h3>Members</h3>
+      <div class="clubs-list" id="members-list">
+        <!-- Members will be populated here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('style_folder.static', filename='js/club_details.js') }}"></script>
+
+{% endblock %}

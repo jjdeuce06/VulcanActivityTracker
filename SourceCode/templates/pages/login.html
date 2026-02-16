@@ -18,7 +18,7 @@
                 <input type="text" placeholder="Enter Username" id="user_entry" required>
                 <input type="password" placeholder="Enter Password" id="pass_entry" required>
 
-                <button id="loginBtn">Login</button>
+                <button id="loginBtn" onclick = "verifyCredentials()">Login</button>
                 <button class="createacc" onclick="createAcc()">Create Account</button>
                 <button class="cancelbtn" onclick="backHome()">Cancel</button>
             </div>
@@ -35,5 +35,18 @@ function backHome() {window.location.href = "/";}
 function createAcc() {window.location.href = "/createacc";}
 </script>
 <script src="{{ url_for('style_folder.static', filename='js/verifyLogin.js') }}"></script>
+<script>
+    function verifyCredentials() {
+        const username = document.getElementById('user_entry').value;
+        const password = document.getElementById('pass_entry').value;
+
+        if (!username || !password) 
+        {
+            alert('Please enter both username and password.');
+            return;
+        }
+        
+    }
+</script>
 </body>
 </html>

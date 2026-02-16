@@ -12,8 +12,15 @@ document.getElementById("createBtn").addEventListener("click", async () =>{
     errorDiv.textContent = "";
     errorDiv.style.color = "red";
 
-    if (!username || !password) {
+    if (!username || !password) 
+        {
         errorDiv.textContent = "Please enter both username and password.";
+        return;
+    }
+
+    if (password.length < 8)
+    {
+        errorDiv.textContent = "Password must be at least 8 characters long.";
         return;
     }
 

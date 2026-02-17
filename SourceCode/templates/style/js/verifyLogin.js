@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const username = document.getElementById("user_entry").value;
         const password = document.getElementById("pass_entry").value;
 
+        
+
         //hash password before sending
         const hash = await hashPassword(password);
         //send to backend

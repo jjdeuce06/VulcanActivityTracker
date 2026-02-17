@@ -23,6 +23,14 @@
                 <button class="cancelbtn" onclick="backHome()">Cancel</button>
             </div>
 
+            <div id="message">
+                <h3> Password must contain the following:</h3>
+                <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
+                <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
+                <p id ="number" class="invalid">A <b>number</b></p>
+                <p id="length" class="invalid">Minimum <b>8 characters</b></p>
+            </div>
+
         </div>
     </main>
 
@@ -35,18 +43,5 @@ function backHome() {window.location.href = "/";}
 function createAcc() {window.location.href = "/createacc";}
 </script>
 <script src="{{ url_for('style_folder.static', filename='js/verifyLogin.js') }}"></script>
-<script>
-    function verifyCredentials() {
-        const username = document.getElementById('user_entry').value;
-        const password = document.getElementById('pass_entry').value;
-
-        if (!username || !password) 
-        {
-            alert('Please enter both username and password.');
-            return;
-        }
-        
-    }
-</script>
 </body>
 </html>

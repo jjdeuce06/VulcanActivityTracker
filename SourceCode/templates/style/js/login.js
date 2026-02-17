@@ -7,6 +7,10 @@ document.getElementById("createBtn").addEventListener("click", async () =>{
     const username = document.getElementById("user_entry").value;
     const password = document.getElementById("pass_entry").value;
     const errorDiv = document.getElementById("register-error");
+    var letter = document.getElementById("letter");
+    var capital = document.getElementById("capital");
+    var number = document.getElementById("number");
+    var length = document.getElementById("length");
 
     // Clear previous messages
     errorDiv.textContent = "";
@@ -18,9 +22,12 @@ document.getElementById("createBtn").addEventListener("click", async () =>{
         return;
     }
 
-    if (password.length < 8)
+    if (letter.classList.contains("invalid") || 
+        capital.classList.contains("invalid") || 
+        number.classList.contains("invalid") || 
+        length.classList.contains("invalid")) 
     {
-        errorDiv.textContent = "Password must be at least 8 characters long.";
+        errorDiv.textContent = "Password does not meet all requirements.";
         return;
     }
 

@@ -8,10 +8,11 @@ login_api = Blueprint('login_api', __name__)
 def login():
     print("enter login api")
     data = request.get_json()
+    email = data.get("email")
     username = data.get("username")
     password = data.get("password")
 
-    print("Recived: ", username, password)
+    print("Recived: ", email, username, password)
     ph = PasswordHasher()
     stored_hash = ph.hash(password)
     print("stored hash:", stored_hash)
@@ -25,7 +26,7 @@ def login():
         if username in existing_users:
             return jsonify({"error": "Username already exists"}), 400
         else:
-            store_login(conn, username, stored_hash)
+            store_login(conn, email, username, stored_hash)
             print("Login Credentails Stored Successfully")
     return jsonify({"status": "ok"})
 

@@ -1,6 +1,7 @@
 <h1 align="center" style="color:#000000;">📆 Weekly Progress – Week 5</h1>
 
 <!-- ===================== GOALS ===================== -->
+
 <div style="
   background:#0b102f;
   color:#ffffff;
@@ -20,6 +21,7 @@
 </div>
 
 <!-- ===================== WORK COMPLETED ===================== -->
+
 <div style="
   background:#11175a;
   color:#ffffff;
@@ -38,6 +40,7 @@
 </div>
 
 <!-- ===================== ISSUES / BLOCKERS ===================== -->
+
 <div style="
   background:#0b102f;
   color:#ffffff;
@@ -55,6 +58,7 @@
 </div>
 
 <!-- ===================== NEXT WEEK ===================== -->
+
 <div style="
   background:#11175a;
   color:#ffffff;
@@ -72,6 +76,7 @@
 </div>
 
 <!-- ===================== LINKS ===================== -->
+
 <div style="
   background:#0b102f;
   color:#ffffff;

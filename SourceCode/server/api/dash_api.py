@@ -4,10 +4,7 @@ from server.controllers.login_store import fetch_all_users
 from server.controllers.user_store import get_user_id
 from server.controllers.friend_store import insert_friend, get_users_friends
 from server.controllers.like_store import toggle_like_friend, check_if_liked, get_total_likes, check_if_thumbs_up, get_total_thumbs_up, toggle_thumbs_up
-<<<<<<< HEAD
 from server.controllers.club_store import get_user_clubs
-=======
->>>>>>> 5ed8add (oml im so confused)
 dash_api = Blueprint('dash_api', __name__)
 
 
@@ -211,8 +208,3 @@ def fill_dash_clubs():
     return jsonify({
         "dash_clubs": dash_clubs
     })
-=======
->>>>>>> 5ed8add (oml im so confused)
-=======
-    })
->>>>>>> 26cb97c (cooked a meal)

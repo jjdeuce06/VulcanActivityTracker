@@ -336,14 +336,8 @@ async function openFriendModal(friendData) {
     await fillFriendActivity(friendData);
     await fillFriendsClub(friendData);
     await likeFeature(username, friendData);
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
     await thumbsUp(username, friendData, activityID);
 
->>>>>>> 5ed8add (oml im so confused)
-=======
->>>>>>> 26cb97c (cooked a meal)
 }
 async function fillFriendActivity(friendUsername) {
   try {

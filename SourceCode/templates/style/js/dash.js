@@ -294,6 +294,7 @@ function populateDashActivity(data) {
       </div>
     </div>
     `;
+    console.log("activity id from dash", activityID);
     feedContainer.appendChild(card);
   });
 }
@@ -318,7 +319,7 @@ async function openFriendModal(friendData) {
     await fillFriendActivity(friendData);
     await fillFriendsClub(friendData);
     await likeFeature(username, friendData);
-    await thumbsUp(username, friendData, activityID);
+    //await thumbsUp(username, friendData, activityID);
 
 }
 async function fillFriendActivity(friendUsername) {
@@ -334,7 +335,7 @@ async function fillFriendActivity(friendUsername) {
     const data = await response.json();
     const activities = Array.isArray(data.activities) ? data.activities : [];
 
-    populateFriendActivities(activities);
+    populateFriendActivities(activities, friendUsername);
 
     return activities;
 
@@ -343,9 +344,11 @@ async function fillFriendActivity(friendUsername) {
   }
 }
 
-function populateFriendActivities(activities) {
+function populateFriendActivities(activities, friendUsername) {
   const feedContainer = document.getElementById("friend-activity-feed");
   feedContainer.innerHTML = ""; // clear previous content
+  const username = localStorage.getItem("currentUser");
+
 
   if (!activities || activities.length === 0) {
     feedContainer.innerHTML = `
@@ -362,9 +365,10 @@ function populateFriendActivities(activities) {
 
   activities.forEach(act => {
     let extra = "";
+    const ModalactivityID = act.activity_id;
 
     // handle swim details if present
-    if (act.ActivityType.toLowerCase() === "swim" && act.Details) {
+    if (act.activity_type.toLowerCase() === "swim" && act.Details) {
       try {
         const details = JSON.parse(act.Details);
         if (details.distance && details.unit) extra = `${details.distance} ${details.unit}`;
@@ -373,7 +377,7 @@ function populateFriendActivities(activities) {
       }
     }
 
-    const dateObj = new Date(act.ActivityDate);
+    const dateObj = new Date(act.date);
     const formattedDate = !isNaN(dateObj)
       ? dateObj.toLocaleDateString("en-US", { year:"numeric", month:"short", day:"numeric" })
       : "Unknown Date";
@@ -381,21 +385,25 @@ function populateFriendActivities(activities) {
     const card = document.createElement("div");
     card.className = "card feed-card";
     card.innerHTML = `
-      <div class="feed-title">${act.ActivityType.toUpperCase()}</div>
+      <div class="feed-title">${act.activity_type.toUpperCase()}</div>
       <div class="feed-meta">${formattedDate}</div>
       <div class="feed-details">
-        Duration: ${act.Duration ?? "N/A"} min • Calories: ${act.CaloriesBurned ?? "N/A"}${extra ? " • " + extra : ""}
+        Duration: ${act.duration ?? "N/A"} min • Calories: ${act.calories_burned ?? "N/A"}${extra ? " • " + extra : ""}
       </div>
-      ${act.Notes ? `<div class="feed-notes">Notes: ${act.Notes}</div>` : ""}
+      ${act.notes ? `<div class="feed-notes">Notes: ${act.notes}</div>` : ""}
       <div class="stat">
         <div class="label">Likes</div>
         <div class="onActivity-like">
-          <button style="background: none; border: none; padding: 0; margin: 0;" class="onActivity-likebtn"data-activity-id="${act.activityID}">👍</button>
+          <button style="background: none; border: none; padding: 0; margin: 0;" class="onActivity-likebtn"data-activity-id="${ModalactivityID}">👍</button>
           <span class="onActivity-like-count">0</span>
         </div>
       </div>
     `;
+    console.log("activity id from modal", ModalactivityID);
     feedContainer.appendChild(card);
+
+    thumbsUp(username, friendUsername, ModalactivityID);
+
   });
 }
 

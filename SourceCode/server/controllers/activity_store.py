@@ -121,11 +121,32 @@ def get_user_activities(conn, user_id: str):
 
 
 
+# def get_public_activities(conn, user_id):
+#     cursor = conn.cursor()
+#     query = """
+#         SELECT ActivityID, ActivityType, ActivityDate, Duration,
+#                CaloriesBurned, Visibility, Notes, Details, CreatedDate, UpdatedDate
+#         FROM activity
+#         WHERE UserID = ? AND Visibility = 'public'
+#         ORDER BY ActivityDate DESC
+#     """
+#     cursor.execute(query, (user_id,))
+#     rows = cursor.fetchall()
+
+#     # Convert to list of dicts
+#     activities = []
+#     columns = [column[0] for column in cursor.description]
+#     for row in rows:
+#         activities.append(dict(zip(columns, row)))
+
+#     return activities
+
+
 def get_public_activities(conn, user_id):
     cursor = conn.cursor()
     query = """
         SELECT ActivityID, ActivityType, ActivityDate, Duration,
-               CaloriesBurned, Visibility, Notes, Details, CreatedDate, UpdatedDate
+               CaloriesBurned, Visibility, Notes, Details
         FROM activity
         WHERE UserID = ? AND Visibility = 'public'
         ORDER BY ActivityDate DESC
@@ -133,10 +154,27 @@ def get_public_activities(conn, user_id):
     cursor.execute(query, (user_id,))
     rows = cursor.fetchall()
 
-    # Convert to list of dicts
     activities = []
-    columns = [column[0] for column in cursor.description]
+
     for row in rows:
-        activities.append(dict(zip(columns, row)))
+        details = {}
+        if row.Details:
+            try:
+                details = json.loads(row.Details)
+            except:
+                pass
+
+        activity = {
+            "activity_type": row.ActivityType,
+            "date": row.ActivityDate.isoformat() if row.ActivityDate else None,
+            "duration": row.Duration,
+            "calories_burned": row.CaloriesBurned,
+            "visibility": row.Visibility,
+            "notes": row.Notes,
+            "activity_id": str(row.ActivityID)
+        }
+
+        activity.update(details)
+        activities.append(activity)
 
     return activities

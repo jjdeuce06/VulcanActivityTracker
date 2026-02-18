@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const selectedActivityBtn = document.querySelector(".selected-activity");
   const clearBtn = document.querySelector(".clr-dropbtn");
   const username = localStorage.getItem("currentUser");
+  
 
   const templates = {
     run: `
@@ -200,7 +201,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     `,
   };
 
-  function setFields(activityKey) {
+  function setFields(activityKey) 
+  {
     activityTypeInput.value = activityKey;
     fieldsContainer.innerHTML = templates[activityKey] || "";
   }
@@ -213,14 +215,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     e.preventDefault();
 
     const activityKey = link.dataset.activity;
-
     setFields(activityKey);
     selectedActivityBtn.textContent = link.textContent;
   });
 
+  //submit button event handler
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const data = collectSportData(form);
+    console.log("Collected Data:", data);
     try {
             const response = await sendActivityData(data, username);
             console.log("Response:", response);
@@ -249,14 +252,34 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 
-function collectSportData(form) {
+function collectSportData(form) 
+{
   if (!form) throw new Error("Form element not provided");
 
   const data = {};
-  form.querySelectorAll("input, textarea, select").forEach(field => {
-    if (field.type === "number") data[field.name] = field.value ? parseFloat(field.value) : null;
-    else data[field.name] = field.value || "";
+  form.querySelectorAll("input, textarea, select").forEach((field) => {
+    if (!field.name) return;
+
+    // ✅ Radio: only take the checked one
+    if (field.type === "radio") {
+      if (!field.checked) return;
+      data[field.name] = field.value;
+      return;
+    }
+
+    // ✅ Checkbox (optional, but nice to support)
+    if (field.type === "checkbox") {
+      data[field.name] = field.checked;
+      return;
+    }
+
+    if (field.type === "number") {
+      data[field.name] = field.value ? parseFloat(field.value) : null;
+    } else {
+      data[field.name] = field.value || "";
+    }
   });
+
   return data;
 }
 

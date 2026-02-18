@@ -12,7 +12,7 @@ def login():
     username = data.get("username")
     password = data.get("password")
 
-    print("Recived: ", email, username, password)
+    print("Received: ", email, username, password)
     ph = PasswordHasher()
     stored_hash = ph.hash(password)
     print("stored hash:", stored_hash)

@@ -16,13 +16,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const data = await resp.json();
     const club = data.club;
+    console.log("Loaded club:", club);
+    console.log("data:", data);
 
     document.getElementById("club-name-heading").textContent = club.name;
     document.getElementById("club-description").textContent = club.description || "No description provided.";
     document.getElementById("member-count").textContent = club.members.length;
 
     const membersList = document.getElementById("members-list");
-    if (club.members.length > 0) {
+    if (club.members.length > 0) 
+      {
+      console.log("Club members:", club.members);
       club.members.forEach(member => {
         const div = document.createElement("div");
         div.className = "club-item";

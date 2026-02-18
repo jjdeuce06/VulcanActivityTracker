@@ -75,3 +75,52 @@ def get_total_likes(conn, friend_id):
 
     return result[0] if result else 0
 
+
+def check_if_thumbs_up(conn, liker_id: str, activity_id: str) -> bool:
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            SELECT 1 FROM activity_likes
+            WHERE LikerUserID = ? AND ActivityID = ?
+        """, (liker_id, activity_id))
+        return cursor.fetchone() is not None
+    finally:
+        cursor.close()
+
+
+def get_total_thumbs_up(conn, activity_id: str) -> int:
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            SELECT COUNT(*) FROM activity_likes
+            WHERE ActivityID = ?
+        """, (activity_id,))
+        row = cursor.fetchone()
+        return row[0] if row else 0
+    finally:
+        cursor.close()
+
+
+def toggle_thumbs_up(conn, liker_id: str, activity_id: str):
+    cursor = conn.cursor()
+    try:
+        liked = check_if_thumbs_up(conn, liker_id, activity_id)
+
+        if liked:
+            cursor.execute(
+                "DELETE FROM activity_likes WHERE LikerUserID = ? AND ActivityID = ?",
+                (liker_id, activity_id)
+            )
+            liked = False
+        else:
+            cursor.execute(
+                "INSERT INTO activity_likes (LikerUserID, ActivityID) VALUES (?, ?)",
+                (liker_id, activity_id)
+            )
+            liked = True
+
+        total_likes = get_total_thumbs_up(conn, activity_id)
+        return liked, total_likes
+
+    finally:
+        cursor.close()

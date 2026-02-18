@@ -227,6 +227,8 @@ body.dashboard-page .feed-card {
   background: linear-gradient(135deg, #1a1c3f, #070b3f);
   padding: 20px;
   margin-bottom: 20px;
+  position: relative; 
+  padding-bottom: 50px; 
 }
 
 body.dashboard-page .feed-card .feed-title {
@@ -421,4 +423,28 @@ body.dashboard-page #friendDropdown option {
   body.dashboard-page .nav-inner {
     padding: 12px 14px;
   }
+}
+
+/*like btn*/
+
+body.dashboard-page .feed-card .stat {
+  position: absolute;
+  bottom: 15px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+body.dashboard-page .onActivity-likebtn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-size: 20px;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+body.dashboard-page .onActivity-likebtn:hover {
+  transform: scale(1.2);
 }

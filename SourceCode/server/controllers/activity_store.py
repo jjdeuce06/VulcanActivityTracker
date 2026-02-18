@@ -76,7 +76,8 @@ def get_user_activities(conn, user_id: str):
                 CaloriesBurned,
                 Visibility,
                 Notes,
-                Details
+                Details,
+                ActivityID        
             FROM activity
             WHERE UserID = ?
             ORDER BY ActivityDate DESC
@@ -102,6 +103,7 @@ def get_user_activities(conn, user_id: str):
                 "calories_burned": row.CaloriesBurned,
                 "visibility": row.Visibility,
                 "notes": row.Notes,
+                "activity_id": str(row.ActivityID)
             }
 
             activity.update(details)

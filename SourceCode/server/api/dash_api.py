@@ -3,7 +3,7 @@ from server.database.connect import get_db_connection
 from server.controllers.login_store import fetch_all_users
 from server.controllers.user_store import get_user_id
 from server.controllers.friend_store import insert_friend, get_users_friends
-from server.controllers.like_store import toggle_like_friend, check_if_liked, get_total_likes
+from server.controllers.like_store import toggle_like_friend, check_if_liked, get_total_likes, check_if_thumbs_up, get_total_thumbs_up, toggle_thumbs_up
 dash_api = Blueprint('dash_api', __name__)
 
 
@@ -51,7 +51,6 @@ def add_friend():
         conn.commit()
 
     return jsonify({"status": "ok", "added": friend_user})
-
 
 
 @dash_api.route("/like", methods=["POST"])
@@ -111,3 +110,43 @@ def get_likes_count():
         "status": "ok",
         "total_likes": total_likes
     })
+
+
+
+@dash_api.route("/thumbsUp", methods=["POST"])
+def thumbs_up_friend():
+    data = request.get_json()
+    username = data.get("username")
+    friend = data.get("friend")
+    action = data.get("action") #action option
+    activity_id = data.get("activity_id")
+
+    print("activity id,", activity_id)
+
+    conn = get_db_connection()
+    try:
+        userID = get_user_id(conn, username)
+        friendID = get_user_id(conn, friend)
+
+        if not userID or not friendID:
+            return jsonify({"status": "error"}), 400
+
+        # fetch
+        if action == "get":
+            liked = check_if_thumbs_up(conn, userID, friendID, activity_id)
+            total_likes = get_total_thumbs_up(conn, friendID, activity_id)
+
+        else:
+            #toggle
+            liked, total_likes = toggle_thumbs_up(conn, userID, friendID, activity_id)
+
+    finally:
+        conn.commit()
+        conn.close()
+
+    return jsonify({
+        "status": "ok",
+        "liked": liked,
+        "total_likes": total_likes
+    })
+

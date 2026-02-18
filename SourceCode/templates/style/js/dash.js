@@ -261,6 +261,7 @@ function populateDashActivity(data) {
   }
 
   data.forEach(activity => {
+    const activityID = activity.activity_id;
     const common = activity.common ?? activity;
     const sport  = activity.sport  ?? activity;
 
@@ -284,6 +285,14 @@ function populateDashActivity(data) {
         Duration: ${common.duration ?? "N/A"} min • Calories: ${common.calories_burned ?? "N/A"}${extra ? " • " + extra : ""}
     </div>
     ${common.notes ? `<div class="feed-notes">Notes: ${common.notes}</div>` : ""}
+
+   <div class="stat">
+      <div class="label">Likes</div>
+      <div class="onActivity-like">
+        <button style="background: none; border: none; padding: 0; margin: 0;" class="onActivity-likebtn"data-activity-id="${activityID}">👍</button>
+        <span class="onActivity-like-count">0</span>
+      </div>
+    </div>
     `;
     feedContainer.appendChild(card);
   });
@@ -309,6 +318,7 @@ async function openFriendModal(friendData) {
     await fillFriendActivity(friendData);
     await fillFriendsClub(friendData);
     await likeFeature(username, friendData);
+    await thumbsUp(username, friendData, activityID);
 
 }
 async function fillFriendActivity(friendUsername) {
@@ -377,6 +387,13 @@ function populateFriendActivities(activities) {
         Duration: ${act.Duration ?? "N/A"} min • Calories: ${act.CaloriesBurned ?? "N/A"}${extra ? " • " + extra : ""}
       </div>
       ${act.Notes ? `<div class="feed-notes">Notes: ${act.Notes}</div>` : ""}
+      <div class="stat">
+        <div class="label">Likes</div>
+        <div class="onActivity-like">
+          <button style="background: none; border: none; padding: 0; margin: 0;" class="onActivity-likebtn"data-activity-id="${act.activityID}">👍</button>
+          <span class="onActivity-like-count">0</span>
+        </div>
+      </div>
     `;
     feedContainer.appendChild(card);
   });

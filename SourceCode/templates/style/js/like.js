@@ -63,6 +63,7 @@ async function likeFeature(username, friendName) {
 
 
 
+<<<<<<< HEAD
 async function thumbsUp(username, friendName, activity_id, modallikeBtn, modallikeCount) {
   if (!modallikeBtn || !modallikeCount || !friendName) return;
 
@@ -71,6 +72,16 @@ async function thumbsUp(username, friendName, activity_id, modallikeBtn, modalli
   function modalupdateLikeUI() {
     modallikeCount.textContent = totalLikes;
   }
+=======
+async function thumbsUp(username, friendName, activity_id) {
+  const likeBtn = document.getElementById("like-friend-btn");
+  const likeCount = document.getElementById("like-friend-count");
+
+  if (!likeBtn || !likeCount || !friendName) return;
+
+  let isLiked = false;
+  let totalLikes = 0;
+>>>>>>> 5ed8add (oml im so confused)
 
   //STEP 1: LOAD current likes (no toggle)
   try {
@@ -90,7 +101,10 @@ async function thumbsUp(username, friendName, activity_id, modallikeBtn, modalli
     if (res.ok) {
       isLiked = data.liked;
       totalLikes = data.total_likes;
+<<<<<<< HEAD
       modalupdateLikeUI();
+=======
+>>>>>>> 5ed8add (oml im so confused)
     }
 
   } catch (err) {
@@ -98,7 +112,11 @@ async function thumbsUp(username, friendName, activity_id, modallikeBtn, modalli
   }
 
   // STEP 2: TOGGLE on click
+<<<<<<< HEAD
   modallikeBtn.addEventListener("click", async () => {
+=======
+  likeBtn.addEventListener("click", async () => {
+>>>>>>> 5ed8add (oml im so confused)
     try {
       const res = await fetch("/dash_api/thumbsUp", {
         method: "POST",
@@ -115,7 +133,11 @@ async function thumbsUp(username, friendName, activity_id, modallikeBtn, modalli
       if (res.ok) {
         isLiked = data.liked;
         totalLikes = data.total_likes;
+<<<<<<< HEAD
         modalupdateLikeUI();
+=======
+        updateLikeUI();
+>>>>>>> 5ed8add (oml im so confused)
       }
 
     } catch (err) {

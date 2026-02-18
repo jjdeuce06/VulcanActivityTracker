@@ -268,7 +268,11 @@ function populateDashActivity(data, username) {
   })
   .slice(0, 10);
 
+<<<<<<< HEAD
   topActivities.forEach(activity => {
+=======
+  data.forEach(activity => {
+>>>>>>> 5ed8add (oml im so confused)
     const activityID = activity.activity_id;
     const common = activity.common ?? activity;
     const sport  = activity.sport  ?? activity;
@@ -295,7 +299,11 @@ function populateDashActivity(data, username) {
     ${common.notes ? `<div class="feed-notes">Notes: ${common.notes}</div>` : ""}
 
    <div class="stat">
+<<<<<<< HEAD
       <div class="label"></div>
+=======
+      <div class="label">Likes</div>
+>>>>>>> 5ed8add (oml im so confused)
       <div class="onActivity-like">
         <button style="background: none; border: none; padding: 0; margin: 0;" class="onActivity-likebtn"data-activity-id="${activityID}">👍</button>
         <span class="onActivity-like-count">0</span>
@@ -328,6 +336,11 @@ async function openFriendModal(friendData) {
     await fillFriendActivity(friendData);
     await fillFriendsClub(friendData);
     await likeFeature(username, friendData);
+<<<<<<< HEAD
+=======
+    await thumbsUp(username, friendData, activityID);
+
+>>>>>>> 5ed8add (oml im so confused)
 }
 async function fillFriendActivity(friendUsername) {
   try {
@@ -409,6 +422,17 @@ function populateFriendActivities(activities, friendUsername) {
           <span class="onActivity-like-count">0</span>
         </div>
       </div>
+<<<<<<< HEAD
+=======
+      ${act.Notes ? `<div class="feed-notes">Notes: ${act.Notes}</div>` : ""}
+      <div class="stat">
+        <div class="label">Likes</div>
+        <div class="onActivity-like">
+          <button style="background: none; border: none; padding: 0; margin: 0;" class="onActivity-likebtn"data-activity-id="${act.activityID}">👍</button>
+          <span class="onActivity-like-count">0</span>
+        </div>
+      </div>
+>>>>>>> 5ed8add (oml im so confused)
     `;
     feedContainer.appendChild(card);
 

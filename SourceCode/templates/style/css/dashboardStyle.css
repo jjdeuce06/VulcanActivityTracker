@@ -426,6 +426,10 @@ body.dashboard-page #friendDropdown option {
 }
 
 /*like btn*/
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5ed8add (oml im so confused)
 body.dashboard-page .feed-card .stat {
   position: absolute;
   bottom: 15px;
@@ -447,6 +451,7 @@ body.dashboard-page .onActivity-likebtn {
 body.dashboard-page .onActivity-likebtn:hover {
   transform: scale(1.2);
 }
+<<<<<<< HEAD
 
 /* Clubs Layout */
 body.dashboard-page .clubs-container {
@@ -527,3 +532,5 @@ body.dashboard-page .club-bubble .club-image {
 body.dashboard-page .club-hover-info {
   z-index: 2;
 }
+=======
+>>>>>>> 5ed8add (oml im so confused)

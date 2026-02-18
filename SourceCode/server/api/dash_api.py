@@ -4,7 +4,10 @@ from server.controllers.login_store import fetch_all_users
 from server.controllers.user_store import get_user_id
 from server.controllers.friend_store import insert_friend, get_users_friends
 from server.controllers.like_store import toggle_like_friend, check_if_liked, get_total_likes, check_if_thumbs_up, get_total_thumbs_up, toggle_thumbs_up
+<<<<<<< HEAD
 from server.controllers.club_store import get_user_clubs
+=======
+>>>>>>> 5ed8add (oml im so confused)
 dash_api = Blueprint('dash_api', __name__)
 
 
@@ -115,7 +118,13 @@ def thumbs_up_friend():
     friend = data.get("friend")
     action = data.get("action") #action option
     activity_id = data.get("activity_id")
+<<<<<<< HEAD
     
+=======
+
+    print("activity id,", activity_id)
+
+>>>>>>> 5ed8add (oml im so confused)
     conn = get_db_connection()
     try:
         userID = get_user_id(conn, username)
@@ -126,12 +135,21 @@ def thumbs_up_friend():
 
         # fetch
         if action == "get":
+<<<<<<< HEAD
             liked = check_if_thumbs_up(conn, userID, activity_id)
             total_likes = get_total_thumbs_up(conn, activity_id)
 
         else:
             #toggle
             liked, total_likes = toggle_thumbs_up(conn, userID, activity_id)
+=======
+            liked = check_if_thumbs_up(conn, userID, friendID, activity_id)
+            total_likes = get_total_thumbs_up(conn, friendID, activity_id)
+
+        else:
+            #toggle
+            liked, total_likes = toggle_thumbs_up(conn, userID, friendID, activity_id)
+>>>>>>> 5ed8add (oml im so confused)
 
     finally:
         conn.commit()
@@ -143,6 +161,7 @@ def thumbs_up_friend():
         "total_likes": total_likes
     })
 
+<<<<<<< HEAD
 @dash_api.route("/thumbCount", methods=["POST"])
 def get_thumb_count():
     data = request.get_json()
@@ -184,3 +203,5 @@ def fill_dash_clubs():
     return jsonify({
         "dash_clubs": dash_clubs
     })
+=======
+>>>>>>> 5ed8add (oml im so confused)

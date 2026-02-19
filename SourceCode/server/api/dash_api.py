@@ -133,12 +133,12 @@ def thumbs_up_friend():
 
         # fetch
         if action == "get":
-            liked = check_if_thumbs_up(conn, userID, friendID, activity_id)
-            total_likes = get_total_thumbs_up(conn, friendID, activity_id)
+            liked = check_if_thumbs_up(conn, userID, activity_id)
+            total_likes = get_total_thumbs_up(conn, activity_id)
 
         else:
             #toggle
-            liked, total_likes = toggle_thumbs_up(conn, userID, friendID, activity_id)
+            liked, total_likes = toggle_thumbs_up(conn, userID, activity_id)
 
     finally:
         conn.commit()

@@ -402,7 +402,13 @@ function populateFriendActivities(activities, friendUsername) {
     console.log("activity id from modal", ModalactivityID);
     feedContainer.appendChild(card);
 
-    thumbsUp(username, friendUsername, ModalactivityID);
+    const modallikeBtn = card.querySelector(".onActivity-likebtn");
+    const modallikeCount = card.querySelector(".onActivity-like-count");
+
+    thumbsUp(username, friendUsername, ModalactivityID, modallikeBtn, modallikeCount);
+
+
+    //thumbsUp(username, friendUsername, ModalactivityID);
 
   });
 }

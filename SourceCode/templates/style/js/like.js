@@ -64,15 +64,18 @@ async function likeFeature(username, friendName) {
 
 
 
-async function thumbsUp(username, friendName, activity_id) {
+async function thumbsUp(username, friendName, activity_id, modallikeBtn, modallikeCount) {
   console.log("entered thumbs up");
-  const likeBtn = document.getElementById("like-friend-btn");
-  const likeCount = document.getElementById("like-friend-count");
+  // const modallikeBtn = document.getElementById("like-friend-btn");
+  // const modallikeCount = document.getElementById("like-friend-count");
 
-  if (!likeBtn || !likeCount || !friendName) return;
+  if (!modallikeBtn || !modallikeCount || !friendName) return;
 
   let isLiked = false;
   let totalLikes = 0;
+  function modalupdateLikeUI() {
+    modallikeCount.textContent = totalLikes;
+  }
 
   //STEP 1: LOAD current likes (no toggle)
   try {
@@ -92,6 +95,7 @@ async function thumbsUp(username, friendName, activity_id) {
     if (res.ok) {
       isLiked = data.liked;
       totalLikes = data.total_likes;
+      modalupdateLikeUI();
     }
 
   } catch (err) {
@@ -99,7 +103,7 @@ async function thumbsUp(username, friendName, activity_id) {
   }
 
   // STEP 2: TOGGLE on click
-  likeBtn.addEventListener("click", async () => {
+  modallikeBtn.addEventListener("click", async () => {
     try {
       const res = await fetch("/dash_api/thumbsUp", {
         method: "POST",
@@ -116,7 +120,7 @@ async function thumbsUp(username, friendName, activity_id) {
       if (res.ok) {
         isLiked = data.liked;
         totalLikes = data.total_likes;
-        updateLikeUI();
+        modalupdateLikeUI();
       }
 
     } catch (err) {

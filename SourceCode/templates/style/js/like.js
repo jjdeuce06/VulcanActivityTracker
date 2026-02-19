@@ -8,7 +8,7 @@ async function likeFeature(username, friendName) {
   let totalLikes = 0;
 
   function updateLikeUI() {
-    likeBtn.textContent = isLiked ? "💔" : "❤️";
+    //likeBtn.textContent = isLiked ? "💔" : "❤️";
     likeCount.textContent = totalLikes;
   }
 

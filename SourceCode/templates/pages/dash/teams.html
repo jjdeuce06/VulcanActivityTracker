@@ -2,4 +2,17 @@
 
 {% block content %}
 <h1 style="color: blue;"> Teams page </h1>
+
+    <div id="teams-container">
+        <div class="card feed-card">
+            <div class="feed-title">Display Sports Teams Here</div>
+
+            <div style="margin-top:12px; color:#777; font-size:13px;">
+            <button id="view-teams-btn">View Teams</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="{{ url_for('style_folder.static', filename='js/teams.js') }}"></script>
 {% endblock %}

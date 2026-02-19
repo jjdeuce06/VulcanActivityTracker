@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const data = await resp.json();
     const club = data.club;
     console.log("Loaded club:", club);
-    console.log("data:", data);
+    console.log("data:", data0202);
 
     document.getElementById("club-name-heading").textContent = club.name;
     document.getElementById("club-description").textContent = club.description || "No description provided.";

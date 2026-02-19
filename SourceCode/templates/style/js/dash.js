@@ -336,8 +336,6 @@ async function openFriendModal(friendData) {
     await fillFriendActivity(friendData);
     await fillFriendsClub(friendData);
     await likeFeature(username, friendData);
-    await thumbsUp(username, friendData, activityID);
-
 }
 async function fillFriendActivity(friendUsername) {
   try {
@@ -419,17 +417,6 @@ function populateFriendActivities(activities, friendUsername) {
           <span class="onActivity-like-count">0</span>
         </div>
       </div>
-<<<<<<< HEAD
-=======
-      ${act.Notes ? `<div class="feed-notes">Notes: ${act.Notes}</div>` : ""}
-      <div class="stat">
-        <div class="label">Likes</div>
-        <div class="onActivity-like">
-          <button style="background: none; border: none; padding: 0; margin: 0;" class="onActivity-likebtn"data-activity-id="${act.activityID}">👍</button>
-          <span class="onActivity-like-count">0</span>
-        </div>
-      </div>
->>>>>>> 5ed8add (oml im so confused)
     `;
     feedContainer.appendChild(card);
 
@@ -604,4 +591,8 @@ function populateDashClubs(clubs) {
   });
 }
 =======
+<<<<<<< HEAD
 >>>>>>> 26cb97c (cooked a meal)
+=======
+>>>>>>> 90fb3e9 (cooked a meal)
+>>>>>>> 03a9502 (cooked a meal)

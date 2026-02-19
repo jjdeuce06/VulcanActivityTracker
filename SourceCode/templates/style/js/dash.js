@@ -233,7 +233,7 @@ async function fillDashActivity(username) {
       ? data
       : data.activities;
 
-    populateDashActivity(activities);
+    populateDashActivity(activities, username);
 
 
     return activities;
@@ -243,7 +243,7 @@ async function fillDashActivity(username) {
   }
 }
 
-function populateDashActivity(data) {
+function populateDashActivity(data, username) {
   const feedContainer = document.querySelector("#activity-feed");
   feedContainer.innerHTML = ""; // clear old feed
 
@@ -296,6 +296,8 @@ function populateDashActivity(data) {
     `;
     console.log("activity id from dash", activityID);
     feedContainer.appendChild(card);
+
+    dashActivityLikes(username, activityID);
   });
 }
 
@@ -319,8 +321,6 @@ async function openFriendModal(friendData) {
     await fillFriendActivity(friendData);
     await fillFriendsClub(friendData);
     await likeFeature(username, friendData);
-    //await thumbsUp(username, friendData, activityID);
-
 }
 async function fillFriendActivity(friendUsername) {
   try {
@@ -491,5 +491,36 @@ async function dashLikes(username){
     likes.textContent = data.total_likes || 0;
   } catch (err) {
     console.error("Failed to load dashboard likes:", err);
+  }
+}
+
+async function dashActivityLikes(username, activity_id) {
+  try {
+    const response = await fetch("/dash_api/thumbCount", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, activity_id })
+    });
+
+    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+
+    const data = await response.json();
+    console.log("likes data:", data);
+
+    if (data.status !== "ok") return;
+
+    const btn = document.querySelector(
+      `.onActivity-likebtn[data-activity-id="${activity_id}"]`
+    );
+
+    if (btn) {
+      const countSpan = btn.parentElement.querySelector(".onActivity-like-count");
+      if (countSpan) {
+        countSpan.textContent = data.activity_total_likes || 0;
+      }
+    }
+
+  } catch (err) {
+    console.error("Failed to load activity likes:", err);
   }
 }

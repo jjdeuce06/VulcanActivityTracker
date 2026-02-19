@@ -19,7 +19,6 @@ def sendFriendsList():
         userID = get_user_id(conn, username)
         existing_users = fetch_all_users(conn)
         existing_friends = get_users_friends(conn, userID)
-        print(existing_users)
     finally:
             conn.close()  
 
@@ -38,15 +37,11 @@ def add_friend():
     
     conn = get_db_connection()
     try:
-
         current_userID = get_user_id(conn, username)
-        print("current", current_userID, "friend", friend_user)
-
         if not current_userID or not friend_user:
             return jsonify({"status": "error", "message": "Missing user"}), 400
         
         insert_friend(conn, current_userID,friend_user )
-        print("insert complete")
     finally:
         conn.commit()
 
@@ -101,7 +96,6 @@ def get_likes_count():
             return jsonify({"status": "error"}), 400
 
         total_likes = get_total_likes(conn, userID)
-        print("total likes", total_likes)
 
     finally:
         conn.close()
@@ -120,9 +114,7 @@ def thumbs_up_friend():
     friend = data.get("friend")
     action = data.get("action") #action option
     activity_id = data.get("activity_id")
-
-    print("activity id,", activity_id)
-
+    
     conn = get_db_connection()
     try:
         userID = get_user_id(conn, username)
@@ -150,3 +142,25 @@ def thumbs_up_friend():
         "total_likes": total_likes
     })
 
+@dash_api.route("/thumbCount", methods=["POST"])
+def get_thumb_count():
+    data = request.get_json()
+    username = data.get("username")
+    activity_id = data.get("activity_id")
+
+    conn = get_db_connection()
+    try:
+        userID = get_user_id(conn, username)
+
+        if not userID:
+            return jsonify({"status": "error"}), 400
+
+        total_likes = get_total_thumbs_up(conn, activity_id)
+
+    finally:
+        conn.close()
+
+    return jsonify({
+        "status": "ok",
+        "activity_total_likes": total_likes
+    })

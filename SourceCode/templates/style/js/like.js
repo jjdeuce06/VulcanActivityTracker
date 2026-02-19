@@ -65,10 +65,6 @@ async function likeFeature(username, friendName) {
 
 
 async function thumbsUp(username, friendName, activity_id, modallikeBtn, modallikeCount) {
-  console.log("entered thumbs up");
-  // const modallikeBtn = document.getElementById("like-friend-btn");
-  // const modallikeCount = document.getElementById("like-friend-count");
-
   if (!modallikeBtn || !modallikeCount || !friendName) return;
 
   let isLiked = false;

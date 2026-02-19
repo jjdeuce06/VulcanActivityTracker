@@ -287,7 +287,7 @@ function populateDashActivity(data, username) {
     ${common.notes ? `<div class="feed-notes">Notes: ${common.notes}</div>` : ""}
 
    <div class="stat">
-      <div class="label">Likes</div>
+      <div class="label"></div>
       <div class="onActivity-like">
         <button style="background: none; border: none; padding: 0; margin: 0;" class="onActivity-likebtn"data-activity-id="${activityID}">👍</button>
         <span class="onActivity-like-count">0</span>
@@ -392,7 +392,7 @@ function populateFriendActivities(activities, friendUsername) {
       </div>
       ${act.notes ? `<div class="feed-notes">Notes: ${act.notes}</div>` : ""}
       <div class="stat">
-        <div class="label">Likes</div>
+        <div class="label"></div>
         <div class="onActivity-like">
           <button style="background: none; border: none; padding: 0; margin: 0;" class="onActivity-likebtn"data-activity-id="${ModalactivityID}">👍</button>
           <span class="onActivity-like-count">0</span>

@@ -337,10 +337,13 @@ async function openFriendModal(friendData) {
     await fillFriendsClub(friendData);
     await likeFeature(username, friendData);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     await thumbsUp(username, friendData, activityID);
 
 >>>>>>> 5ed8add (oml im so confused)
+=======
+>>>>>>> 26cb97c (cooked a meal)
 }
 async function fillFriendActivity(friendUsername) {
   try {
@@ -535,6 +538,10 @@ async function dashActivityLikes(username, activity_id) {
     if (!response.ok) throw new Error(`HTTP error ${response.status}`);
 
     const data = await response.json();
+<<<<<<< HEAD
+=======
+    console.log("likes data:", data);
+>>>>>>> 26cb97c (cooked a meal)
 
     if (data.status !== "ok") return;
 
@@ -553,6 +560,7 @@ async function dashActivityLikes(username, activity_id) {
     console.error("Failed to load activity likes:", err);
   }
 }
+<<<<<<< HEAD
 
 
 async function fillDashClub(username){
@@ -601,3 +609,5 @@ function populateDashClubs(clubs) {
     container.appendChild(clubDiv);
   });
 }
+=======
+>>>>>>> 26cb97c (cooked a meal)

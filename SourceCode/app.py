@@ -21,6 +21,7 @@ app.register_blueprint(dash_api, url_prefix="/dash_api")
 app.register_blueprint(club_api, url_prefix="/club_api")
 app.register_blueprint(team_api, url_prefix="/team_api")
 app.register_blueprint(challenges_api, url_prefix="/challenges_api")
+app.register_blueprint(team_api, url_prefix="/team_api")
 
 
 # Initialize / upgrade schema on app start

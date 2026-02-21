@@ -12,6 +12,7 @@ def create_user_table(conn: pyodbc.Connection) -> None:
         cursor.execute("""
             CREATE TABLE [user] (
                 UserID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+                Email VARCHAR(255) NOT NULL UNIQUE,
                 Username VARCHAR(255) NOT NULL UNIQUE,
                 PasswordHash NVARCHAR(255) NOT NULL,
                 isActive BIT NOT NULL DEFAULT 1,

@@ -1,11 +1,96 @@
 //this file will handle login click events, forma verification, and redirection
 //will serve as api for login user account set up
 //possibly hold password hashing functions but prob not
+    var letter = document.getElementById("letter");
+    var capital = document.getElementById("capital");
+    var number = document.getElementById("number");
+    var length = document.getElementById("length");
+    var myInput = document.getElementById("pass_entry");
+    var emailInput = document.getElementById("email_entry");
+    const errorDiv = document.getElementById("register-error");
 
+    emailInput.onfocus = function()
+    {
+        // Clear previous messages
+        errorDiv.textContent = "";
+        errorDiv.style.color = "red";
+    }
+
+    myInput.onfocus = function() 
+    {
+        document.getElementById("message").style.display = "block";
+        // Clear previous messages
+        errorDiv.textContent = "";
+        errorDiv.style.color = "red";
+    }
+
+    myInput.onkeyup = function() 
+    {
+        // Validate lowercase letters
+        var lowerCaseLetters = /[a-z]/g;
+        if(myInput.value.match(lowerCaseLetters)) 
+        {  
+            letter.classList.remove("invalid");
+            letter.classList.add("valid");
+        } 
+        else 
+        {
+            letter.classList.remove("valid");
+            letter.classList.add("invalid");
+        }
+            
+        // Validate capital letters
+        var upperCaseLetters = /[A-Z]/g;
+        if(myInput.value.match(upperCaseLetters)) 
+        {  
+            capital.classList.remove("invalid");
+            capital.classList.add("valid");
+        } 
+        else 
+        {
+            capital.classList.remove("valid");
+            capital.classList.add("invalid");
+        }
+
+        // Validate numbers
+        var numbers = /[0-9]/g;
+        if(myInput.value.match(numbers)) 
+        {  
+            number.classList.remove("invalid");
+            number.classList.add("valid");
+        } 
+        else 
+        {
+            number.classList.remove("valid");
+            number.classList.add("invalid");
+        }
+
+        // Validate length
+        if(myInput.value.length >= 8) 
+        {  
+            length.classList.remove("invalid");
+            length.classList.add("valid");
+        } 
+        else 
+        {
+            length.classList.remove("valid");
+            length.classList.add("invalid");
+        }
+    };
+
+function validateEmail(email) 
+{
+    if (!email.includes("@pennwest.edu"))
+    {
+        return false;
+    }
+    return true;
+}
 
 document.getElementById("createBtn").addEventListener("click", async () =>{
     const username = document.getElementById("user_entry").value;
     const password = document.getElementById("pass_entry").value;
+    const email = document.getElementById("email_entry").value;
     const errorDiv = document.getElementById("register-error");
     var letter = document.getElementById("letter");
     var capital = document.getElementById("capital");
@@ -16,9 +101,9 @@ document.getElementById("createBtn").addEventListener("click", async () =>{
     errorDiv.textContent = "";
     errorDiv.style.color = "red";
 
-    if (!username || !password) 
-        {
-        errorDiv.textContent = "Please enter both username and password.";
+    if (!username || !password || !email) 
+    {
+        errorDiv.textContent = "Please enter username, email and password.";
         return;
     }
 
@@ -31,16 +116,26 @@ document.getElementById("createBtn").addEventListener("click", async () =>{
         return;
     }
 
+    if (!validateEmail(email))
+    {
+        errorDiv.textContent = "Please enter a valid PennWest email.";
+        return;
+    }
+
+    
+
     //hash password before sending
     const hash = await hashPassword(password);
         //send to backend
         try {
-        const response = await sendLoginData(username, hash);
+        const response = await sendLoginData(email, username, hash);
         if (!response.ok) {
             // show backend error message like "Username already exists"
             errorDiv.textContent = response.error || "Registration failed";
             document.getElementById("user_entry").focus();
-        } else {
+        } 
+        else 
+        {
             errorDiv.style.color = "green";
             errorDiv.textContent = "Registration successful!";
             backToLogin();
@@ -81,13 +176,14 @@ async function hashPassword(password){
 
 //Step 2: API to send hash
 
-async function sendLoginData(username, hashPassword){
+async function sendLoginData(email, username, hashPassword){
     const response = await fetch("/login_api/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
+            email: email,
             username: username,
             password: hashPassword
         })

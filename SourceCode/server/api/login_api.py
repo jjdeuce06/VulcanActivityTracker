@@ -15,9 +15,6 @@ def login():
     print("Received: ", email, username, password)
     ph = PasswordHasher()
     stored_hash = ph.hash(password)
-    print("stored hash:", stored_hash)
-
-
 
     with get_db_connection() as conn:
 

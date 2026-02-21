@@ -361,10 +361,8 @@ function populateActivityTable(data){
       <td>${common.visibility}</td>
       <td>${common.notes ?? ""}</td>
     `;
-
+    console.log(data.visibility);
     activityTable.appendChild(row);
-    
-    
   });
 
 }

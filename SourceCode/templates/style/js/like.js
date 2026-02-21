@@ -8,7 +8,6 @@ async function likeFeature(username, friendName) {
   let totalLikes = 0;
 
   function updateLikeUI() {
-    likeBtn.textContent = isLiked ? "💔" : "❤️";
     likeCount.textContent = totalLikes;
   }
 
@@ -54,6 +53,69 @@ async function likeFeature(username, friendName) {
         isLiked = data.liked;
         totalLikes = data.total_likes;
         updateLikeUI();
+      }
+
+    } catch (err) {
+      console.error("Like error:", err);
+    }
+  });
+}
+
+
+
+async function thumbsUp(username, friendName, activity_id, modallikeBtn, modallikeCount) {
+  if (!modallikeBtn || !modallikeCount || !friendName) return;
+
+  let isLiked = false;
+  let totalLikes = 0;
+  function modalupdateLikeUI() {
+    modallikeCount.textContent = totalLikes;
+  }
+
+  //STEP 1: LOAD current likes (no toggle)
+  try {
+    const res = await fetch("/dash_api/thumbsUp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username,
+        friend: friendName,
+        action: "get",
+        activity_id: activity_id
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      isLiked = data.liked;
+      totalLikes = data.total_likes;
+      modalupdateLikeUI();
+    }
+
+  } catch (err) {
+    console.error("Initial load error:", err);
+  }
+
+  // STEP 2: TOGGLE on click
+  modallikeBtn.addEventListener("click", async () => {
+    try {
+      const res = await fetch("/dash_api/thumbsUp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username,
+          friend: friendName,
+          activity_id: activity_id
+        })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        isLiked = data.liked;
+        totalLikes = data.total_likes;
+        modalupdateLikeUI();
       }
 
     } catch (err) {

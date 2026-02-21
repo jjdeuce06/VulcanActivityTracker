@@ -268,11 +268,7 @@ function populateDashActivity(data, username) {
   })
   .slice(0, 10);
 
-<<<<<<< HEAD
   topActivities.forEach(activity => {
-=======
-  data.forEach(activity => {
->>>>>>> 5ed8add (oml im so confused)
     const activityID = activity.activity_id;
     const common = activity.common ?? activity;
     const sport  = activity.sport  ?? activity;
@@ -299,11 +295,7 @@ function populateDashActivity(data, username) {
     ${common.notes ? `<div class="feed-notes">Notes: ${common.notes}</div>` : ""}
 
    <div class="stat">
-<<<<<<< HEAD
       <div class="label"></div>
-=======
-      <div class="label">Likes</div>
->>>>>>> 5ed8add (oml im so confused)
       <div class="onActivity-like">
         <button style="background: none; border: none; padding: 0; margin: 0;" class="onActivity-likebtn"data-activity-id="${activityID}">👍</button>
         <span class="onActivity-like-count">0</span>
@@ -541,7 +533,6 @@ async function dashActivityLikes(username, activity_id) {
     console.error("Failed to load activity likes:", err);
   }
 }
-<<<<<<< HEAD
 
 
 async function fillDashClub(username){
@@ -590,9 +581,12 @@ function populateDashClubs(clubs) {
     container.appendChild(clubDiv);
   });
 }
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 >>>>>>> 26cb97c (cooked a meal)
 =======
 >>>>>>> 90fb3e9 (cooked a meal)
 >>>>>>> 03a9502 (cooked a meal)
+=======
+>>>>>>> 8af0038 (fix radio button front end)

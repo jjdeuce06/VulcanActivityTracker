@@ -248,15 +248,27 @@ document.addEventListener("DOMContentLoaded", async () => {
   await fillActivityTable(username);
 });
 
-
 function collectSportData(form) {
   if (!form) throw new Error("Form element not provided");
 
   const data = {};
+
   form.querySelectorAll("input, textarea, select").forEach(field => {
-    if (field.type === "number") data[field.name] = field.value ? parseFloat(field.value) : null;
-    else data[field.name] = field.value || "";
+
+    if (field.type === "radio") {
+      if (field.checked) {
+        data[field.name] = field.value;
+      }
+      return;
+    }
+
+    if (field.type === "number") {
+      data[field.name] = field.value ? parseFloat(field.value) : null;
+    } else {
+      data[field.name] = field.value || "";
+    }
   });
+
   return data;
 }
 
@@ -338,10 +350,8 @@ function populateActivityTable(data){
       <td>${common.visibility}</td>
       <td>${common.notes ?? ""}</td>
     `;
-
+    console.log(data.visibility);
     activityTable.appendChild(row);
-    
-    
   });
 
 }

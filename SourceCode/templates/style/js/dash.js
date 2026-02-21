@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await fillDashActivity(username);
   await fillDashFriends(username); // pass current user for filtering
   await dashLikes(username);
+  await fillDashClub(username);
 
 
   const fBtn = document.getElementById("friendBtn");
@@ -233,7 +234,7 @@ async function fillDashActivity(username) {
       ? data
       : data.activities;
 
-    populateDashActivity(activities);
+    populateDashActivity(activities, username);
 
 
     return activities;
@@ -243,7 +244,7 @@ async function fillDashActivity(username) {
   }
 }
 
-function populateDashActivity(data) {
+function populateDashActivity(data, username) {
   const feedContainer = document.querySelector("#activity-feed");
   feedContainer.innerHTML = ""; // clear old feed
 
@@ -259,8 +260,16 @@ function populateDashActivity(data) {
     `;
     return;
   }
+  const topActivities = [...data]
+  .sort((a, b) => {
+    const dateA = new Date((a.common ?? a).date);
+    const dateB = new Date((b.common ?? b).date);
+    return dateB - dateA;
+  })
+  .slice(0, 10);
 
-  data.forEach(activity => {
+  topActivities.forEach(activity => {
+    const activityID = activity.activity_id;
     const common = activity.common ?? activity;
     const sport  = activity.sport  ?? activity;
 
@@ -284,8 +293,18 @@ function populateDashActivity(data) {
         Duration: ${common.duration ?? "N/A"} min • Calories: ${common.calories_burned ?? "N/A"}${extra ? " • " + extra : ""}
     </div>
     ${common.notes ? `<div class="feed-notes">Notes: ${common.notes}</div>` : ""}
+
+   <div class="stat">
+      <div class="label"></div>
+      <div class="onActivity-like">
+        <button style="background: none; border: none; padding: 0; margin: 0;" class="onActivity-likebtn"data-activity-id="${activityID}">👍</button>
+        <span class="onActivity-like-count">0</span>
+      </div>
+    </div>
     `;
     feedContainer.appendChild(card);
+
+    dashActivityLikes(username, activityID);
   });
 }
 
@@ -309,7 +328,6 @@ async function openFriendModal(friendData) {
     await fillFriendActivity(friendData);
     await fillFriendsClub(friendData);
     await likeFeature(username, friendData);
-
 }
 async function fillFriendActivity(friendUsername) {
   try {
@@ -324,7 +342,7 @@ async function fillFriendActivity(friendUsername) {
     const data = await response.json();
     const activities = Array.isArray(data.activities) ? data.activities : [];
 
-    populateFriendActivities(activities);
+    populateFriendActivities(activities, friendUsername);
 
     return activities;
 
@@ -333,9 +351,11 @@ async function fillFriendActivity(friendUsername) {
   }
 }
 
-function populateFriendActivities(activities) {
+function populateFriendActivities(activities, friendUsername) {
   const feedContainer = document.getElementById("friend-activity-feed");
   feedContainer.innerHTML = ""; // clear previous content
+  const username = localStorage.getItem("currentUser");
+
 
   if (!activities || activities.length === 0) {
     feedContainer.innerHTML = `
@@ -350,11 +370,16 @@ function populateFriendActivities(activities) {
   const FactivityCountDiv = document.querySelector("#Factivity-count");
   FactivityCountDiv.textContent = activities?.length ?? 0;
 
-  activities.forEach(act => {
+  const topActivities = [...activities]
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 10);
+
+  topActivities.forEach(act => {
     let extra = "";
+    const ModalactivityID = act.activity_id;
 
     // handle swim details if present
-    if (act.ActivityType.toLowerCase() === "swim" && act.Details) {
+    if (act.activity_type.toLowerCase() === "swim" && act.Details) {
       try {
         const details = JSON.parse(act.Details);
         if (details.distance && details.unit) extra = `${details.distance} ${details.unit}`;
@@ -363,7 +388,7 @@ function populateFriendActivities(activities) {
       }
     }
 
-    const dateObj = new Date(act.ActivityDate);
+    const dateObj = new Date(act.date);
     const formattedDate = !isNaN(dateObj)
       ? dateObj.toLocaleDateString("en-US", { year:"numeric", month:"short", day:"numeric" })
       : "Unknown Date";
@@ -371,14 +396,30 @@ function populateFriendActivities(activities) {
     const card = document.createElement("div");
     card.className = "card feed-card";
     card.innerHTML = `
-      <div class="feed-title">${act.ActivityType.toUpperCase()}</div>
+      <div class="feed-title">${act.activity_type.toUpperCase()}</div>
       <div class="feed-meta">${formattedDate}</div>
       <div class="feed-details">
-        Duration: ${act.Duration ?? "N/A"} min • Calories: ${act.CaloriesBurned ?? "N/A"}${extra ? " • " + extra : ""}
+        Duration: ${act.duration ?? "N/A"} min • Calories: ${act.calories_burned ?? "N/A"}${extra ? " • " + extra : ""}
       </div>
-      ${act.Notes ? `<div class="feed-notes">Notes: ${act.Notes}</div>` : ""}
+      ${act.notes ? `<div class="feed-notes">Notes: ${act.notes}</div>` : ""}
+      <div class="stat">
+        <div class="label"></div>
+        <div class="onActivity-like">
+          <button style="background: none; border: none; padding: 0; margin: 0;" class="onActivity-likebtn"data-activity-id="${ModalactivityID}">👍</button>
+          <span class="onActivity-like-count">0</span>
+        </div>
+      </div>
     `;
     feedContainer.appendChild(card);
+
+    const modallikeBtn = card.querySelector(".onActivity-likebtn");
+    const modallikeCount = card.querySelector(".onActivity-like-count");
+
+    thumbsUp(username, friendUsername, ModalactivityID, modallikeBtn, modallikeCount);
+
+
+    //thumbsUp(username, friendUsername, ModalactivityID);
+
   });
 }
 
@@ -395,9 +436,6 @@ async function fillFriendsClub(friendUsername){
 
     const data = await response.json();
     const clubs = Array.isArray(data.clubs) ? data.clubs : [];
-
-    console.log("friends clubs:", clubs);
-
     populateFriendClubs(clubs);
 
   } catch (err) {
@@ -456,9 +494,86 @@ async function dashLikes(username){
     if (!response.ok) throw new Error(`HTTP error ${response.status}`);
 
     const data = await response.json();
-    console.log("likes data:", data);
     likes.textContent = data.total_likes || 0;
   } catch (err) {
     console.error("Failed to load dashboard likes:", err);
   }
+}
+
+async function dashActivityLikes(username, activity_id) {
+  try {
+    const response = await fetch("/dash_api/thumbCount", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, activity_id })
+    });
+
+    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+
+    const data = await response.json();
+
+    if (data.status !== "ok") return;
+
+    const btn = document.querySelector(
+      `.onActivity-likebtn[data-activity-id="${activity_id}"]`
+    );
+
+    if (btn) {
+      const countSpan = btn.parentElement.querySelector(".onActivity-like-count");
+      if (countSpan) {
+        countSpan.textContent = data.activity_total_likes || 0;
+      }
+    }
+
+  } catch (err) {
+    console.error("Failed to load activity likes:", err);
+  }
+}
+
+
+async function fillDashClub(username){
+  try {
+    const response = await fetch("/dash_api/fillDashClubs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ currentUser: username })
+    });
+
+    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+
+    const data = await response.json();
+    const clubs = Array.isArray(data.dash_clubs) ? data.dash_clubs : [];
+    console.log("Dash Clubs", clubs);
+    populateDashClubs(clubs);
+  } catch (err) {
+    console.error("Failed to load friend clubs:", err);
+  }
+
+}
+
+function populateDashClubs(clubs) {
+  const container = document.getElementById("dash-clubs-container");
+  container.innerHTML = "";
+
+  if (!clubs || clubs.length === 0) {
+    container.innerHTML = `<div style="color:#777;">No clubs yet.</div>`;
+    return;
+  }
+
+  clubs.forEach(club => {
+    const clubDiv = document.createElement("div");
+    clubDiv.className = "club-bubble";
+
+    // Use club.imageUrl if present, otherwise default
+    const imageUrl = club.imageUrl || "/style/img/penn.jpg";
+
+    clubDiv.innerHTML = `
+      <img class="club-image" src="${imageUrl}" alt="${club.name}">
+      <div class="club-hover-info">
+        <div class="club-title">${club.name}</div>
+        <div class="club-members">${club.members?.length ?? 0} members</div>
+      </div>
+    `;
+    container.appendChild(clubDiv);
+  });
 }

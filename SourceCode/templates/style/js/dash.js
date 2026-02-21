@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await fillDashActivity(username);
   await fillDashFriends(username); // pass current user for filtering
   await dashLikes(username);
+  await fillDashClub(username);
 
 
   const fBtn = document.getElementById("friendBtn");
@@ -259,8 +260,15 @@ function populateDashActivity(data, username) {
     `;
     return;
   }
+  const topActivities = [...data]
+  .sort((a, b) => {
+    const dateA = new Date((a.common ?? a).date);
+    const dateB = new Date((b.common ?? b).date);
+    return dateB - dateA;
+  })
+  .slice(0, 10);
 
-  data.forEach(activity => {
+  topActivities.forEach(activity => {
     const activityID = activity.activity_id;
     const common = activity.common ?? activity;
     const sport  = activity.sport  ?? activity;
@@ -486,7 +494,6 @@ async function dashLikes(username){
     if (!response.ok) throw new Error(`HTTP error ${response.status}`);
 
     const data = await response.json();
-    console.log("likes data:", data);
     likes.textContent = data.total_likes || 0;
   } catch (err) {
     console.error("Failed to load dashboard likes:", err);
@@ -504,7 +511,6 @@ async function dashActivityLikes(username, activity_id) {
     if (!response.ok) throw new Error(`HTTP error ${response.status}`);
 
     const data = await response.json();
-    console.log("likes data:", data);
 
     if (data.status !== "ok") return;
 
@@ -522,4 +528,52 @@ async function dashActivityLikes(username, activity_id) {
   } catch (err) {
     console.error("Failed to load activity likes:", err);
   }
+}
+
+
+async function fillDashClub(username){
+  try {
+    const response = await fetch("/dash_api/fillDashClubs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ currentUser: username })
+    });
+
+    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+
+    const data = await response.json();
+    const clubs = Array.isArray(data.dash_clubs) ? data.dash_clubs : [];
+    console.log("Dash Clubs", clubs);
+    populateDashClubs(clubs);
+  } catch (err) {
+    console.error("Failed to load friend clubs:", err);
+  }
+
+}
+
+function populateDashClubs(clubs) {
+  const container = document.getElementById("dash-clubs-container");
+  container.innerHTML = "";
+
+  if (!clubs || clubs.length === 0) {
+    container.innerHTML = `<div style="color:#777;">No clubs yet.</div>`;
+    return;
+  }
+
+  clubs.forEach(club => {
+    const clubDiv = document.createElement("div");
+    clubDiv.className = "club-bubble";
+
+    // Use club.imageUrl if present, otherwise default
+    const imageUrl = club.imageUrl || "/style/img/penn.jpg";
+
+    clubDiv.innerHTML = `
+      <img class="club-image" src="${imageUrl}" alt="${club.name}">
+      <div class="club-hover-info">
+        <div class="club-title">${club.name}</div>
+        <div class="club-members">${club.members?.length ?? 0} members</div>
+      </div>
+    `;
+    container.appendChild(clubDiv);
+  });
 }

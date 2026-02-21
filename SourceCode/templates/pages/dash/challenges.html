@@ -1,0 +1,68 @@
+{% extends "base_temp/dashboard.html" %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/challenges.css') }}">
+{% endblock %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>Challenges - Vulcan Activity Tracker</title>
+    <link rel="stylesheet" href="/static/css/challenges.css">
+</head>
+<body>
+
+<h1>Challenges</h1>
+<p class="page-description">
+    Compete with others and push your limits.
+</p>
+
+<div class="challenge-layout">
+
+    <!-- LEFT: CREATE FORM -->
+    <form class="challenge-form" id="createChallengeForm">
+        <h3>Create Challenge</h3>
+
+        <label>Challenge Name</label>
+        <input type="text" id="challengeName" required>
+
+        <label>Description</label>
+        <textarea id="description" rows="3"></textarea>
+
+        <label>Activity Type</label>
+        <select id="activityType" required>
+            <option value="Running">Running</option>
+            <option value="Cycling">Cycling</option>
+            <option value="Swimming">Swimming</option>
+            <option value="Weightlifting">Weightlifting</option>
+        </select>
+
+        <label>Metric Type</label>
+        <select id="metricType" required>
+            <option value="distance">Distance</option>
+            <option value="count">Workout Count</option>
+        </select>
+
+        <label>Start Date</label>
+        <input type="date" id="startDate" required>
+
+        <label>End Date</label>
+        <input type="date" id="endDate" required>
+
+        <button type="submit">Create Challenge</button>
+    </form>
+
+    <!-- RIGHT: ACTIVE CHALLENGES -->
+    <div class="challenge-card">
+        <h3>Active Challenges</h3>
+        <div class="challenge-list" id="challengeList">
+            <!-- JS will inject challenges here -->
+        </div>
+    </div>
+
+</div>
+
+</body>
+<script src="{{ url_for('style_folder.static', filename='js/challenges.js') }}"></script>
+
+{% endblock %}

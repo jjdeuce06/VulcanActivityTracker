@@ -20,6 +20,7 @@ ROUTES = {
     "/teams": ("pages/dash/teams.html", "teams"),
     "/maps": ("pages/dash/maps.html", "maps"),
     "/leaderboard": ("pages/dash/leaderboard.html", "leaderboard"),
+    "/challenges": ("pages/dash/challenges.html", "challenges"),
 }  
 
 def make_view(tpl, active_page):

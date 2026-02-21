@@ -29,3 +29,7 @@ def init_or_upgrade_schema(conn):
     from server.database.schema.activityLikeSchema import create_activity_likes_table
     create_activity_likes_table(conn)
     print("activity_likes table schema initialized or updated.")
+    
+    from server.database.schema.challengesSchema import create_challenges_table
+    create_challenges_table(conn)
+    print("likes table schema initialized or updated.")

@@ -294,7 +294,6 @@ function populateDashActivity(data, username) {
       </div>
     </div>
     `;
-    console.log("activity id from dash", activityID);
     feedContainer.appendChild(card);
 
     dashActivityLikes(username, activityID);
@@ -363,7 +362,11 @@ function populateFriendActivities(activities, friendUsername) {
   const FactivityCountDiv = document.querySelector("#Factivity-count");
   FactivityCountDiv.textContent = activities?.length ?? 0;
 
-  activities.forEach(act => {
+  const topActivities = [...activities]
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 10);
+
+  topActivities.forEach(act => {
     let extra = "";
     const ModalactivityID = act.activity_id;
 
@@ -399,7 +402,6 @@ function populateFriendActivities(activities, friendUsername) {
         </div>
       </div>
     `;
-    console.log("activity id from modal", ModalactivityID);
     feedContainer.appendChild(card);
 
     const modallikeBtn = card.querySelector(".onActivity-likebtn");
@@ -426,9 +428,6 @@ async function fillFriendsClub(friendUsername){
 
     const data = await response.json();
     const clubs = Array.isArray(data.clubs) ? data.clubs : [];
-
-    console.log("friends clubs:", clubs);
-
     populateFriendClubs(clubs);
 
   } catch (err) {

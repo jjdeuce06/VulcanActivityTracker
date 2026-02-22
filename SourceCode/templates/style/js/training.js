@@ -260,14 +260,12 @@ function collectSportData(form)
   form.querySelectorAll("input, textarea, select").forEach((field) => {
     if (!field.name) return;
 
-    // ✅ Radio: only take the checked one
     if (field.type === "radio") {
       if (!field.checked) return;
       data[field.name] = field.value;
       return;
     }
 
-    // ✅ Checkbox (optional, but nice to support)
     if (field.type === "checkbox") {
       data[field.name] = field.checked;
       return;

@@ -508,10 +508,6 @@ async function dashActivityLikes(username, activity_id) {
     if (!response.ok) throw new Error(`HTTP error ${response.status}`);
 
     const data = await response.json();
-<<<<<<< HEAD
-=======
-    console.log("likes data:", data);
->>>>>>> 26cb97c (cooked a meal)
 
     if (data.status !== "ok") return;
 
@@ -578,12 +574,3 @@ function populateDashClubs(clubs) {
     container.appendChild(clubDiv);
   });
 }
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 26cb97c (cooked a meal)
-=======
->>>>>>> 90fb3e9 (cooked a meal)
->>>>>>> 03a9502 (cooked a meal)
-=======
->>>>>>> 8af0038 (fix radio button front end)

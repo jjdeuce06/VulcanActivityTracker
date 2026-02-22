@@ -22,6 +22,10 @@ def init_or_upgrade_schema(conn):
     create_likes_table(conn)
     print("likes table schema initialized or updated.")
 
+    from server.database.schema.teamSchema import create_teams_table
+    create_teams_table(conn)
+    print("teams table schema initialized or updated.")
+    
     from server.database.schema.activityLikeSchema import create_activity_likes_table
     create_activity_likes_table(conn)
     print("activity_likes table schema initialized or updated.")

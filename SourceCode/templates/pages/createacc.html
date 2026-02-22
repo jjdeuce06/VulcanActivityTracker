@@ -16,6 +16,7 @@
                  <label><h2>Create Account</h2></label>
 
             <div class="login-form">
+                <input type="email" placeholder="Enter Email" id="email_entry" required>
                 <input type="text" placeholder="Enter Username" id="user_entry" required>
                 <input type="password" placeholder="Enter Password" id="pass_entry" required>
                 <div id="register-error" style="color: red; margin-top: 8px;"></div>
@@ -42,75 +43,6 @@
 <script>
 function backHome() {window.location.href = "/";}
 function backToLogin() {window.location.href = "/login";}
- var letter = document.getElementById("letter");
-    var capital = document.getElementById("capital");
-    var number = document.getElementById("number");
-    var length = document.getElementById("length");
-    var myInput = document.getElementById("pass_entry");
-
-    myInput.onfocus = function() 
-    {
-        document.getElementById("message").style.display = "block";
-    }
-
-    myInput.onblur = function() 
-    {
-        document.getElementById("message").style.display = "none";
-    }
-
-    myInput.onkeyup = function() 
-    {
-        // Validate lowercase letters
-        var lowerCaseLetters = /[a-z]/g;
-        if(myInput.value.match(lowerCaseLetters)) 
-        {  
-            letter.classList.remove("invalid");
-            letter.classList.add("valid");
-        } 
-        else 
-        {
-            letter.classList.remove("valid");
-            letter.classList.add("invalid");
-        }
-            
-        // Validate capital letters
-        var upperCaseLetters = /[A-Z]/g;
-        if(myInput.value.match(upperCaseLetters)) 
-        {  
-            capital.classList.remove("invalid");
-            capital.classList.add("valid");
-        } 
-        else 
-        {
-            capital.classList.remove("valid");
-            capital.classList.add("invalid");
-        }
-
-        // Validate numbers
-        var numbers = /[0-9]/g;
-        if(myInput.value.match(numbers)) 
-        {  
-            number.classList.remove("invalid");
-            number.classList.add("valid");
-        } 
-        else 
-        {
-            number.classList.remove("valid");
-            number.classList.add("invalid");
-        }
-
-        // Validate length
-        if(myInput.value.length >= 8) 
-        {  
-            length.classList.remove("invalid");
-            length.classList.add("valid");
-        } 
-        else 
-        {
-            length.classList.remove("valid");
-            length.classList.add("invalid");
-        }
-    }
 </script>
 <script src="{{ url_for('style_folder.static', filename='js/login.js') }}"></script>
 </body>

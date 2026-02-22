@@ -72,7 +72,7 @@ def get_user_clubs(conn, user_id): #gets club in which the current user is a mem
         print("Get user clubs error:", e)
         raise
 
-def add_member_to_club(conn, club_id, user_id): #adds a user to the member list of a club in the database
+def add_member_to_club(conn, club_id, user_id, username): #adds a user to the member list of a club in the database
     cursor = conn.cursor()
     try:
         cursor.execute("SELECT Members FROM clubs WHERE ClubID = ?", (club_id,))
@@ -92,6 +92,7 @@ def add_member_to_club(conn, club_id, user_id): #adds a user to the member list 
             return members
 
         members.append(user_str)
+        members.append(username)
         new_json = json.dumps(members)
         cursor.execute("UPDATE clubs SET Members = ?, UpdatedDate = SYSDATETIME() WHERE ClubID = ?", (new_json, club_id))
         conn.commit()

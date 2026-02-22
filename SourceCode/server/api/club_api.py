@@ -96,7 +96,7 @@ def join_club():
             if not user_id:
                 return jsonify({"error": "User not found"}), 404
 
-            members = add_member_to_club(conn, club_id, user_id)
+            members = add_member_to_club(conn, club_id, user_id, username)
         finally:
             conn.close()
 

@@ -115,17 +115,7 @@ def thumbs_up_friend():
     friend = data.get("friend")
     action = data.get("action") #action option
     activity_id = data.get("activity_id")
-<<<<<<< HEAD
-<<<<<<< HEAD
     
-=======
-
-    print("activity id,", activity_id)
-
->>>>>>> 5ed8add (oml im so confused)
-=======
-    
->>>>>>> 26cb97c (cooked a meal)
     conn = get_db_connection()
     try:
         userID = get_user_id(conn, username)
@@ -136,21 +126,12 @@ def thumbs_up_friend():
 
         # fetch
         if action == "get":
-<<<<<<< HEAD
             liked = check_if_thumbs_up(conn, userID, activity_id)
             total_likes = get_total_thumbs_up(conn, activity_id)
 
         else:
             #toggle
             liked, total_likes = toggle_thumbs_up(conn, userID, activity_id)
-=======
-            liked = check_if_thumbs_up(conn, userID, friendID, activity_id)
-            total_likes = get_total_thumbs_up(conn, friendID, activity_id)
-
-        else:
-            #toggle
-            liked, total_likes = toggle_thumbs_up(conn, userID, friendID, activity_id)
->>>>>>> 5ed8add (oml im so confused)
 
     finally:
         conn.commit()
@@ -162,10 +143,6 @@ def thumbs_up_friend():
         "total_likes": total_likes
     })
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 26cb97c (cooked a meal)
 @dash_api.route("/thumbCount", methods=["POST"])
 def get_thumb_count():
     data = request.get_json()
@@ -187,7 +164,6 @@ def get_thumb_count():
     return jsonify({
         "status": "ok",
         "activity_total_likes": total_likes
-<<<<<<< HEAD
     })
 
 @dash_api.route("/fillDashClubs", methods =["POST"])

@@ -417,9 +417,6 @@ function populateFriendActivities(activities, friendUsername) {
 
     thumbsUp(username, friendUsername, ModalactivityID, modallikeBtn, modallikeCount);
 
-
-    //thumbsUp(username, friendUsername, ModalactivityID);
-
   });
 }
 

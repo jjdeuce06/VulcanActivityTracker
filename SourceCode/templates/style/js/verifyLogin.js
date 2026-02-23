@@ -19,7 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 localStorage.setItem("currentUser", response.username);
             }
             toDashboard();
-        } catch (err) {
+        } catch (err) 
+        {
             console.error("Error sending login data:", err);
         }
 

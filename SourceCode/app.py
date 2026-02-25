@@ -1,5 +1,5 @@
 import flask
-from flask import Flask, jsonify, request, Blueprint
+from flask import Flask, jsonify, request, Blueprint, session
 from server.api.team_api import team_api
 from server.blueprints.blue import blue, style_folder
 from server.api.login_api import login_api
@@ -11,6 +11,7 @@ from server.database.connect import get_db_connection
 from server.database import init_or_upgrade_schema
 
 app = Flask(__name__)
+app.secret_key = "vulcan_secret_key"
 
 # Register blueprints
 app.register_blueprint(blue)

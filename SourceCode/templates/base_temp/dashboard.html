@@ -38,11 +38,6 @@
     {% include "pages/dash/home.html" %}
   {% endblock %}
 
-  <script>
-    function logout() {
-      window.location.href = "/login";
-    }
-  </script>
-
 </body>
+<script src="{{ url_for('style_folder.static', filename='js/logout.js') }}"></script>
 </html>

@@ -9,9 +9,16 @@ from server.api.club_api import club_api
 from server.api.challenges_api import challenges_api
 from server.database.connect import get_db_connection
 from server.database import init_or_upgrade_schema
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
 
 app = Flask(__name__)
 app.secret_key = "vulcan_secret_key"
+app.config["SECRET_KEY"] = "vulcan_secret_key"
 
 # Register blueprints
 app.register_blueprint(blue)

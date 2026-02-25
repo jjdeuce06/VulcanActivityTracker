@@ -2,3 +2,7 @@ pyodbc==5.2.0
 flask-session
 flask-cors
 argon2-cffi
+python-dotenv
+resend
+itsdangerous
+argon2-cffi

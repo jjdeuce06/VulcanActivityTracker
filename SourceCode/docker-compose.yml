@@ -14,6 +14,8 @@ services:
     working_dir: /VulcanActivityTracker
     ports:
       - "6455:6455"
+    env_file:
+      - .env
     networks:
       - vulcan_network
     depends_on:

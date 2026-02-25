@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, render_template
 import os
+from server.api.protectRoutes import login_required
 
 #hold blueprints
 #template 
@@ -26,6 +27,9 @@ ROUTES = {
 def make_view(tpl, active_page):
     def view():
         return render_template(tpl, active_page=active_page)
+    
+    if active_page is not None:
+        return login_required(view) 
     return view
 
 for rule, (tpl, active_page) in ROUTES.items():

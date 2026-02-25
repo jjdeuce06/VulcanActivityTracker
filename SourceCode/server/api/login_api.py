@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, Blueprint
+from flask import Flask, request, jsonify, Blueprint,session
 from argon2 import PasswordHasher
 from server.database.connect import get_db_connection
 from server.controllers.login_store import store_login, fetch_login, fetch_all_users
@@ -45,6 +45,8 @@ def verify():
     ph = PasswordHasher()
     try:
         if ph.verify(stored_hash, password):
+            session["user_id"] = username
+            print(f"User {username} logged in successfully in session")
             return jsonify({"message": "Login successful", "username": username}), 200
     except:
         return jsonify({"error": "Invalid username or password"}), 401

@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (response.username) {
                 localStorage.setItem("currentUser", response.username);
             }
-            toDashboard();
+            toDashboard();//insecure need to update
         } catch (err) 
         {
             console.error("Error sending login data:", err);

@@ -51,4 +51,8 @@ def verify():
     except:
         return jsonify({"error": "Invalid username or password"}), 401
 
+@login_api.route("/logout", methods=["POST"])
+def logout():
+    session.pop("user_id", None)
+    return jsonify({"message": "Logged out successfully"}), 200
 

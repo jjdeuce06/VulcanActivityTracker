@@ -5,61 +5,64 @@
 {% endblock %}
 
 {% block content %}
-<head>
-    <meta charset="UTF-8">
-    <title>Challenges - Vulcan Activity Tracker</title>
-    <link rel="stylesheet" href="/static/css/challenges.css">
-</head>
-<body>
+<div class ="challenge-page">
 
-<h1>Challenges</h1>
-<p class="page-description">
-    Compete with others and push your limits.
-</p>
+    <h1>Challenges</h1>
+    <p class="page-description">
+        Compete with others and push your limits.
+    </p>
 
-<div class="challenge-layout">
+    <div class="challenge-layout">
 
-    <!-- LEFT: CREATE FORM -->
-    <form class="challenge-form" id="createChallengeForm">
-        <h3>Create Challenge</h3>
+        <!-- LEFT: CREATE FORM -->
+        <form class="challenge-form" id="create-challenge-form">
+            <h3>Create Challenge</h3>
 
-        <label>Challenge Name</label>
-        <input type="text" id="challengeName" required>
+            <label>Challenge Name</label>
+            <input type="text" id="challenge-name" required>
 
-        <label>Description</label>
-        <textarea id="description" rows="3"></textarea>
+            <label>Description</label>
+            <textarea id="challenge-description" rows="3"></textarea>
 
-        <label>Activity Type</label>
-        <select id="activityType" required>
-            <option value="Running">Running</option>
-            <option value="Cycling">Cycling</option>
-            <option value="Swimming">Swimming</option>
-            <option value="Weightlifting">Weightlifting</option>
-        </select>
+            <label>Activity Type</label>
+            <select id="challenge-activity-type" required>
+                <option value="Running">Running</option>
+                <option value="Cycling">Cycling</option>
+                <option value="Swimming">Swimming</option>
+                <option value="Weightlifting">Weightlifting</option>
+            </select>
 
-        <label>Metric Type</label>
-        <select id="metricType" required>
-            <option value="distance">Distance</option>
-            <option value="count">Workout Count</option>
-        </select>
+            <label>Metric Type</label>
+            <select id="challenge-metric-type" required>
+                <option value="distance">Distance</option>
+                <option value="count">Workout Count</option>
+            </select>
 
-        <label>Start Date</label>
-        <input type="date" id="startDate" required>
+            <label>Start Date</label>
+            <input type="date" id="start-date" required>
 
-        <label>End Date</label>
-        <input type="date" id="endDate" required>
+            <label>End Date</label>
+            <input type="date" id="end-date" required>
 
-        <button type="submit">Create Challenge</button>
-    </form>
+            <button type="submit">Create Challenge</button>
+        </form>
 
-    <!-- RIGHT: ACTIVE CHALLENGES -->
-    <div class="challenge-card">
-        <h3>Active Challenges</h3>
-        <div class="challenge-list" id="challengeList">
-            <!-- JS will inject challenges here -->
+        <!-- RIGHT: MY CHALLENGES -->
+        <div class="challenge-card">
+            <h3>My Challenges</h3>
+            <div class="challenge-list" id="my-challenge-list">
+                <!-- JS will inject challenges here -->
+            </div>
+        </div>
+
+        <!-- RIGHT: ACTIVE CHALLENGES -->
+        <div class="challenge-card">
+            <h3>All Challenges</h3>
+            <div class="challenge-list" id="all-challenge-list">
+                <!-- JS will inject challenges here -->
+            </div>
         </div>
     </div>
-
 </div>
 
 </body>

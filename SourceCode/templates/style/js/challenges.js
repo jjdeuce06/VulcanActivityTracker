@@ -1,98 +1,182 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("createChallengeForm");
+  const form = document.getElementById("create-challenge-form"); 
+  if (!form) {
+    console.error("challenge-form not found");
+    return;
+  }
 
-    if (form) {
-        form.addEventListener("submit", handleCreateChallenge);
-    }
-
-    loadChallenges();
-});
-
-
-async function handleCreateChallenge(event) {
-    event.preventDefault();
-
+  async function loadChallenges() {
+  try {
     const username = localStorage.getItem("currentUser");
 
     if (!username) {
-        alert("User not logged in.");
-        return;
+      console.warn("No logged-in user");
+      renderChallenges("all-challenge-list", [], false);
+      renderChallenges("my-challenge-list", [], true);
+      return;
     }
+
+    // Fetch Challenges user is NOT part of
+    const allResp = await fetch("/challenges_api/listchallenges", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username })
+    });
+
+    if (allResp.ok) {
+      const data = await allResp.json();
+      renderChallenges("all-challenge-list", data.challenges || [], false);
+    } else {
+      console.error("Failed to load challenges", allResp.status);
+    }
+
+    // Fetch user's Challenges
+    const myResp = await fetch("/challenges_api/mychallenges", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username })
+    });
+
+    if (myResp.ok) {
+      const data = await myResp.json();
+      renderChallenges("my-challenge-list", data.challenges || [], true);
+    } else {
+      console.error("Failed to load my challenges", myResp.status);
+    }
+
+  } catch (err) {
+    console.error("Error loading challenges:", err);
+  }
+}
+
+  window.loadChallenges = loadChallenges;//
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const username = localStorage.getItem("currentUser");
+
+    
 
     const data = {
         username: username,
-        challengeName: document.getElementById("challengeName").value.trim(),
-        description: document.getElementById("description").value.trim(),
-        activityType: document.getElementById("activityType").value,
-        metricType: document.getElementById("metricType").value,
-        startDate: document.getElementById("startDate").value,
-        endDate: document.getElementById("endDate").value
+        challengeName: document.getElementById("challenge-name").value.trim(),
+        description: document.getElementById("challenge-description").value.trim(),
+        activityType: document.getElementById("challenge-activity-type").value,
+        metricType: document.getElementById("challenge-metric-type").value,
+        startDate: document.getElementById("start-date").value,
+        endDate: document.getElementById("end-date").value
     };
 
-    try {
-        const response = await fetch("/challenges_api/createchallenge", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-            alert("Challenge created successfully!");
-            document.getElementById("createChallengeForm").reset();
-        } else {
-            alert(result.error || "Failed to create challenge.");
-        }
-
-    } catch (error) {
-        console.error("Create challenge error:", error);
-        alert("Server error while creating challenge.");
+    if (!data.challengeName) {
+      alert("Challenge name required");
+      return;
     }
+
+    try {
+      const response = await fetch("/challenges_api/createchallenge", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.error || `HTTP ${response.status}`);
+      }
+
+      alert("Challenge created!");
+      form.reset();
+      await loadChallenges();
+    } catch (err) {
+      console.error("Create challenge error:", err);
+      alert("Failed to create challenge");
+    }
+  });
+
+  loadChallenges();
+});
+
+function renderChallenges(containerId, challenges, isMember) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = "";
+
+  if (!challenges || challenges.length === 0) {
+    container.innerHTML = "<p class='empty'>No challenges found.</p>";
+    return;
+  }
+
+  const currentUser = localStorage.getItem("currentUser");
+
+  challenges.forEach(challenge => {
+    const card = document.createElement("div");
+    card.className = "challenge-item";
+
+    const participants = challenge.participants || [];
+    const userIsMember = participants.includes(currentUser);
+    const isOwner = challenge.creator_username === currentUser
+
+    card.innerHTML = `
+        <h4>${challenge.name}</h4>
+        <p>${challenge.description || ""}</p>
+        <p>${participants.length} participants</p>
+      <div style="display: flex; gap: 8px;">
+      <button class="secondary-btn" data-challenge-id="${challenge.id}" data-action="${isOwner ? 'delete' : (userIsMember ? 'leave' : 'join')}">
+        ${isOwner ? "Delete" : (userIsMember ? "Leave" : "Join")}
+      </button>
+      </div>
+    `;
+
+    container.appendChild(card);
+
+   
+
+    const actionBtn = card.querySelector("button.secondary-btn");  // Get the second button
+if (actionBtn) {
+  actionBtn.addEventListener("click", async () => {
+    const username = localStorage.getItem("currentUser");
+    if (!username) {
+      alert("Please log in to continue.");
+      return;
+    }
+    
+    const challengeId = actionBtn.dataset.challengeId;
+    const action = actionBtn.dataset.action;
+    let endpoint = "";
+
+    if (action === "delete") {
+      if (!confirm(`Delete this challenge? This cannot be undone.`)) return;
+      endpoint = "/challenges_api/deletechallenge";
+    } else if (action === "leave") {
+      endpoint = "/challenges_api/leave";
+    } else {
+      endpoint = "/challenges_api/join";
+    }
+
+    try {
+      const resp = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, challenge_id: challengeId })
+      });
+
+      const payload = await resp.json().catch(() => null);
+      console.log(endpoint, resp.status, payload);
+
+      if (!resp.ok) {
+        const msg = payload && payload.error ? payload.error : `HTTP ${resp.status}`;
+        alert("Action failed: " + msg);
+        return;
+      }
+
+      await (window.loadChallenges ? window.loadChallenges() : Promise.resolve());
+    } catch (err) {
+      console.error("Challenge action error:", err);
+      alert("An error occurred.");
+    }
+  });
 }
 
-async function loadChallenges() {
-    try {
-        const response = await fetch("/challenges_api/list");
-
-        const challenges = await response.json();
-
-        const list = document.getElementById("challengeList");
-        list.innerHTML = "";
-
-        if (!challenges.length) {
-            list.innerHTML = "<p style='text-align:center;'>No active challenges yet.</p>";
-            return;
-        }
-
-        challenges.forEach(challenge => {
-            const item = document.createElement("div");
-            item.className = "challenge-item";
-
-            item.innerHTML = `
-                <h4>${challenge.ChallengeName}</h4>
-                <p>${challenge.Description || "No description provided."}</p>
-                <p>
-                    <strong>${challenge.ActivityType}</strong> • 
-                    ${challenge.MetricType}
-                </p>
-                <p>
-                    ${challenge.StartDate} → ${challenge.EndDate}
-                </p>
-                
-                <div style="display: flex; gap: 8px;">
-                <button class="secondary-btn">
-                    View Details
-                </button>
-                </div>
-            `;
-
-            list.appendChild(item);
-        });
-
-    } catch (error) {
-        console.error("Error loading challenges:", error);
-    }
+  });
 }

@@ -90,6 +90,7 @@ function validateEmail(email)
 document.getElementById("createBtn").addEventListener("click", async () =>{
     const username = document.getElementById("user_entry").value;
     const password = document.getElementById("pass_entry").value;
+    const confirmPassword = document.getElementById("confirm_pass_entry").value;
     const email = document.getElementById("email_entry").value;
     const errorDiv = document.getElementById("register-error");
     var letter = document.getElementById("letter");
@@ -113,6 +114,12 @@ document.getElementById("createBtn").addEventListener("click", async () =>{
         length.classList.contains("invalid")) 
     {
         errorDiv.textContent = "Password does not meet all requirements.";
+        return;
+    }
+
+    if (password !== confirmPassword)
+    {
+        errorDiv.textContent = "Passwords do not match.";
         return;
     }
 

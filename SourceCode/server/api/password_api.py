@@ -23,10 +23,32 @@ def reset_password(token):
         
         with get_db_connection() as conn:
             new_hash = ph.hash(new_password)
-            conn.execute("UPDATE users SET password_hash = ? WHERE email = ?", (new_hash, email))
+            conn.execute("UPDATE user SET password_hash = ? WHERE email = ?", (new_hash, email))
             conn.commit()
         
         flash("Your password has been reset successfully. Please log in.", "success")
         return redirect(url_for("login_api.login"))
     
     return render_template("reset_password.html", token=token)
+
+@password_api.route("/reset-password", methods=["POST"])
+def request_password_reset():
+    data = request.get_json(silent=True) or {}
+    email = (data.get("email") or "").strip().lower()
+
+    # Always return generic success to avoid leaking whether an email exists
+    if not email:
+        return jsonify(success=False, error="Email is required."), 400
+
+    # Check if user exists (adjust column/table names if needed)
+    with get_db_connection() as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT 1 FROM users WHERE email = ?", (email,))
+        user_exists = cur.fetchone() is not None
+
+    if user_exists:
+        token = generate_reset_token(email)
+        reset_link = url_for("password_api.reset_password", token=token, _external=True)
+        send_reset_email(email, reset_link)
+
+    return jsonify(success=True)

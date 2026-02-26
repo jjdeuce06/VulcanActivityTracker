@@ -1,5 +1,6 @@
 import flask
 from flask import Flask, jsonify, request, Blueprint, session
+from server.api.password_api import password_api
 from server.api.team_api import team_api
 from server.blueprints.blue import blue, style_folder
 from server.api.login_api import login_api
@@ -29,6 +30,7 @@ app.register_blueprint(dash_api, url_prefix="/dash_api")
 app.register_blueprint(club_api, url_prefix="/club_api")
 app.register_blueprint(team_api, url_prefix="/team_api")
 app.register_blueprint(challenges_api, url_prefix="/challenges_api")
+app.register_blueprint(password_api, url_prefix="/password_api")
 
 
 # Initialize / upgrade schema on app start

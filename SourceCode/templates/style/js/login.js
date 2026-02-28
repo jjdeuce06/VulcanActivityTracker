@@ -136,7 +136,8 @@ document.getElementById("createBtn").addEventListener("click", async () =>{
         //send to backend
         try {
         const response = await sendLoginData(email, username, hash);
-        if (!response.ok) {
+        if (!response.ok) 
+        {
             // show backend error message like "Username already exists"
             errorDiv.textContent = response.error || "Registration failed";
             document.getElementById("user_entry").focus();

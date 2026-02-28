@@ -41,6 +41,8 @@ def verify():
     if not stored_hash:
         return jsonify({"error": "Invalid username or password"}), 401
     
+    
+    
 
     ph = PasswordHasher()
     try:

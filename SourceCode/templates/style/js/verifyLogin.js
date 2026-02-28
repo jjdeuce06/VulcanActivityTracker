@@ -67,8 +67,13 @@ async function sendLoginData(username, hashPassword){
         })
     });
 
-    if(!response.ok){ throw new Error(`HTTP error ${response.status}`);}
+    if(!response.ok)
+        { 
+            alert("Login failed: invalid credentials");
+            throw new Error(`HTTP error ${response.status}`);
+        }
         return await response.json();
+    
 }
 
 function toDashboard(){window.location.href = "/dashboard";}

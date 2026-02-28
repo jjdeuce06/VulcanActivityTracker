@@ -103,7 +103,7 @@ def add_member_to_club(conn, club_id, user_id, username): #adds a user to the me
     finally:
         cursor.close()
         
-def remove_member_from_club(conn, club_id, user_id): #removes the user from the member list of a club in the database
+def remove_member_from_club(conn, club_id, user_id, username): #removes the user from the member list of a club in the database
     cursor = conn.cursor()
     try:
         cursor.execute("SELECT Members FROM clubs WHERE ClubID = ?", (club_id,))
@@ -118,11 +118,12 @@ def remove_member_from_club(conn, club_id, user_id): #removes the user from the 
             members = []
 
         user_str = str(user_id)
+        username_str = str(username)
         if user_str not in members: 
             print("User not in members list or owner of club trying to leave") #
             return members
 
-        members = [m for m in members if m != user_str]
+        members = [m for m in members if m != user_str and m != username_str]
         new_json = json.dumps(members)
         cursor.execute("UPDATE clubs SET Members = ?, UpdatedDate = SYSDATETIME() WHERE ClubID = ?", (new_json, club_id))
         conn.commit()

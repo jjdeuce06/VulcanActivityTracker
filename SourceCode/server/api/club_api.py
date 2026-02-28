@@ -121,7 +121,7 @@ def leave_club():
             if not user_id:
                 return jsonify({"error": "User not found"}), 404
 
-            members = remove_member_from_club(conn, club_id, user_id)
+            members = remove_member_from_club(conn, club_id, user_id, username)
         finally:
             conn.close()
 

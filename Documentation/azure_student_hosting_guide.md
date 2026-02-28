@@ -150,7 +150,7 @@ https://yourapp.azurewebsites.net
 5. Optional: use Docker + Gunicorn for production-grade deployment.
 
 > Advantages:
+>
 > - No changes to your database schema
 > - Completely free for students
 > - Fully production-ready deployment
-

@@ -17,6 +17,7 @@
         <h3 style="margin-bottom:10px;">Add New Route</h3>
         <button id="startRoute">Start Route</button>
         <button id="endRoute">End Route</button>
+        <div id="routeNameContainer"></div>
         <ul id="newRouteList"></ul>
         <div id="routeDistance" style="margin-top:10px; font-weight:bold;"></div>
     </div>
@@ -32,7 +33,7 @@
         <h3 style="margin-bottom:10px;">Vulcan Routes</h3>
         <ul id="defaultRoutesList"></ul>
     </div>
-
+    
 </div>
 
 <script src="{{ url_for('style_folder.static', filename='js/maps.js') }}"></script>

@@ -1,3 +1,7 @@
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadUserRoutes();
+});
+
 // Initialize map
 const map = L.map('map').setView([40.06428075146778, -79.8847461297468], 15);
 
@@ -53,6 +57,11 @@ const campusLoop = [
     [40.06347895019966, -79.88769654458297] // close loop
 ];
 
+L.marker([40.06428075146778, -79.8847461297468])
+    .addTo(map)
+    .bindPopup("PennWest California Campus")
+    .openPopup();
+
 
 // --- Draw default campus loop ---
 const routeLine = L.polyline(campusLoop, { color: '#007bff', weight: 5 }).addTo(map);
@@ -99,45 +108,69 @@ document.getElementById("startRoute").addEventListener("click", () => {
     // Remove any leftover markers
     routeMarkers.forEach(marker => map.removeLayer(marker));
     routeMarkers = [];
+
+    const container = document.getElementById("routeNameContainer");
+    container.innerHTML = ""; // clear previous
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.id = "routeNameInput";
+    input.placeholder = "Enter route name";
+    input.classList.add("route-input");
+    container.appendChild(input);
+
+    input.focus(); // auto focus for better UX
 });
+
 
 // Finish route button
 document.getElementById("endRoute").addEventListener("click", async (e) => {
     drawing = false;
 
-    // Remove all markers now
     routeMarkers.forEach(marker => map.removeLayer(marker));
     routeMarkers = [];
 
+    const nameInput = document.getElementById("routeNameInput");
+    const routeName = nameInput ? nameInput.value.trim() : "";
+
     if (routePoints.length > 1) {
+
+        if (!routeName) {
+            alert("Please enter a route name.");
+            return;
+        }
+
         currentPolyline = L.polyline(routePoints, { color: 'red', weight: 5 }).addTo(map);
         map.fitBounds(currentPolyline.getBounds());
 
         const miles = calculateDistanceMiles(routePoints);
         document.getElementById("routeDistance").textContent = `Distance: ${miles} miles`;
 
-        // Save to My Routes list
         const li = document.createElement("li");
-        const routeCount = document.getElementById("savedRoutesList").children.length + 1;
-        li.textContent = `Route ${routeCount} (${miles} miles)`;
+        li.textContent = `${routeName} (${miles} miles)`;
         li.style.cursor = "pointer";
+
+        const savedPoints = [...routePoints];
 
         li.addEventListener("click", () => {
             if (currentPolyline) map.removeLayer(currentPolyline);
-            currentPolyline = L.polyline(routePoints, { color: 'red', weight: 5 }).addTo(map);
+            currentPolyline = L.polyline(savedPoints, { color: 'red', weight: 5 }).addTo(map);
             map.fitBounds(currentPolyline.getBounds());
             document.getElementById("routeDistance").textContent = `Distance: ${miles} miles`;
         });
 
         document.getElementById("savedRoutesList").appendChild(li);
-    }
+        document.getElementById("routeNameContainer").innerHTML = "";
 
-    await storeRoutes(routePoints);
+        await storeRoutes(routePoints, routeName);
+    }
 });
+
 
 // --- Click on map to add points while drawing ---
 map.on('click', (e) => {
     if (!drawing) return;
+
     const point = [e.latlng.lat, e.latlng.lng];
     routePoints.push(point);
 
@@ -156,14 +189,13 @@ map.on('click', (e) => {
     }
 });
 
-
-async function storeRoutes(routePoints) {
+async function storeRoutes(routePoints, route_name) {
     try {
         const response = await fetch('/map_api/store_map_routes', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                name: `Route ${document.getElementById("savedRoutesList").children.length + 1}`,
+                name: route_name,
                 distance: calculateDistanceMiles(routePoints),
                 coordinates: routePoints
             })
@@ -173,4 +205,43 @@ async function storeRoutes(routePoints) {
     } catch (error) {
         console.error('Error saving route:', error);
     }
+}
+
+async function loadUserRoutes() {
+    try{
+        const response = await fetch('/map_api/get_user_routes');
+        const data = await response.json();
+        console.log("Load Maps Data", data);
+
+        if(data.success){
+            displayMaps(data.maps.routes);
+        }
+    }catch(error){
+        console.error("error loading maps", error);
+    } 
+}
+
+function displayMaps(routes) {
+    if (!routes || !Array.isArray(routes)) {
+        console.warn("No routes to display:", routes);
+        return;
+    }
+
+    const container = document.getElementById("savedRoutesList");
+    container.innerHTML = "";
+
+    routes.forEach(route => {
+        const li = document.createElement("li");
+        li.textContent = `${route.name} (${route.distance} miles)`;
+        li.style.cursor = "pointer";
+
+        li.addEventListener("click", () => {
+            if (window.currentPolyline) map.removeLayer(window.currentPolyline);
+            window.currentPolyline = L.polyline(route.coordinates, { color: 'blue', weight: 5 }).addTo(map);
+            map.fitBounds(window.currentPolyline.getBounds());
+            document.getElementById("routeDistance").textContent = `Distance: ${route.distance} miles`;
+        });
+
+        container.appendChild(li);
+    });
 }

@@ -1,3 +1,4 @@
+//challenge_details.js:
 document.addEventListener("DOMContentLoaded", async () => {
   const challengeName = decodeURIComponent(
     window.location.pathname.split("/").pop()

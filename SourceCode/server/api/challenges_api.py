@@ -1,3 +1,4 @@
+#challenges_api.py:
 from flask import Blueprint, request, jsonify
 from server.database.connect import get_db_connection
 from server.controllers.user_store import get_user_id
@@ -16,11 +17,12 @@ def create_challenge():
         description = data.get("description")
         activity_type = data.get("activityType")
         metric_type = data.get("metricType")
+        target_value = data.get("targetValue")
         start_date = data.get("startDate")
         end_date = data.get("endDate")
 
         # Validate required fields
-        if not all([username, name, activity_type, metric_type, start_date, end_date]):
+        if not all([username, name, activity_type, metric_type, target_value, start_date, end_date]):
             return jsonify({"error": "Missing required fields"}), 400
 
         conn = get_db_connection()
@@ -36,6 +38,7 @@ def create_challenge():
                 description,
                 activity_type,
                 metric_type,
+                target_value,
                 start_date,
                 end_date
             )

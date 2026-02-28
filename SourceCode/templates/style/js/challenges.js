@@ -1,9 +1,43 @@
+//challenges.js:
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("create-challenge-form"); 
   if (!form) {
     console.error("challenge-form not found");
     return;
   }
+
+  const activitySelect = document.getElementById("challenge-activity-type");
+  const metricSelect = document.getElementById("challenge-metric-type");
+
+  const metricOptionsBySport = {
+    run: ["distance", "time", "count"],
+    bike: ["distance", "time", "count"],
+    swim: ["distance", "time", "count"],
+    equestrian: ["distance", "time", "count"],
+    walk: ["steps", "time", "count"],
+    lifting: ["sets", "time", "count"],
+    yoga: ["intensity", "time", "count"],
+    soccer: ["goals", "assists", "time", "count"],
+    baseball: ["hits", "runs", "time", "count"],
+    football: ["touchdowns", "time", "count"],
+    tennis: ["time", "count"],
+    volleyball: ["kills", "time", "count"],
+    basketball: ["points", "rebounds", "assists", "time", "count"]
+  };
+
+  activitySelect.addEventListener("change", () => {
+    const sport = activitySelect.value;
+    const metrics = metricOptionsBySport[sport] || ["time", "count"];
+
+    metricSelect.innerHTML = "";
+
+    metrics.forEach(metric => {
+      const option = document.createElement("option");
+      option.value = metric;
+      option.textContent = metric.charAt(0).toUpperCase() + metric.slice(1);
+      metricSelect.appendChild(option);
+    });
+  });
 
   async function loadChallenges() {
   try {
@@ -64,6 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
         description: document.getElementById("challenge-description").value.trim(),
         activityType: document.getElementById("challenge-activity-type").value,
         metricType: document.getElementById("challenge-metric-type").value,
+        targetValue: parseFloat(document.getElementById("challenge-target").value),
         startDate: document.getElementById("start-date").value,
         endDate: document.getElementById("end-date").value
     };
@@ -120,6 +155,24 @@ function renderChallenges(containerId, challenges, isParticipant) {
       <h4>${challenge.name}</h4>
       <p>${challenge.description || ""}</p>
       <p>${participants.length} participants</p>
+
+        <p><strong>Activity:</strong> ${challenge.activity_type}</p>
+        <p><strong>Metric:</strong> ${challenge.metric_type}</p>
+
+      ${isParticipant && challenge.progress ? `
+    <div class="challenge-progress">
+      <p>
+        ${challenge.progress.current} / 
+        ${challenge.progress.target}
+      </p>
+      <div class="progress-container">
+        <div class="progress-bar"
+             style="width: ${challenge.progress.percent}%;">
+        </div>
+      </div>
+    </div>
+    ` : ""}
+
       <div style="display: flex; gap: 8px;">
       <button class="secondary-btn view-challenge-btn" data-challenge-id="${challenge.id}">
         View

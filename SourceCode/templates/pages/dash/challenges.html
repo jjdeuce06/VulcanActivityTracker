@@ -1,4 +1,4 @@
-{% extends "base_temp/dashboard.html" %}
+ {% extends "base_temp/dashboard.html" %}
 
 {% block page_css %}
 <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/challenges.css') }}">
@@ -12,10 +12,10 @@
         Compete with others and push your limits.
     </p>
 
-    <div class="challenge-layout">
+    <div class="challengepage-layout">
 
         <!-- LEFT: CREATE FORM -->
-        <form class="challenge-form" id="create-challenge-form">
+        <form class="challengepage-form" id="create-challenge-form">
             <h3>Create Challenge</h3>
 
             <label>Challenge Name</label>
@@ -48,17 +48,17 @@
         </form>
 
         <!-- RIGHT: MY CHALLENGES -->
-        <div class="challenge-card">
+        <div class="challengepage-card">
             <h3>My Challenges</h3>
-            <div class="challenge-list" id="my-challenge-list">
+            <div class="challengepage-list" id="my-challenge-list">
                 <!-- JS will inject challenges here -->
             </div>
         </div>
 
         <!-- RIGHT: ACTIVE CHALLENGES -->
-        <div class="challenge-card">
+        <div class="challengepage-card">
             <h3>All Challenges</h3>
-            <div class="challenge-list" id="all-challenge-list">
+            <div class="challengepage-list" id="all-challenge-list">
                 <!-- JS will inject challenges here -->
             </div>
         </div>

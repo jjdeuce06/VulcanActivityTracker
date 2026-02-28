@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadChallenges();
 });
 
-function renderChallenges(containerId, challenges, isMember) {
+function renderChallenges(containerId, challenges, isParticipant) {
   const container = document.getElementById(containerId);
   if (!container) return;
   container.innerHTML = "";
@@ -111,19 +111,21 @@ function renderChallenges(containerId, challenges, isMember) {
 
   challenges.forEach(challenge => {
     const card = document.createElement("div");
-    card.className = "challenge-item";
+    card.className = "challengepage-item";
 
-    const participants = challenge.participants || [];
-    const userIsMember = participants.includes(currentUser);
-    const isOwner = challenge.creator_username === currentUser
+    const participants = challenge.participants !== undefined ? challenge.participants : [];
+    const isOwner = isParticipant && challenge.creator_username === currentUser
 
     card.innerHTML = `
-        <h4>${challenge.name}</h4>
-        <p>${challenge.description || ""}</p>
-        <p>${participants.length} participants</p>
+      <h4>${challenge.name}</h4>
+      <p>${challenge.description || ""}</p>
+      <p>${participants.length} participants</p>
       <div style="display: flex; gap: 8px;">
-      <button class="secondary-btn" data-challenge-id="${challenge.id}" data-action="${isOwner ? 'delete' : (userIsMember ? 'leave' : 'join')}">
-        ${isOwner ? "Delete" : (userIsMember ? "Leave" : "Join")}
+      <button class="secondary-btn view-challenge-btn" data-challenge-id="${challenge.id}">
+        View
+      </button>
+      <button class="secondary-btn" data-challenge-id="${challenge.id}" data-action="${isOwner ? 'delete' : (isParticipant ? 'leave' : 'join')}">
+        ${isOwner ? "Delete" : (isParticipant ? "Leave" : "Join")}
       </button>
       </div>
     `;
@@ -132,7 +134,7 @@ function renderChallenges(containerId, challenges, isMember) {
 
    
 
-    const actionBtn = card.querySelector("button.secondary-btn");  // Get the second button
+    const actionBtn = card.querySelector("button.secondary-btn[data-action]");  // Get the second button
 if (actionBtn) {
   actionBtn.addEventListener("click", async () => {
     const username = localStorage.getItem("currentUser");
@@ -177,6 +179,13 @@ if (actionBtn) {
     }
   });
 }
+
+  const viewBtn = card.querySelector("button.view-challenge-btn");
+    if (viewBtn) {
+      viewBtn.addEventListener("click", () => {
+        window.location.href = `/challenge/${encodeURIComponent(challenge.name)}`;
+      });
+    }
 
   });
 }

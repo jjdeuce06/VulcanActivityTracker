@@ -87,7 +87,7 @@ def get_not_user_challenges(conn, user_id):
     try:
         all_challenges = get_all_challenges(conn)
         uid = str(user_id)
-        not_user_challenges = [c for c in all_challenges if c["creator_user_id"] != uid and uid not in c.get("Participants", [])]
+        not_user_challenges = [c for c in all_challenges if c["creator_user_id"] != uid and uid not in c.get("participants", [])]
         return not_user_challenges
     except Exception as e:
         print("Get not user challenges error:", e)
@@ -97,7 +97,7 @@ def get_user_challenges(conn, user_id):
     try:
         all_challenges = get_all_challenges(conn)
         uid = str(user_id)
-        user_challenges = [c for c in all_challenges if c["creator_user_id"] == uid or uid in c.get("Participants", [])]
+        user_challenges = [c for c in all_challenges if c["creator_user_id"] == uid or uid in c.get("participants", [])]
         return user_challenges
     except Exception as e:
         print("Get user challenges error:", e)

@@ -123,7 +123,7 @@ def join_challenge():
     
     
 @challenges_api.route('/leave', methods=['POST']) #user leaves a challenge and calls the remove member from challenge function
-def leave_club():
+def leave_challenge():
     try:
         data = request.get_json() or {}
         username = data.get("username")
@@ -177,3 +177,24 @@ def delete_challenge():
         print("Error deleting challenge:", e)
         return jsonify({"error": str(e)}), 500
     
+
+@challenges_api.route('/challengedetail', methods=['POST'])
+def challenge_detail():
+    try:
+        data = request.get_json() or {}
+        challenge_name = data.get("challenge_name")
+        if not challenge_name:
+            return jsonify({"error": "Missing challenge_name"}), 400
+
+        conn = get_db_connection()
+        try:
+            challenges = get_all_challenges(conn)
+            challenge = next((c for c in challenges if c["name"] == challenge_name), None)
+            if not challenge:
+                return jsonify({"error": "challenge not found"}), 404
+            return jsonify({"challenge": challenge}), 200
+        finally:
+            conn.close()
+    except Exception as e:
+        print("Error fetching challenge detail:", e)
+        return jsonify({"error": str(e)}), 500

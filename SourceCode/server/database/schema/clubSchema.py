@@ -12,7 +12,7 @@ def create_clubs_table(conn: pyodbc.Connection) -> None:
         cursor.execute("""
             CREATE TABLE [clubs] (
                 ClubID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-                ClubName NVARCHAR(255) NOT NULL,
+                ClubName NVARCHAR(255) NOT NULL UNIQUE,
                 Description NVARCHAR(MAX) NULL,
                 CreatorUserID UNIQUEIDENTIFIER NOT NULL,
                 Members NVARCHAR(MAX) NULL DEFAULT '[]', -- JSON for member user IDs

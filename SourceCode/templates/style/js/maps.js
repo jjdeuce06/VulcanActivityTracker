@@ -102,7 +102,7 @@ document.getElementById("startRoute").addEventListener("click", () => {
 });
 
 // Finish route button
-document.getElementById("endRoute").addEventListener("click", () => {
+document.getElementById("endRoute").addEventListener("click", async (e) => {
     drawing = false;
 
     // Remove all markers now
@@ -131,6 +131,8 @@ document.getElementById("endRoute").addEventListener("click", () => {
 
         document.getElementById("savedRoutesList").appendChild(li);
     }
+
+    await storeRoutes(routePoints);
 });
 
 // --- Click on map to add points while drawing ---
@@ -153,3 +155,22 @@ map.on('click', (e) => {
         document.getElementById("routeDistance").textContent = `Distance: ${miles} miles`;
     }
 });
+
+
+async function storeRoutes(routePoints) {
+    try {
+        const response = await fetch('/map_api/store_map_routes', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: `Route ${document.getElementById("savedRoutesList").children.length + 1}`,
+                distance: calculateDistanceMiles(routePoints),
+                coordinates: routePoints
+            })
+        });
+        const data = await response.json();
+        console.log('Route saved:', data);
+    } catch (error) {
+        console.error('Error saving route:', error);
+    }
+}

@@ -6,6 +6,7 @@
     height: 40vh;
     width: 100%;
     border-radius: 12px;
+    border-bottom: 6px solid #070b3f;
 }
 
 .map-controls {
@@ -20,7 +21,7 @@
 }
 
 .map-controls button {
-    background: linear-gradient(135deg, #6b1414, #915f58); /* fun gradient */
+    background: linear-gradient(135deg, #6b1414, #7c2929); /* fun gradient */
     border: none;
     color: white;
     font-weight: bold;

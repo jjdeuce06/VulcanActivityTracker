@@ -1,49 +1,28 @@
-
-const map = L.map('map').setView([40.06428075146778, -79.8847461297468], 15); //pennwest california
+// Initialize map
+const map = L.map('map').setView([40.06428075146778, -79.8847461297468], 15);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// Example marker
-L.marker([40.06428075146778, -79.8847461297468])
-    .addTo(map)
-    .bindPopup("PennWest California Campus")
-    .openPopup();
-//route lines
+// Global variables
+let drawing = false;
 let routePoints = [];
-
-map.on('click', function(e) {
-    const latlng = [e.latlng.lat, e.latlng.lng];
-    routePoints.push(latlng);
-    console.log(`[${latlng[0]}, ${latlng[1]}],`);
-    L.marker(latlng).addTo(map);
-
-    if (routePoints.length > 1) {
-        if (window.currentRoute) {
-            map.removeLayer(window.currentRoute);
-        }
-
-        window.currentRoute = L.polyline(routePoints, {
-            color: 'red',
-            weight: 5
-        }).addTo(map);
-    }
-});
+let currentPolyline;
+let routeMarkers = [];
+// --- Function to calculate miles ---
 function calculateDistanceMiles(coords) {
     let totalMeters = 0;
-
     for (let i = 1; i < coords.length; i++) {
         const prev = L.latLng(coords[i - 1]);
         const curr = L.latLng(coords[i]);
-        totalMeters += prev.distanceTo(curr); // distance in meters
+        totalMeters += prev.distanceTo(curr);
     }
-
-    const miles = totalMeters / 1609.34; // convert meters → miles
-    return miles.toFixed(2); // 2 decimal places
+    return (totalMeters / 1609.34).toFixed(2);
 }
-// Your loop coordinates (make sure first point is repeated at end)
-var campusLoop = [
+
+// --- Campus Loop Default Route ---
+const campusLoop = [
     [40.06347895019966, -79.88769654458297],
     [40.06293295629167, -79.88676851082606],
     [40.06264558931943, -79.8863071761261],
@@ -74,22 +53,103 @@ var campusLoop = [
     [40.06347895019966, -79.88769654458297] // close loop
 ];
 
-// Draw the loop
-var routeLine = L.polyline(campusLoop, {
-    color: '#ff3b30',
-    weight: 5
-}).addTo(map);
 
-// Fit map to loop
+// --- Draw default campus loop ---
+const routeLine = L.polyline(campusLoop, { color: '#007bff', weight: 5 }).addTo(map);
 map.fitBounds(routeLine.getBounds());
 
-// Calculate distance in miles
-var loopDistanceMiles = calculateDistanceMiles(campusLoop);
-
-// Show on map
+// Show campus loop distance in miles
+const loopDistanceMiles = calculateDistanceMiles(campusLoop);
 L.popup()
- .setLatLng(campusLoop[0])
- .setContent(`Campus Loop Distance: ${loopDistanceMiles} miles`)
- .openOn(map);
+  .setLatLng(campusLoop[0])
+  .setContent(`Campus Loop Distance: ${loopDistanceMiles} miles`)
+  .openOn(map);
 
-console.log("Campus Loop Distance:", loopDistanceMiles, "miles");
+// --- Default Routes List ---
+const defaultRoutes = { "Campus Loop": campusLoop };
+const defaultRoutesList = document.getElementById("defaultRoutesList");
+
+for (let name in defaultRoutes) {
+    const li = document.createElement("li");
+    li.textContent = name;
+    li.style.cursor = "pointer";
+    li.addEventListener("click", () => {
+        if (currentPolyline) map.removeLayer(currentPolyline);
+        currentPolyline = L.polyline(defaultRoutes[name], { color: 'blue', weight: 5 }).addTo(map);
+        map.fitBounds(currentPolyline.getBounds());
+
+        const miles = calculateDistanceMiles(defaultRoutes[name]);
+        document.getElementById("routeDistance").textContent = `Distance: ${miles} miles`;
+    });
+    defaultRoutesList.appendChild(li);
+}
+
+// --- Add New Route Functionality ---
+document.getElementById("startRoute").addEventListener("click", () => {
+    drawing = true;
+    routePoints = [];
+    
+    // Remove current polyline if any
+    if (currentPolyline) map.removeLayer(currentPolyline);
+
+    // Clear UI
+    document.getElementById("newRouteList").innerHTML = "";
+    document.getElementById("routeDistance").textContent = "";
+
+    // Remove any leftover markers
+    routeMarkers.forEach(marker => map.removeLayer(marker));
+    routeMarkers = [];
+});
+
+// Finish route button
+document.getElementById("endRoute").addEventListener("click", () => {
+    drawing = false;
+
+    // Remove all markers now
+    routeMarkers.forEach(marker => map.removeLayer(marker));
+    routeMarkers = [];
+
+    if (routePoints.length > 1) {
+        currentPolyline = L.polyline(routePoints, { color: 'red', weight: 5 }).addTo(map);
+        map.fitBounds(currentPolyline.getBounds());
+
+        const miles = calculateDistanceMiles(routePoints);
+        document.getElementById("routeDistance").textContent = `Distance: ${miles} miles`;
+
+        // Save to My Routes list
+        const li = document.createElement("li");
+        const routeCount = document.getElementById("savedRoutesList").children.length + 1;
+        li.textContent = `Route ${routeCount} (${miles} miles)`;
+        li.style.cursor = "pointer";
+
+        li.addEventListener("click", () => {
+            if (currentPolyline) map.removeLayer(currentPolyline);
+            currentPolyline = L.polyline(routePoints, { color: 'red', weight: 5 }).addTo(map);
+            map.fitBounds(currentPolyline.getBounds());
+            document.getElementById("routeDistance").textContent = `Distance: ${miles} miles`;
+        });
+
+        document.getElementById("savedRoutesList").appendChild(li);
+    }
+});
+
+// --- Click on map to add points while drawing ---
+map.on('click', (e) => {
+    if (!drawing) return;
+    const point = [e.latlng.lat, e.latlng.lng];
+    routePoints.push(point);
+
+    // Show marker while drawing
+    const marker = L.marker(point).addTo(map);
+    routeMarkers.push(marker);
+
+    // Update live polyline
+    if (currentPolyline) map.removeLayer(currentPolyline);
+    currentPolyline = L.polyline(routePoints, { color: 'red', weight: 5 }).addTo(map);
+
+    // Update live distance
+    if (routePoints.length > 1) {
+        const miles = calculateDistanceMiles(routePoints);
+        document.getElementById("routeDistance").textContent = `Distance: ${miles} miles`;
+    }
+});

@@ -4,12 +4,35 @@
 <!---reference: https://leafletjs.com/-->
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/map.css') }}">
-
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 
 <div class="map-container">
     <div id="map"></div>
+</div>
+
+<div class="map-controls">
+    <!-- Add New Route Card -->
+    <div class="card">
+        <h3 style="margin-bottom:10px;">Add New Route</h3>
+        <button id="startRoute">Start Route</button>
+        <button id="endRoute">End Route</button>
+        <ul id="newRouteList"></ul>
+        <div id="routeDistance" style="margin-top:10px; font-weight:bold;"></div>
+    </div>
+
+    <!-- My Routes Card -->
+    <div id= "myroutes" class="card">
+        <h3 style="margin-bottom:10px;">My Routes</h3>
+        <ul id="savedRoutesList"></ul>
+    </div>
+
+    <!-- Default Routes Card -->
+    <div id="defaultroutes" class="card">
+        <h3 style="margin-bottom:10px;">Vulcan Routes</h3>
+        <ul id="defaultRoutesList"></ul>
+    </div>
+
 </div>
 
 <script src="{{ url_for('style_folder.static', filename='js/maps.js') }}"></script>

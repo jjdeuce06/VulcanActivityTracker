@@ -3,7 +3,45 @@
 }
 
 #map {
-    height: 65vh;
+    height: 40vh;
     width: 100%;
     border-radius: 12px;
+}
+
+.map-controls {
+    display: flex;
+    gap: 20px;
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.map-controls .card {
+    flex: 1;
+}
+
+.map-controls button {
+    background: linear-gradient(135deg, #6b1414, #915f58); /* fun gradient */
+    border: none;
+    color: white;
+    font-weight: bold;
+    padding: 10px 16px;
+    border-radius: 50px; /* rounded pill style */
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+
+/* Hover effect: pop and shine */
+.map-controls button:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    background: linear-gradient(135deg, #2e659f, #aee0ff);
+}
+
+/* Active effect: press down */
+.map-controls button:active {
+    transform: translateY(0px) scale(0.98);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
 }

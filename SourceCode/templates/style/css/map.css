@@ -1,0 +1,9 @@
+.map-container {
+    margin: 0 auto;   /* centers horizontally */
+}
+
+#map {
+    height: 65vh;
+    width: 100%;
+    border-radius: 12px;
+}

@@ -1,5 +1,16 @@
 {% extends "base_temp/dashboard.html" %}
 
 {% block content %}
-<h1 style="color: blue;"> Map page </h1>
+<!---reference: https://leafletjs.com/-->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/map.css') }}">
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+
+<div class="map-container">
+    <div id="map"></div>
+</div>
+
+<script src="{{ url_for('style_folder.static', filename='js/maps.js') }}"></script>
 {% endblock %}

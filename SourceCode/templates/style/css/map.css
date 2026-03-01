@@ -1,0 +1,76 @@
+.map-container {
+    margin: 0 auto;   /* centers horizontally */
+}
+
+#map {
+    height: 40vh;
+    width: 100%;
+    border-radius: 12px;
+    border-bottom: 6px solid #070b3f;
+}
+
+.map-controls {
+    display: flex;
+    gap: 20px;
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.map-controls .card {
+    flex: 1;
+}
+
+.map-controls button {
+    margin-left: 10px;
+    padding: 10px 16px;
+
+    background: linear-gradient(135deg, #6b1414, #3f0707);
+    border: none;
+    border-radius: 12px;
+
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+
+    box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+    transition: all 0.3s ease;
+}
+
+/* Hover effect: pop and shine */
+.map-controls button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px rgba(0,0,0,0.45);
+}
+
+/* Active effect: press down */
+.map-controls button:active {
+    transform: translateY(0px) scale(0.98);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+.route-input {
+  width: 260px;
+  padding: 10px 14px;
+
+  background: linear-gradient(135deg, #1b1f5f, #070b3f);
+  border: 2px solid #6b1414;
+  border-radius: 12px;
+
+  color: #ffffff;
+  font-size: 14px;
+  outline: none;
+
+  box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+  transition: all 0.3s ease;
+}
+
+/* Placeholder */
+.route-input::placeholder {
+  color: rgba(255,255,255,0.6);
+}
+
+/* Focus effect */
+.route-input:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px rgba(0,0,0,0.45);
+  border-color: #8a1c1c;
+}

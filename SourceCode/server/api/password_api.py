@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, redirect, url_for, flash
+from flask import Blueprint, request, render_template, redirect, url_for, flash, jsonify
 from server.database.tokens import generate_reset_token, verify_reset_token
 from server.controllers.email_store import send_reset_email
 from server.database.connect import get_db_connection

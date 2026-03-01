@@ -33,3 +33,8 @@ def init_or_upgrade_schema(conn):
     from server.database.schema.challengesSchema import create_challenges_table
     create_challenges_table(conn)
     print("likes table schema initialized or updated.")
+
+
+    from server.database.schema.mapSchema import create_maps_table
+    create_maps_table(conn)
+    print("maps table schema initialized or updated.")

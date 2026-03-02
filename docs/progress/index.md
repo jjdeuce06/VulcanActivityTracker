@@ -108,7 +108,7 @@ Track development milestones and weekly updates for the Vulcan Activity Tracker.
     box-shadow:0 6px 16px rgba(0,0,0,0.3);
   ">
   <h3>📅 Week 7</h3>
-    <p><strong>Date:</strong> Feb 23, 2026</p>
+    <p><strong>Date:</strong> Mar 2, 2026</p>
     <p>Login Requirement, User Testing, Challenges Development.</p>
 
   <a href="week7" style="color:#7dd3fc; font-weight:600;">

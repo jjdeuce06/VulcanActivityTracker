@@ -13,3 +13,58 @@
     font-size: 14px;
     font-weight: bold;
 }
+
+
+.weather-card {
+  background: linear-gradient(135deg, #1b1f5f, #070b3f);
+  border: 1.5px solid #6b1414;
+  border-radius: 18px;
+  padding: 16px;
+  color: white;
+}
+
+.forecast-scroll {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.forecast-day {
+  min-width: 120px;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid #6b1414;
+  text-align: center;
+  transition: all 0.25s ease;
+}
+
+.forecast-day:hover {
+  transform: translateY(-5px);
+  background: rgba(107,20,20,0.3);
+}
+
+.best-day {
+  border: 2px solid gold;
+  box-shadow: 0 0 15px rgba(255,215,0,0.4);
+}
+
+/* Forecast horizontal scrollbar */
+.forecast-scroll::-webkit-scrollbar {
+  height: 8px;   /* horizontal scroll uses height, not width */
+}
+
+.forecast-scroll::-webkit-scrollbar-track {
+  background: #0b0f3d;
+  border-radius: 10px;
+}
+
+.forecast-scroll::-webkit-scrollbar-thumb {
+  background: #6b1414;
+  border-radius: 10px;
+}
+
+.forecast-scroll::-webkit-scrollbar-thumb:hover {
+  background: #8a1c1c;
+}

@@ -128,7 +128,7 @@ function renderClubs(containerId, clubs, isMember) {
 
    
 
-    const actionBtn = card.querySelectorAll("button.secondary-btn")[1];  // Get the second button
+    const actionBtn = card.querySelector("button.secondary-btn[data-action]");  // Get the second button
 if (actionBtn) {
   actionBtn.addEventListener("click", async () => {
     const username = localStorage.getItem("currentUser");
@@ -177,7 +177,7 @@ if (actionBtn) {
     const viewBtn = card.querySelector("button.view-club-btn");
     if (viewBtn) {
       viewBtn.addEventListener("click", () => {
-        window.location.href = `/club/${club.id}`;
+        window.location.href = `/club/${encodeURIComponent(club.name)}`;
       });
     }
   });

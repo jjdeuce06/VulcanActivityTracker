@@ -137,10 +137,6 @@
   transform: translateY(-50%) scale(1);
 }
 
-
-
-
-
 /*scrollbar*/
 .routeUI::-webkit-scrollbar {
   width: 8px;

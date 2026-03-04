@@ -1,0 +1,15 @@
+#weatherCard #weatherContent {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.weather-icon {
+    font-size: 32px; /* emoji or icon size */
+}
+
+.weather-info span {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+}

@@ -219,20 +219,43 @@ document.addEventListener("DOMContentLoaded", () => {
     const key = sortBy.value;                  // score | name | totalMinutes | totalActivities
     const dir = sortDirBtn.dataset.dir || "desc";
 
-    // compute the values that are actually displayed for this sport
     const computed = buildComputedRows(data, sport);
 
-    const sorted = [...computed].sort((a, b) => {
-      let av = a[key];
-      let bv = b[key];
+    // Choose tie-break order depending on what you're sorting by
+    const tieBreakersByKey = {
+      totalMinutes: ["score", "totalActivities", "name"],
+      score: ["totalMinutes", "totalActivities", "name"],
+      totalActivities: ["score", "totalMinutes", "name"],
+      name: ["score", "totalMinutes", "totalActivities"], // name already handled as primary
+    };
 
-      if (key === "name") {
+
+    const tieBreakers = tieBreakersByKey[key] || ["score", "totalMinutes", "totalActivities", "name"];
+
+    function cmp(a, b, k, direction = dir) {
+      const av = a[k];
+      const bv = b[k];
+
+      if (k === "name") {
         const res = String(av ?? "").localeCompare(String(bv ?? ""), undefined, { sensitivity: "base" });
-        return dir === "asc" ? res : -res;
+        return direction === "asc" ? res : -res;
       }
 
       const res = (Number(av) || 0) - (Number(bv) || 0);
-      return dir === "asc" ? res : -res;
+      return direction === "asc" ? res : -res;
+    }
+
+    const sorted = [...computed].sort((a, b) => {
+      // primary compare
+      let res = cmp(a, b, key, dir);
+      if (res !== 0) return res;
+
+      // tie-break compares (usually keep these DESC regardless of primary dir)
+      for (const t of tieBreakers) {
+        res = cmp(a, b, t, t === "name" ? "asc" : "desc");
+        if (res !== 0) return res;
+      }
+      return 0;
     });
 
     render(sorted);

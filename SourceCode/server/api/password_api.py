@@ -43,7 +43,7 @@ def request_password_reset():
     # Check if user exists (adjust column/table names if needed)
     with get_db_connection() as conn:
         cur = conn.cursor()
-        cur.execute("SELECT 1 FROM users WHERE email = ?", (email,))
+        cur.execute("SELECT 1 FROM [user] WHERE Email = ?", (email,))
         user_exists = cur.fetchone() is not None
 
     if user_exists:

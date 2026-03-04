@@ -3,6 +3,7 @@ import resend
 resend.api_key = os.getenv("RESEND_API_KEY")
 
 def send_reset_email(user_email, reset_link):
+    print(f"Preparing to send password reset email to {user_email} with link: {reset_link}")
     try:
         response = resend.Emails.send({
         "from": os.getenv("RESEND_FROM"),

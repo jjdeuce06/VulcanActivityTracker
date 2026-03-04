@@ -81,7 +81,7 @@ def add_member_to_club(conn, club_id, user_id, username): #adds a user to the me
             raise ValueError("Club not found")
 
         members_json = getattr(row, "Members", None) or row[0]
-      
+    
         try:
             members = json.loads(members_json) if members_json else []
         except Exception:

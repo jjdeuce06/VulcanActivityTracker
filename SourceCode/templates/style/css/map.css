@@ -74,3 +74,88 @@
   box-shadow: 0 12px 22px rgba(0,0,0,0.45);
   border-color: #8a1c1c;
 }
+
+
+/*saved list*/
+
+/* My Routes Card */
+.routeUI {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+
+.routeUI li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 12px 14px;
+  margin-bottom: 10px;
+
+  background: linear-gradient(135deg, #1b1f5f, #070b3f);
+  border: 1.5px solid #6b1414;
+  border-radius: 14px;
+
+  color: white;
+  cursor: pointer;
+  position: relative;
+
+  transition: all 0.25s ease;
+}
+.route-title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.routeUI li:hover {
+  transform: translateX(6px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+  border-color: #8a1c1c;
+}
+.route-hover-info {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%) scale(0.8);
+
+  background: #070b3f;
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  border: 1px solid #6b1414;
+
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+.routeUI li:hover .route-hover-info {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+
+
+
+
+/*scrollbar*/
+.routeUI::-webkit-scrollbar {
+  width: 8px;
+}
+
+.routeUI::-webkit-scrollbar-track {
+  background: #0b0f3d;
+  border-radius: 10px;
+}
+
+.routeUI::-webkit-scrollbar-thumb {
+  background: #6b1414;
+  border-radius: 10px;
+}
+
+.routeUI::-webkit-scrollbar-thumb:hover {
+  background: #8a1c1c;
+}

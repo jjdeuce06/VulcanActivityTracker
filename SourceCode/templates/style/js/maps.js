@@ -78,20 +78,53 @@ L.popup()
 const defaultRoutes = { "Campus Loop": campusLoop };
 const defaultRoutesList = document.getElementById("defaultRoutesList");
 
+// for (let name in defaultRoutes) {
+//     const li = document.createElement("li");
+//     li.textContent = name;
+//     li.style.cursor = "pointer";
+//     li.addEventListener("click", () => {
+//         if (currentPolyline) map.removeLayer(currentPolyline);
+//         currentPolyline = L.polyline(defaultRoutes[name], { color: 'blue', weight: 5 }).addTo(map);
+//         map.fitBounds(currentPolyline.getBounds());
+
+//         const miles = calculateDistanceMiles(defaultRoutes[name]);
+//         document.getElementById("routeDistance").textContent = `Distance: ${miles} miles`;
+//     });
+//     defaultRoutesList.appendChild(li);
+// }
+
 for (let name in defaultRoutes) {
+
     const li = document.createElement("li");
-    li.textContent = name;
-    li.style.cursor = "pointer";
+
+    const miles = calculateDistanceMiles(defaultRoutes[name]);
+
+    li.innerHTML = `
+        <div class="route-icon">📍</div>
+        <div class="route-title">${name}</div>
+        <div class="route-hover-info">${miles} miles</div>
+    `;
+
     li.addEventListener("click", () => {
         if (currentPolyline) map.removeLayer(currentPolyline);
-        currentPolyline = L.polyline(defaultRoutes[name], { color: 'blue', weight: 5 }).addTo(map);
+
+        currentPolyline = L.polyline(defaultRoutes[name], {
+            color: 'blue',
+            weight: 5
+        }).addTo(map);
+
         map.fitBounds(currentPolyline.getBounds());
 
-        const miles = calculateDistanceMiles(defaultRoutes[name]);
-        document.getElementById("routeDistance").textContent = `Distance: ${miles} miles`;
+        document.getElementById("routeDistance").textContent =
+            `Distance: ${miles} miles`;
     });
+
     defaultRoutesList.appendChild(li);
 }
+
+
+
+
 
 // --- Add New Route Functionality ---
 document.getElementById("startRoute").addEventListener("click", () => {
@@ -147,7 +180,12 @@ document.getElementById("endRoute").addEventListener("click", async (e) => {
         document.getElementById("routeDistance").textContent = `Distance: ${miles} miles`;
 
         const li = document.createElement("li");
-        li.textContent = `${routeName} (${miles} miles)`;
+       li.innerHTML = `
+            <div class="route-icon">📍</div>
+            <span class="route-title">${routeName}</span>
+            <div class="route-hover-info">${miles} miles</div>
+        `;
+       
         li.style.cursor = "pointer";
 
         const savedPoints = [...routePoints];
@@ -232,7 +270,11 @@ function displayMaps(routes) {
 
     routes.forEach(route => {
         const li = document.createElement("li");
-        li.textContent = `${route.name} (${route.distance} miles)`;
+        li.innerHTML = `
+            <div class="route-icon">📍</div>
+            <span class="route-title">${route.name}</span>
+            <div class="route-hover-info">${route.distance} miles</div>
+        `;
         li.style.cursor = "pointer";
 
         li.addEventListener("click", () => {

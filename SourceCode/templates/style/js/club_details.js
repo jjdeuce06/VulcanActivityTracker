@@ -24,13 +24,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("member-count").textContent = club.members.length;
 
     const membersList = document.getElementById("members-list");
+    const names = club.member_usernames || [];
     if (club.members.length > 0) 
       {
       console.log("Club members:", club.members);
-      club.members.forEach(member => {
+      names.forEach(name => {
         const div = document.createElement("div");
         div.className = "club-item";
-        div.textContent = member;
+        div.textContent = name;
         membersList.appendChild(div);
       });
     } else {

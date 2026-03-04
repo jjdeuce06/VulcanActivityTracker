@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from server.database.connect import get_db_connection
 from server.controllers.user_store import get_user_id
-from server.controllers.club_store import insert_club, get_all_clubs,get_not_user_clubs, get_user_clubs, add_member_to_club, remove_member_from_club, remove_club_from_database
+from server.controllers.club_store import insert_club, get_all_clubs,get_not_user_clubs, get_user_clubs, add_member_to_club, remove_member_from_club, remove_club_from_database, usernames_from_userids
 
 club_api = Blueprint('club_api', __name__)
 
@@ -173,6 +173,7 @@ def club_detail():
             club = next((c for c in clubs if c["id"] == club_id), None)
             if not club:
                 return jsonify({"error": "Club not found"}), 404
+            club["member_usernames"] = usernames_from_userids(conn, club.get("members", []))
             return jsonify({"club": club}), 200
         finally:
             conn.close()

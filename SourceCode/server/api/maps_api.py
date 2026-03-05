@@ -43,3 +43,24 @@ def getUserRoutes():
         return jsonify({"success": True, "maps": result})
     except Exception as e:
         return jsonify(success=False, error=str(e))
+
+
+@map_api.route('/delete_route', methods=['POST'])
+def deleteRoute():
+    try:
+        data = request.get_json()
+        RouteName = data.get("name")
+        username = session.get("user_id", None)
+
+        conn = get_db_connection()
+        user_id = get_user_id(conn, username)
+        if not user_id:
+            return jsonify({"error": "Not logged in"}), 401
+
+        result = delete_route(conn, user_id, RouteName)
+        conn.close()
+
+        return jsonify(result)
+
+    except Exception as e:
+        return jsonify(success=False, error=str(e))

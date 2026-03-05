@@ -100,6 +100,7 @@ for (let name in defaultRoutes) {
     const miles = calculateDistanceMiles(defaultRoutes[name]);
 
     li.innerHTML = `
+
         <div class="route-icon">📍</div>
         <div class="route-title">${name}</div>
         <div class="route-hover-info">${miles} miles</div>
@@ -180,11 +181,14 @@ document.getElementById("endRoute").addEventListener("click", async (e) => {
         document.getElementById("routeDistance").textContent = `Distance: ${miles} miles`;
 
         const li = document.createElement("li");
-       li.innerHTML = `
+        li.classList.add("route-item");
+        li.innerHTML = `
             <div class="route-icon">📍</div>
             <span class="route-title">${routeName}</span>
             <div class="route-hover-info">${miles} miles</div>
+            <button class="delete-btn">🗑</button>
         `;
+        await deleteRoute(li, routeName);
        
         li.style.cursor = "pointer";
 
@@ -268,14 +272,18 @@ function displayMaps(routes) {
     const container = document.getElementById("savedRoutesList");
     container.innerHTML = "";
 
-    routes.forEach(route => {
+    routes.forEach(async route => {
         const li = document.createElement("li");
+        li.classList.add("route-item");
         li.innerHTML = `
             <div class="route-icon">📍</div>
             <span class="route-title">${route.name}</span>
             <div class="route-hover-info">${route.distance} miles</div>
+            <button class="delete-btn">🗑</button>
         `;
         li.style.cursor = "pointer";
+
+        await deleteRoute(li, route.name);
 
         li.addEventListener("click", () => {
             if (window.currentPolyline) map.removeLayer(window.currentPolyline);
@@ -286,4 +294,42 @@ function displayMaps(routes) {
 
         container.appendChild(li);
     });
+}
+
+async function deleteRoute(li, routeName) {
+    const deleteBtn = li.querySelector(".delete-btn");
+
+    deleteBtn.addEventListener("click", async (e) => {
+        e.stopPropagation(); //prevents route click
+
+        // Remove from UI
+        li.remove();
+
+        // Remove polyline if it's currently active
+        if (currentPolyline) {
+            map.removeLayer(currentPolyline);
+            currentPolyline = null;
+        }
+
+        // Clear distance display
+        document.getElementById("routeDistance").textContent = "";
+
+        // Remove from backend
+        await deleteRouteFromStorage(routeName);
+    });
+}
+
+//technically could delete routes of same name unique not implemented
+async function deleteRouteFromStorage(routeName) {
+    try {
+        const response = await fetch('/map_api/delete_route', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: routeName })
+        });
+        const data = await response.json();
+        console.log('Route deleted:', data);
+    } catch (error) {
+        console.error('Error deleting route:', error);
+    }
 }

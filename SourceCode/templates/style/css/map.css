@@ -10,13 +10,6 @@
     border-bottom: 6px solid #070b3f;
 }
 
-/* .map-controls {
-    display: flex;
-    gap: 20px;
-    max-width: 900px;
-    margin: 20px auto;
-} */
-
 .map-controls {
   display: flex;
   flex-wrap: wrap;          /* allows multiple rows */
@@ -166,4 +159,35 @@
 
 .routeUI::-webkit-scrollbar-thumb:hover {
   background: #8a1c1c;
+}
+
+
+/*trashcan*/
+.route-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 8px;
+  right: -20px;
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  opacity: 0;
+  transition: 0.2s ease;
+}
+
+.route-item:hover .delete-btn {
+  opacity: 1;
+}
+
+.delete-btn:hover {
+  transform: scale(1.2);
 }

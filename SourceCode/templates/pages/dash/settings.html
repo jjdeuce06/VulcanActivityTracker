@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/settings.css') }}">
 {% endblock %}
 
+<<<<<<< HEAD
 {% block content %}
 <div class="settings-page">
 
@@ -93,4 +94,40 @@
 </div>
 
 <script src="{{ url_for('style_folder.static', filename='js/settings.js') }}"></script>
+=======
+
+{% block content %}
+<h1 class="settings-title">Account Settings</h1>
+
+<div class="settings-container">
+
+    <!-- Change Username -->
+    <div class="settings-card">
+        <h3>Change Username</h3>
+
+        <label>New Username</label>
+        <input type="text" id="newUsername" placeholder="Enter new username">
+
+        <button id="changeUsernameBtn">Update Username</button>
+
+        <p id="usernameMessage"></p>
+    </div>
+
+
+    <!-- Delete Account -->
+    <div class="settings-card danger">
+        <h3>Delete Account</h3>
+
+        <p>This action cannot be undone.</p>
+
+        <button id="deleteAccountBtn">Delete My Account</button>
+
+        <p id="deleteMessage"></p>
+    </div>
+
+</div>
+
+<script src="{{ url_for('style_folder.static', filename='js/settings.js') }}"></script>
+
+>>>>>>> 1782402 (Settings page begun)
 {% endblock %}

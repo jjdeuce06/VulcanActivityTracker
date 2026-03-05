@@ -22,7 +22,8 @@ ROUTES = {
     "/maps": ("pages/dash/maps.html", "maps"),
     "/leaderboard": ("pages/dash/leaderboard.html", "leaderboard"),
     "/challenges": ("pages/dash/challenges.html", "challenges"),
-    "/resetpassword": ("pages/reset_password.html", None)
+    "/resetpassword": ("pages/reset_password.html", None),
+    "/settings": ("pages/dash/settings.html", "settings")
 }  
 
 def make_view(tpl, active_page):

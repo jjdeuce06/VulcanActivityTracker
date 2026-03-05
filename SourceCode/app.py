@@ -11,6 +11,7 @@ from server.api.challenges_api import challenges_api
 from server.database.connect import get_db_connection
 from server.database import init_or_upgrade_schema
 from server.api.maps_api import map_api
+from server.api.settings_api import settings_api
 
 from dotenv import load_dotenv
 import os
@@ -34,6 +35,7 @@ app.register_blueprint(team_api, url_prefix="/team_api")
 app.register_blueprint(challenges_api, url_prefix="/challenges_api")
 app.register_blueprint(password_api, url_prefix="/password_api")
 app.register_blueprint(map_api, url_prefix="/map_api")
+app.register_blueprint(settings_api, url_prefix="/settings_api")
 
 # Initialize / upgrade schema on app start
 with get_db_connection() as conn:

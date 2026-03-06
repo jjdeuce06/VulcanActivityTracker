@@ -1,51 +1,147 @@
 .settings-title {
-    text-align: center;
-    margin-bottom: 30px;
+  text-align: center;
+  font-weight: 900;
+  margin-bottom: 6px;
 }
 
-.settings-container {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
+.settings-description {
+  text-align: center;
+  color: #0e11da;
+  margin-bottom: 30px;
+}
+
+.settings-layout {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  padding: 0 100px;
+  flex-wrap: wrap;
 }
 
 .settings-card {
-    background: white;
-    padding: 25px;
-    border-radius: 10px;
-    width: 320px;
-
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  width: 100%;
+  max-width: 420px;
+  margin: 40px 0;
+  padding: 26px;
+  background: linear-gradient(135deg, #1b1f5f, #070b3f);
+  border-radius: 22px;
+  box-shadow:
+    0 18px 40px rgba(0,0,0,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  animation: popIn 0.4s ease;
+  color: white;
 }
 
 .settings-card h3 {
-    margin-bottom: 10px;
+  text-align: center;
+  font-weight: 900;
+  margin-bottom: 14px;
+}
+
+.settings-card p {
+  color: #d7d7d7;
+  font-size: 14px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.settings-card label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 5px;
+  color: #e0e0e0;
+  font-weight: 600;
 }
 
 .settings-card input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: none;
+  background: rgba(255,255,255,0.08);
+  color: white;
+  font-size: 14px;
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.settings-card input:focus {
+  outline: none;
+  background: rgba(255,255,255,0.12);
+  box-shadow:
+    0 0 0 2px rgba(107,20,20,0.7),
+    inset 0 2px 4px rgba(0,0,0,0.5);
 }
 
 .settings-card button {
-    padding: 10px 14px;
-    border: none;
-    background: #0b1170;
-    color: white;
-    cursor: pointer;
-    border-radius: 6px;
+  width: 100%;
+  margin-top: 22px;
+  padding: 14px;
+  background: linear-gradient(145deg, #6b1414, #8a1b1b);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow:
+    0 10px 22px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .settings-card button:hover {
-    background: #070b3f;
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 30px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.18);
+}
+
+.settings-card button:active {
+  transform: translateY(0);
 }
 
 .settings-card.danger {
-    border-left: 6px solid red;
+  background: linear-gradient(135deg, #5a1212, #2d0606);
+  border: 1px solid rgba(255, 80, 80, 0.25);
 }
 
-.settings-card.danger button {
-    background: red;
+.settings-card.danger h3 {
+  color: #ffb3b3;
+}
+
+.settings-card.danger p {
+  color: #f0d0d0;
+}
+
+.settings-message {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #dcdcdc;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.97);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 900px) {
+  .settings-layout {
+    flex-direction: column;
+    align-items: center;
+    padding: 0 24px;
+  }
+
+  .settings-card {
+    max-width: 100%;
+  }
 }

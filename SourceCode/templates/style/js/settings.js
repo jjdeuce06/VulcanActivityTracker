@@ -147,8 +147,10 @@ function fillDisplayInfo(data){
 
         const result = await response.json();
 
-        usernameMessage.textContent = result.message;
-
+        if(result.success){
+            localStorage.setItem("currentUser", newUsername);
+            usernameMessage.textContent = result.message;
+        }
     });
 
 

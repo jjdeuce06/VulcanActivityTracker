@@ -1,39 +1,19 @@
-// async function loadWeather() {
-//     try {
-//         const apiKey = "58c18f06ebfdd3ff8e3f178e47a11e35";
-//         const city = "California,PA,US"; // or dynamically detect user location
-//         const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${apiKey}`;
-
-//         const response = await fetch(url);
-//         const data = await response.json();
-
-//         if(data && data.main) {
-//             const temp = Math.round(data.main.temp);
-//             const desc = data.weather[0].description;
-//             const iconCode = data.weather[0].icon;
-
-//             document.getElementById("weather-temp").textContent = `${temp}°F`;
-//             document.getElementById("weather-desc").textContent = desc;
-
-//             // Optional: replace emoji with API icon
-//             document.querySelector(".weather-icon").innerHTML = `<img src="https://openweathermap.org/img/wn/${iconCode}.png" alt="${desc}" />`;
-//         }
-//     } catch(err) {
-//         console.error("Error fetching weather:", err);
-//         document.getElementById("weather-desc").textContent = "Unable to load weather";
-//     }
-// }
-
-// // Call on page load
-// loadWeather();
-
-
-
 async function loadForecast() {
+   // Get API key from Flask
+    const keyRes = await fetch("/map_api/send-weatherkey", {
+        method: "POST"
+    });
+
+    const keyData = await keyRes.json();
+    const API_KEY = keyData.key;
+
+    // Now call OpenWeather
     const res = await fetch(
-        "https://api.openweathermap.org/data/2.5/forecast?lat=40.0643&lon=-79.8847&units=imperial&appid=58c18f06ebfdd3ff8e3f178e47a11e35"
+        `https://api.openweathermap.org/data/2.5/forecast?q=California,PA,US&units=imperial&appid=${API_KEY}`
     );
+
     const data = await res.json();
+
 
     const container = document.getElementById("forecastContainer");
     container.innerHTML = "";

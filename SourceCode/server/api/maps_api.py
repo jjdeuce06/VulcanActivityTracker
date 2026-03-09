@@ -1,7 +1,12 @@
 from flask import Flask, request, jsonify, Blueprint, session
+import os
 from server.database.connect import get_db_connection
 from server.controllers.user_store import get_user_id
 from server.controllers.map_store import add_route, get_user_routes, delete_route
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 map_api = Blueprint('map_api', __name__)
 
 @map_api.route('/store_map_routes', methods=['POST'])
@@ -64,3 +69,10 @@ def deleteRoute():
 
     except Exception as e:
         return jsonify(success=False, error=str(e))
+
+
+@map_api.route('/send-weatherkey', methods=['POST'])
+def sendweatherkey():
+    return jsonify({
+        "key": os.getenv("WEATHER_API_KEY")
+    })

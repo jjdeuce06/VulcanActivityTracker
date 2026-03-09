@@ -1,54 +1,47 @@
-from flask import Blueprint, request, render_template, redirect, url_for, flash, jsonify
-from server.database.tokens import generate_reset_token, verify_reset_token
-from server.controllers.email_store import send_reset_email
-from server.database.connect import get_db_connection
-from argon2 import PasswordHasher
+from flask import Blueprint, request, jsonify
+from controllers.email_store import send_password_reset_email
+from database.tokens import generate_password_reset_token
+
+password_api = Blueprint("password_api", __name__)
 
 
-password_api = Blueprint('password_api', __name__)
-ph = PasswordHasher()
+@password_api.route("/forgot-password", methods=["POST"])
+def forgot_password():
+    data = request.get_json()
+    email = data.get("email")
 
-@password_api.route("/reset-password/<token>", methods=["GET", "POST"])
+    if not email:
+        return jsonify({"error": "Email is required"}), 400
+
+    # TODO:
+    # Check whether user exists in DB
+    # If user does not exist, you may still return success to avoid user enumeration
+
+    try:
+        token = generate_password_reset_token(email)
+        send_password_reset_email(email, token)
+    except Exception as e:
+        print("Error sending password reset email:", e)
+        return jsonify({"error": "Failed to send password reset email"}), 500
+
+    return jsonify({"message": "If that email exists, a password reset link has been sent."}), 200
+
+@password_api.route("/reset-password/<token>", methods=["POST"])
 def reset_password(token):
-    email = verify_reset_token(token)
+    data = request.get_json()
+    new_password = data.get("password")
+
+    if not new_password:
+        return jsonify({"error": "Password is required"}), 400
+
+    email = confirm_password_reset_token(token)
     if not email:
-        flash("The password reset link is invalid or has expired.", "danger")
-        return redirect(url_for("login_api.login"))
-    
-    if request.method == "POST":
-        new_password = request.form.get("password")
-        if not new_password:
-            flash("Please enter a new password.", "warning")
-            return render_template("reset_password.html", token=token)
-        
-        with get_db_connection() as conn:
-            new_hash = ph.hash(new_password)
-            conn.execute("UPDATE user SET password_hash = ? WHERE email = ?", (new_hash, email))
-            conn.commit()
-        
-        flash("Your password has been reset successfully. Please log in.", "success")
-        return redirect(url_for("login_api.login"))
-    
-    return render_template("reset_password.html", token=token)
+        return jsonify({"error": "Invalid or expired reset token"}), 400
 
-@password_api.route("/reset-password", methods=["POST"])
-def request_password_reset():
-    data = request.get_json(silent=True) or {}
-    email = (data.get("email") or "").strip().lower()
+    hashed_password = generate_password_hash(new_password)
 
-    # Always return generic success to avoid leaking whether an email exists
-    if not email:
-        return jsonify(success=False, error="Email is required."), 400
+    # TODO:
+    # Update DB:
+    # set PasswordHash = hashed_password where Email = email
 
-    # Check if user exists (adjust column/table names if needed)
-    with get_db_connection() as conn:
-        cur = conn.cursor()
-        cur.execute("SELECT 1 FROM [user] WHERE Email = ?", (email,))
-        user_exists = cur.fetchone() is not None
-
-    if user_exists:
-        token = generate_reset_token(email)
-        reset_link = url_for("password_api.reset_password", token=token, _external=True)
-        send_reset_email(email, reset_link)
-
-    return jsonify(success=True)
+    return jsonify({"message": "Password reset successful"}), 200

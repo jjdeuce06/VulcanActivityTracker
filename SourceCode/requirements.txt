@@ -8,3 +8,5 @@ itsdangerous
 argon2-cffi
 gunicorn
 requests
+requests
+mailersend

@@ -7,3 +7,4 @@ resend
 itsdangerous
 argon2-cffi
 requests
+mailersend

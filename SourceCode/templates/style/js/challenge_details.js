@@ -27,13 +27,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("participant-count").textContent = challenge.participants.length;
 
     const participantsList = document.getElementById("participants-list");
-    if (challenge.participants.length > 0) 
-      {
-      console.log("challenge participants:", challenge.participants);
-      challenge.participants.forEach(participant => {
+    participantsList.innerHTML = "";
+
+    const participantDetails = challenge.participant_details || [];
+
+    if (participantDetails.length > 0) {
+      participantDetails.forEach(participant => {
         const div = document.createElement("div");
         div.className = "challengepage-item";
-        div.textContent = participant;
+        div.textContent = participant.username;
         participantsList.appendChild(div);
       });
     } else {

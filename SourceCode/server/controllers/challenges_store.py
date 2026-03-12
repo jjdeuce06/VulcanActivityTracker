@@ -322,3 +322,47 @@ def calculate_challenge_progress(conn, challenge, user_id):
         "target": target,
         "percent": round(percent, 1)
     }
+    
+
+def challenge_name_exists(conn, challenge_name):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            SELECT 1
+            FROM challenges
+            WHERE LOWER(LTRIM(RTRIM(ChallengeName))) = LOWER(LTRIM(RTRIM(?)))
+        """, (challenge_name,))
+        row = cursor.fetchone()
+        return row is not None
+    except Exception as e:
+        print("Challenge name exists check error:", e)
+        raise
+    finally:
+        cursor.close()    
+        
+
+def get_participant_details(conn, user_ids):
+    cursor = conn.cursor()
+    try:
+        if not user_ids:
+            return []
+
+        clean_ids = [str(uid) for uid in user_ids if str(uid).strip()]
+        placeholders = ",".join("?" for _ in clean_ids)
+
+        cursor.execute(f"""
+            SELECT UserID, Username
+            FROM [user]
+            WHERE UserID IN ({placeholders})
+        """, tuple(clean_ids))
+
+        rows = cursor.fetchall()
+        user_map = {str(row.UserID): row.Username for row in rows}
+
+        return [
+            {"user_id": str(uid), "username": user_map.get(str(uid), f"User {uid}")}
+            for uid in clean_ids
+        ]
+
+    finally:
+        cursor.close()

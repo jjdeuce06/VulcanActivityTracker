@@ -6,60 +6,22 @@
 {% endblock %}
 
 {% block content %}
-<div class ="challenge-page">
+<div class ="challengepage-page">
 
-    <h1>Challenges</h1>
-    <p class="page-description">
-        Compete with others and push your limits.
-    </p>
+        <div class="challengepage-header">
+            <div class="challengepage-header-center">
+            <h1>Challenges</h1>
+            <p class="challengepage-description">
+                Compete with others and push your limits.
+             </p>
+            </div>
 
+            <a href="/create_challenge" class="challengepage-create-btn">
+                + Create Challenge
+             </a>
+        </div>
+        
     <div class="challengepage-layout">
-
-        <!-- LEFT: CREATE FORM -->
-        <form class="challengepage-form" id="create-challenge-form">
-            <h3>Create Challenge</h3>
-
-            <label>Challenge Name</label>
-            <input type="text" id="challenge-name" required>
-
-            <label>Description</label>
-            <textarea id="challenge-description" rows="3"></textarea>
-
-            <label>Activity Type</label>
-            <select id="challenge-activity-type" required>
-                <option value="run">Running</option>
-                <option value="bike">Cycling</option>
-                <option value="swim">Swimming</option>
-                <option value="lifting">Weightlifting</option>
-                <option value="walk">Walking</option>
-                <option value="yoga">Yoga</option>
-                <option value="soccer">Soccer</option>
-                <option value="baseball">Baseball</option>
-                <option value="football">Football</option>
-                <option value="tennis">Tennis</option>
-                <option value="volleyball">Volleyball</option>
-                <option value="basketball">Basketball</option>
-                <option value="equestrian">Equestrian</option>
-            </select>
-
-            <label>Metric Type</label>
-            <select id="challenge-metric-type" required>
-                <option value="distance">Distance</option>
-                <option value="time">Workout Time</option>
-                <option value="count">Workout Count</option>
-            </select>
-
-            <label>Target Goal</label>
-            <input type="number" id="challenge-target" required min="1">
-
-            <label>Start Date</label>
-            <input type="date" id="start-date" required>
-
-            <label>End Date</label>
-            <input type="date" id="end-date" required>
-
-            <button type="submit">Create Challenge</button>
-        </form>
 
         <!-- RIGHT: MY CHALLENGES -->
         <div class="challengepage-card">

@@ -13,7 +13,7 @@ def create_challenges_table(conn: pyodbc.Connection) -> None:
         cursor.execute("""
             CREATE TABLE [challenges] (
                 ChallengeID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-                ChallengeName NVARCHAR(255) NOT NULL,
+                ChallengeName NVARCHAR(255) NOT NULL UNIQUE,
                 Description NVARCHAR(MAX) NULL,
                 CreatorUserID UNIQUEIDENTIFIER NOT NULL,
                 Participants NVARCHAR(MAX) NULL DEFAULT '[]', -- JSON for participants user IDs

@@ -4,7 +4,13 @@ import json
 
 def insert_club(conn, user_id, name, description): #inserts a new club into the database
     cursor = conn.cursor()
+    
+    cursor.execute("SELECT 1 FROM clubs WHERE ClubName = ?", (name,))
+    if cursor.fetchone():
+        raise ValueError("Club name already exists")
+        
     try:
+     
         cursor.execute("""
             INSERT INTO clubs (ClubName, Description, CreatorUserID)
             VALUES (?, ?, ?)
@@ -14,6 +20,8 @@ def insert_club(conn, user_id, name, description): #inserts a new club into the 
         print("Club inserted successfully")
 
     except Exception as e:
+        if "UNIQUE" in str(e).upper():
+            raise ValueError("Club name already exists")
         print("Insert club error:", e)
         raise
 

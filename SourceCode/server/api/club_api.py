@@ -25,6 +25,10 @@ def create_club():
 
             insert_club(conn, user_id, name, description)
             return jsonify({"status": "success"}), 201
+        
+        except ValueError as ve:
+            return jsonify({"error": str(ve)}), 400
+        
         finally:
             conn.close()
 
@@ -163,14 +167,14 @@ def delete_club():
 def club_detail():
     try:
         data = request.get_json() or {}
-        club_id = data.get("club_id")
-        if not club_id:
-            return jsonify({"error": "Missing club_id"}), 400
+        club_name = data.get("club_name")
+        if not club_name:
+            return jsonify({"error": "Missing club_name"}), 400
 
         conn = get_db_connection()
         try:
             clubs = get_all_clubs(conn)
-            club = next((c for c in clubs if c["id"] == club_id), None)
+            club = next((c for c in clubs if c["name"] == club_name), None)
             if not club:
                 return jsonify({"error": "Club not found"}), 404
             club["member_usernames"] = usernames_from_userids(conn, club.get("members", []))

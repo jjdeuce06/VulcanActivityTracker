@@ -1,65 +1,82 @@
-{% extends "base_temp/dashboard.html" %}
+ <!-- challenges.html: -->
+ {% extends "base_temp/dashboard.html" %}
 
 {% block page_css %}
 <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/challenges.css') }}">
 {% endblock %}
 
 {% block content %}
-<head>
-    <meta charset="UTF-8">
-    <title>Challenges - Vulcan Activity Tracker</title>
-    <link rel="stylesheet" href="/static/css/challenges.css">
-</head>
-<body>
+<div class ="challenge-page">
 
-<h1>Challenges</h1>
-<p class="page-description">
-    Compete with others and push your limits.
-</p>
+    <h1>Challenges</h1>
+    <p class="page-description">
+        Compete with others and push your limits.
+    </p>
 
-<div class="challenge-layout">
+    <div class="challengepage-layout">
 
-    <!-- LEFT: CREATE FORM -->
-    <form class="challenge-form" id="createChallengeForm">
-        <h3>Create Challenge</h3>
+        <!-- LEFT: CREATE FORM -->
+        <form class="challengepage-form" id="create-challenge-form">
+            <h3>Create Challenge</h3>
 
-        <label>Challenge Name</label>
-        <input type="text" id="challengeName" required>
+            <label>Challenge Name</label>
+            <input type="text" id="challenge-name" required>
 
-        <label>Description</label>
-        <textarea id="description" rows="3"></textarea>
+            <label>Description</label>
+            <textarea id="challenge-description" rows="3"></textarea>
 
-        <label>Activity Type</label>
-        <select id="activityType" required>
-            <option value="Running">Running</option>
-            <option value="Cycling">Cycling</option>
-            <option value="Swimming">Swimming</option>
-            <option value="Weightlifting">Weightlifting</option>
-        </select>
+            <label>Activity Type</label>
+            <select id="challenge-activity-type" required>
+                <option value="run">Running</option>
+                <option value="bike">Cycling</option>
+                <option value="swim">Swimming</option>
+                <option value="lifting">Weightlifting</option>
+                <option value="walk">Walking</option>
+                <option value="yoga">Yoga</option>
+                <option value="soccer">Soccer</option>
+                <option value="baseball">Baseball</option>
+                <option value="football">Football</option>
+                <option value="tennis">Tennis</option>
+                <option value="volleyball">Volleyball</option>
+                <option value="basketball">Basketball</option>
+                <option value="equestrian">Equestrian</option>
+            </select>
 
-        <label>Metric Type</label>
-        <select id="metricType" required>
-            <option value="distance">Distance</option>
-            <option value="count">Workout Count</option>
-        </select>
+            <label>Metric Type</label>
+            <select id="challenge-metric-type" required>
+                <option value="distance">Distance</option>
+                <option value="time">Workout Time</option>
+                <option value="count">Workout Count</option>
+            </select>
 
-        <label>Start Date</label>
-        <input type="date" id="startDate" required>
+            <label>Target Goal</label>
+            <input type="number" id="challenge-target" required min="1">
 
-        <label>End Date</label>
-        <input type="date" id="endDate" required>
+            <label>Start Date</label>
+            <input type="date" id="start-date" required>
 
-        <button type="submit">Create Challenge</button>
-    </form>
+            <label>End Date</label>
+            <input type="date" id="end-date" required>
 
-    <!-- RIGHT: ACTIVE CHALLENGES -->
-    <div class="challenge-card">
-        <h3>Active Challenges</h3>
-        <div class="challenge-list" id="challengeList">
-            <!-- JS will inject challenges here -->
+            <button type="submit">Create Challenge</button>
+        </form>
+
+        <!-- RIGHT: MY CHALLENGES -->
+        <div class="challengepage-card">
+            <h3>My Challenges</h3>
+            <div class="challengepage-list" id="my-challenge-list">
+                <!-- JS will inject challenges here -->
+            </div>
+        </div>
+
+        <!-- RIGHT: ACTIVE CHALLENGES -->
+        <div class="challengepage-card">
+            <h3>All Challenges</h3>
+            <div class="challengepage-list" id="all-challenge-list">
+                <!-- JS will inject challenges here -->
+            </div>
         </div>
     </div>
-
 </div>
 
 </body>

@@ -1,3 +1,4 @@
+#challengesSchema.py:
 import pyodbc
 
 def create_challenges_table(conn: pyodbc.Connection) -> None:
@@ -18,6 +19,7 @@ def create_challenges_table(conn: pyodbc.Connection) -> None:
                 Participants NVARCHAR(MAX) NULL DEFAULT '[]', -- JSON for participants user IDs
                 ActivityType NVARCHAR(100) NOT NULL,  -- Running, Cycling, etc
                 MetricType NVARCHAR(50) NOT NULL,     -- distance or count
+                TargetValue FLOAT NOT NULL,
                 StartDate DATE NOT NULL,
                 EndDate DATE NOT NULL,
                 CONSTRAINT FK_challenges_CreatorUser FOREIGN KEY (CreatorUserID) REFERENCES [user](UserID)

@@ -1,0 +1,32 @@
+<!-- challenge_details.html: -->
+{% extends "base_temp/dashboard.html" %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/challenges.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="challenge-page">
+  <h1 class="page-description"id="challenge-name-heading">Challenge Name</h1>
+  
+  <div class="challengepage-layout">
+    <div class="challengepage-form">
+      <h2>About</h2>
+      <p id="challenge-description"></p>
+      <p><strong>Participants: </strong><span id="participant-count">0</span></p>
+      <button onclick="history.back()" class="secondary-btn" style="margin-top: 14px; width: auto; padding: 10px 20px;">Back</button>
+    </div>
+    
+    <div class="card challengepage-card">
+      <h3>Participants</h3>
+      <div class="challengepage-list" id="participants-list">
+        <!-- participants will be populated here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('style_folder.static', filename='js/challenge_details.js') }}"></script>
+
+{% endblock %}

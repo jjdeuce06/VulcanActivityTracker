@@ -1,11 +1,13 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const clubId = window.location.pathname.split("/").pop();
+  const clubName = decodeURIComponent(
+    window.location.pathname.split("/").pop()
+  );
   
   try {
     const resp = await fetch("/club_api/clubdetail", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ club_id: clubId })
+      body: JSON.stringify({ club_name: clubName })
     });
 
     if (!resp.ok) {

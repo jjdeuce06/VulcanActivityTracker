@@ -17,3 +17,16 @@ def confirm_password_reset_token(token, max_age=3600):
         return serializer.loads(token, salt="password-reset", max_age=max_age)
     except (SignatureExpired, BadSignature):
         return None
+
+
+def generate_email_verification_token(email):
+    serializer = get_serializer()
+    return serializer.dumps(email, salt="email-verification")
+
+
+def confirm_email_verification_token(token, max_age=86400):
+    serializer = get_serializer()
+    try:
+        return serializer.loads(token, salt="email-verification", max_age=max_age)
+    except (SignatureExpired, BadSignature):
+        return None

@@ -11,6 +11,12 @@ from server.controllers.login_store import (
     fetch_user_by_username
 )
 
+from server.controllers.email_store import send_verification_email
+from server.database.tokens import generate_email_verification_token
+from server.database.tokens import confirm_email_verification_token
+from server.controllers.login_store import verify_user_by_email
+from server.controllers.login_store import fetch_user_verification_status
+
 login_api = Blueprint('login_api', __name__)
 
 
@@ -40,14 +46,39 @@ def login():
                 return jsonify({"error": "Email already exists"}), 400
 
             store_login(conn, email, username, hashed_password)
-            print("Login credentials stored successfully")
 
-        return jsonify({"status": "ok"}), 200
+        token = generate_email_verification_token(email)
+        send_verification_email(email, token)
+
+        return jsonify({
+            "status": "ok",
+            "message": "Registration successful. Please check your email to verify your account."
+        }), 200
 
     except Exception as e:
         print("Registration error:", e)
         return jsonify({"error": "Failed to create account"}), 500
+    
+@login_api.route("/verify-email/<token>", methods=["POST"])
+def verify_email(token):
+    email = confirm_email_verification_token(token)
 
+    if not email:
+        return jsonify({"error": "Invalid or expired verification token"}), 400
+
+    try:
+        with get_db_connection() as conn:
+            updated = verify_user_by_email(conn, email)
+
+        if not updated:
+            return jsonify({"error": "User not found"}), 404
+
+        return jsonify({"message": "Account verified successfully"}), 200
+
+    except Exception as e:
+        print("Verification error:", e)
+        return jsonify({"error": "Failed to verify account"}), 500
+    
 
 @login_api.route("/verify", methods=["POST"])
 def verify():
@@ -62,8 +93,12 @@ def verify():
         with get_db_connection() as conn:
             stored_hash = fetch_login(conn, username)
 
-        if not stored_hash:
-            return jsonify({"error": "Invalid username or password"}), 401
+            if not stored_hash:
+                return jsonify({"error": "Invalid username or password"}), 401
+
+            is_verified = fetch_user_verification_status(conn, username)
+            if is_verified is False:
+                return jsonify({"error": "Please verify your email before logging in"}), 403
 
         ph = PasswordHasher()
         ph.verify(stored_hash, password)

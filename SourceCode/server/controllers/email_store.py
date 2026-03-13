@@ -70,3 +70,27 @@ If you did not request this, you can ignore this email.
 """
 
     return send_email(to_email, subject, html_content, text_content)
+
+def send_verification_email(to_email, token):
+    verify_link = f"{FRONTEND_BASE_URL}/verifyemail?token={token}"
+
+    subject = "Verify your Vulcan Activity Tracker account"
+
+    html_content = f"""
+    <h2>Verify Your Account</h2>
+    <p>Welcome to Vulcan Activity Tracker.</p>
+    <p>Click the link below to verify your email address:</p>
+    <p><a href="{verify_link}">Verify My Account</a></p>
+    <p>If you did not create this account, you can ignore this email.</p>
+    """
+
+    text_content = f"""
+Welcome to Vulcan Activity Tracker.
+
+Verify your account here:
+{verify_link}
+
+If you did not create this account, you can ignore this email.
+"""
+
+    return send_email(to_email, subject, html_content, text_content)

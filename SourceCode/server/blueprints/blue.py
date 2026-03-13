@@ -24,7 +24,8 @@ ROUTES = {
     "/challenges": ("pages/dash/challenges.html", "challenges"),
     "/requestpassword": ("pages/request_password.html", None),
     "/settings": ("pages/dash/settings.html", "settings"),
-    "/resetpassword": ("pages/resetPassword.html", None)
+    "/resetpassword": ("pages/resetPassword.html", None),
+    "/verifyemail": ("pages/verifyemail.html", None)
 }  
 
 def make_view(tpl, active_page):

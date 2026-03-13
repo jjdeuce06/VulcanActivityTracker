@@ -4,8 +4,8 @@ def store_login(conn, email, username, passwordHash):
     cursor = conn.cursor()
     try:
         cursor.execute("""
-            INSERT INTO [user] (Email, Username, PasswordHash)
-            VALUES (?, ?, ?)
+            INSERT INTO [user] (Email, Username, PasswordHash, IsVerified)
+            VALUES (?, ?, ?, 0)
         """, (email, username, passwordHash))
         conn.commit()
     finally:
@@ -76,5 +76,45 @@ def update_password_by_email(conn, email, passwordHash):
         conn.commit()
         print("")
         return cursor.rowcount > 0
+    finally:
+        cursor.close()
+
+def fetch_password_hash_by_email(conn, email):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            SELECT PasswordHash
+            FROM [user]
+            WHERE Email = ?
+        """, (email,))
+        row = cursor.fetchone()
+        return row.PasswordHash if row else None
+    finally:
+        cursor.close()
+
+def verify_user_by_email(conn, email):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            UPDATE [user]
+            SET IsVerified = 1
+            WHERE Email = ?
+        """, (email,))
+        conn.commit()
+        return cursor.rowcount > 0
+    finally:
+        cursor.close()
+
+
+def fetch_user_verification_status(conn, username):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            SELECT IsVerified
+            FROM [user]
+            WHERE Username = ?
+        """, (username,))
+        row = cursor.fetchone()
+        return bool(row.IsVerified) if row else None
     finally:
         cursor.close()

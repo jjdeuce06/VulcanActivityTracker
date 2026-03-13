@@ -74,6 +74,7 @@ def update_password_by_email(conn, email, passwordHash):
             WHERE Email = ?
         """, (passwordHash, email))
         conn.commit()
+        print("")
         return cursor.rowcount > 0
     finally:
         cursor.close()

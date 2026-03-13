@@ -7,6 +7,8 @@ MAIL_FROM_NAME = os.getenv("MAIL_FROM_NAME", "Vulcan Activity Tracker")
 FRONTEND_BASE_URL = os.getenv("FRONTEND_BASE_URL", "http://localhost:6455")
 
 
+
+
 def send_email(to_email, subject, html_content, text_content=None):
     if not MAILERSEND_API_KEY:
         raise ValueError("MAILERSEND_API_KEY is not set")
@@ -46,7 +48,7 @@ def send_email(to_email, subject, html_content, text_content=None):
 
 
 def send_password_reset_email(to_email, token):
-    reset_link = f"{FRONTEND_BASE_URL}/reset-password/{token}"
+    reset_link = f"{FRONTEND_BASE_URL}/resetpassword?token={token}"
 
     subject = "Reset your Vulcan Activity Tracker password"
 

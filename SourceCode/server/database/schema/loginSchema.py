@@ -19,6 +19,7 @@ def create_user_table(conn: pyodbc.Connection) -> None:
                 LastLogin DATETIME2 NULL,
                 FailedLoginAttempted INT DEFAULT 0,
                 TempPassword VARCHAR(255) NULL,
+                IsVerified BIT NOT NULL DEFAULT 0,
                 UpdatedDate DATETIME2 NOT NULL DEFAULT SYSDATETIME()
             )
         """)

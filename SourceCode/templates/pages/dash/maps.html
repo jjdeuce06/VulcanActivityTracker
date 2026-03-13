@@ -23,18 +23,24 @@
     </div>
 
     <!-- My Routes Card -->
-    <div id= "myroutes" class="card">
+    <div id= "myroutes" class="card routeUI">
         <h3 style="margin-bottom:10px;">My Routes</h3>
         <ul id="savedRoutesList"></ul>
     </div>
 
     <!-- Default Routes Card -->
-    <div id="defaultroutes" class="card">
+    <div id="defaultroutes" class="card routeUI">
         <h3 style="margin-bottom:10px;">Vulcan Routes</h3>
         <ul id="defaultRoutesList"></ul>
     </div>
+
+    <div class="card weather-card">
+        <h3>Forecast</h3>
+    <div id="forecastContainer" class="forecast-scroll"></div>
+</div>
     
 </div>
 
 <script src="{{ url_for('style_folder.static', filename='js/maps.js') }}"></script>
+<script src="{{ url_for('style_folder.static', filename='js/weather.js') }}"></script>
 {% endblock %}

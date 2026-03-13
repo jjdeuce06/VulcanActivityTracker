@@ -57,6 +57,50 @@ const campusLoop = [
     [40.06347895019966, -79.88769654458297] // close loop
 ];
 
+const coalcenter =[[40.07048014037708, -79.89926115272135], 
+[40.0699302244132, -79.89979768347321], 
+[40.070824861553206, -79.9014609288039], 
+[40.07106288229943, -79.90189015340538], 
+[40.07158816652017, -79.90132143080842],
+[40.0710382595022, -79.90029129176489], 
+[40.07043910202561, -79.89912165472587],
+[40.0697906927908, -79.89803786260715],
+[40.06967578418129, -79.89738329508991],
+[40.06921614780468, -79.89694333987337],
+[40.06921614780468, -79.89560201299378],
+[40.06817374667178, -79.89465771887052],
+[40.06782901207836, -79.89232917540754],
+[40.06757456399751, -79.89055862392644],
+[40.06743502754962, -79.88943190934756],
+[40.067213410250844, -79.88744674556575],
+[40.066450056258425, -79.886073226841], 
+[40.06548969553724, -79.88692094542894],
+[40.06443082058788, -79.88512893271778],
+[40.06290404168797, -79.88655610451768],
+[40.062862998772175, -79.88660975759285],
+[40.06225556072761, -79.8855688879343],
+[40.06183691784176, -79.88486066734184],
+[40.06150856868034, -79.88389491198853], 
+[40.061262305770846, -79.88309011586077],
+[40.06110633880113, -79.88242481772849], 
+[40.060942162657824, -79.88214582173752], 
+[40.06093395384026, -79.88183463390145],
+[40.0611309651885, -79.88125518068946],
+[40.06181229170952, -79.88107276023382],
+[40.06287941594145, -79.8811800663842], 
+[40.063864438859056, -79.88149125422026], 
+[40.06464423856862, -79.88187755636162], 
+[40.06481661414192, -79.88207070743226], 
+[40.06520240551124, -79.88246774018863], 
+[40.065719526685726, -79.88289696479009],
+[40.06615456209389, -79.88328326693143], 
+[40.066794797830354, -79.88438852028024], 
+[40.06732832301428, -79.88564400223954], 
+[40.067426819514395, -79.88619126360643], 
+[40.067155953796416, -79.88647025959737],
+[40.06681942216161, -79.886652680053]
+]
+
 L.marker([40.06428075146778, -79.8847461297468])
     .addTo(map)
     .bindPopup("PennWest California Campus")
@@ -75,21 +119,36 @@ L.popup()
   .openOn(map);
 
 // --- Default Routes List ---
-const defaultRoutes = { "Campus Loop": campusLoop };
+const defaultRoutes = { "Campus Loop": campusLoop, "Coal Center": coalcenter};
 const defaultRoutesList = document.getElementById("defaultRoutesList");
 
 for (let name in defaultRoutes) {
+
     const li = document.createElement("li");
-    li.textContent = name;
-    li.style.cursor = "pointer";
+
+    const miles = calculateDistanceMiles(defaultRoutes[name]);
+
+    li.innerHTML = `
+
+        <div class="route-icon">📍</div>
+        <div class="route-title">${name}</div>
+        <div class="route-hover-info">${miles} miles</div>
+    `;
+
     li.addEventListener("click", () => {
         if (currentPolyline) map.removeLayer(currentPolyline);
-        currentPolyline = L.polyline(defaultRoutes[name], { color: 'blue', weight: 5 }).addTo(map);
+
+        currentPolyline = L.polyline(defaultRoutes[name], {
+            color: 'blue',
+            weight: 5
+        }).addTo(map);
+
         map.fitBounds(currentPolyline.getBounds());
 
-        const miles = calculateDistanceMiles(defaultRoutes[name]);
-        document.getElementById("routeDistance").textContent = `Distance: ${miles} miles`;
+        document.getElementById("routeDistance").textContent =
+            `Distance: ${miles} miles`;
     });
+
     defaultRoutesList.appendChild(li);
 }
 
@@ -147,7 +206,15 @@ document.getElementById("endRoute").addEventListener("click", async (e) => {
         document.getElementById("routeDistance").textContent = `Distance: ${miles} miles`;
 
         const li = document.createElement("li");
-        li.textContent = `${routeName} (${miles} miles)`;
+        li.classList.add("route-item");
+        li.innerHTML = `
+            <div class="route-icon">📍</div>
+            <span class="route-title">${routeName}</span>
+            <div class="route-hover-info">${miles} miles</div>
+            <button class="delete-btn">🗑</button>
+        `;
+        await deleteRoute(li, routeName);
+       
         li.style.cursor = "pointer";
 
         const savedPoints = [...routePoints];
@@ -230,10 +297,18 @@ function displayMaps(routes) {
     const container = document.getElementById("savedRoutesList");
     container.innerHTML = "";
 
-    routes.forEach(route => {
+    routes.forEach(async route => {
         const li = document.createElement("li");
-        li.textContent = `${route.name} (${route.distance} miles)`;
+        li.classList.add("route-item");
+        li.innerHTML = `
+            <div class="route-icon">📍</div>
+            <span class="route-title">${route.name}</span>
+            <div class="route-hover-info">${route.distance} miles</div>
+            <button class="delete-btn">🗑</button>
+        `;
         li.style.cursor = "pointer";
+
+        await deleteRoute(li, route.name);
 
         li.addEventListener("click", () => {
             if (window.currentPolyline) map.removeLayer(window.currentPolyline);
@@ -244,4 +319,42 @@ function displayMaps(routes) {
 
         container.appendChild(li);
     });
+}
+
+async function deleteRoute(li, routeName) {
+    const deleteBtn = li.querySelector(".delete-btn");
+
+    deleteBtn.addEventListener("click", async (e) => {
+        e.stopPropagation(); //prevents route click
+
+        // Remove from UI
+        li.remove();
+
+        // Remove polyline if it's currently active
+        if (currentPolyline) {
+            map.removeLayer(currentPolyline);
+            currentPolyline = null;
+        }
+
+        // Clear distance display
+        document.getElementById("routeDistance").textContent = "";
+
+        // Remove from backend
+        await deleteRouteFromStorage(routeName);
+    });
+}
+
+//technically could delete routes of same name unique not implemented
+async function deleteRouteFromStorage(routeName) {
+    try {
+        const response = await fetch('/map_api/delete_route', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: routeName })
+        });
+        const data = await response.json();
+        console.log('Route deleted:', data);
+    } catch (error) {
+        console.error('Error deleting route:', error);
+    }
 }

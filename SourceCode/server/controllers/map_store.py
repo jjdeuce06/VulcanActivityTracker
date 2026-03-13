@@ -73,11 +73,11 @@ def get_user_routes(conn, user_id: str) -> dict:
 # ----------------------------------
 # DELETE ROUTE
 # ----------------------------------
-def delete_route(conn, route_id: str) -> dict:
+def delete_route(conn, user_id: str, RouteName: str) -> dict:
     try:
         cursor = conn.cursor()
 
-        cursor.execute("DELETE FROM maps WHERE MapID = ?", (route_id,))
+        cursor.execute("DELETE FROM maps WHERE RouteName = ? AND UserID = ?", (RouteName, user_id))
         conn.commit()
 
         cursor.close()

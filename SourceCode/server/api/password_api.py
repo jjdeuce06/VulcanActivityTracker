@@ -42,28 +42,44 @@ def forgot_password():
 
 @password_api.route("/reset-password/<token>", methods=["POST"])
 def reset_password(token):
+    print("STEP 1: reset route hit")
+
     data = request.get_json()
+    print("STEP 2: request data =", data)
+
     new_password = data.get("password")
 
     if not new_password:
+        print("STEP 3: missing password")
         return jsonify({"error": "Password is required"}), 400
 
     email = confirm_password_reset_token(token)
+    print("STEP 4: decoded email =", email)
+
     if not email:
+        print("STEP 5: invalid token")
         return jsonify({"error": "Invalid or expired reset token"}), 400
 
     try:
+        from argon2 import PasswordHasher
         ph = PasswordHasher()
         hashed_password = ph.hash(new_password)
+        print("STEP 6: password hashed: ", new_password)
+
 
         with get_db_connection() as conn:
             updated = update_password_by_email(conn, email, hashed_password)
+            print("STEP 7: DB update result =", updated)
 
         if not updated:
+            print("STEP 8: no user updated")
             return jsonify({"error": "User not found"}), 404
 
+        print("STEP 9: password reset successful")
         return jsonify({"message": "Password reset successful"}), 200
 
     except Exception as e:
-        print("Error resetting password:", e)
-        return jsonify({"error": "Failed to reset password"}), 500
+        import traceback
+        print("RESET ERROR:", e)
+        traceback.print_exc()
+        return jsonify({"error": f"Failed to reset password: {str(e)}"}), 500

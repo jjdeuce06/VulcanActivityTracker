@@ -198,8 +198,6 @@ def fill_dash_challenges():
         userID = get_user_id(conn, username)
         #send user challenges to dash
         dash_challenges = get_user_challenges(conn, userID)
-        print("this is dash challenges:", dash_challenges)
-       
     finally:
             conn.close()  
 

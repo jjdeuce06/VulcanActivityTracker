@@ -593,7 +593,7 @@ async function fillDashChallenge(){
     const data = await response.json();
     const challenge = Array.isArray(data.dash_challenge) ? data.dash_challenge : [];
     console.log("Dash Challenges", challenge);
-    populateDashClubs(challenge);
+    populateDashChallenge(challenge);
   } catch (err) {
     console.error("Failed to load friend challenges:", err);
   }
@@ -617,9 +617,11 @@ function populateDashChallenge(challenge) {
        <div class="challenge-badge"></div>
         <div>
             <div class="challenge-title">${challenge.name}</div>
-            <div class="challenge-meta">${challenge.participants} participants</div>
+            <div class="challenge-meta">${challenge.participants.length} participants</div>
+             <div class="challenge-progress">${challenge.progress.current} / ${challenge.progress.target} ${challenge.metric_type}</div>
         </div>
+       
     `;
-    container.appendChild(clubDiv);
+    container.appendChild(challengeDiv);
   });
 }

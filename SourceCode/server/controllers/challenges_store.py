@@ -110,6 +110,33 @@ def get_user_challenges(conn, user_id):
     except Exception as e:
         print("Get user challenges error:", e)
         raise
+
+
+
+def get_dash_challenges(conn, user_id):
+    try:
+        all_challenges = get_all_challenges(conn)
+        uid = str(user_id)
+
+        user_challenges = []
+        for c in all_challenges:
+            participants = c.get("participants") or []
+            participants = [str(p) for p in participants]
+
+            # only include challenges created by this user OR joined by this user
+            if c["creator_user_id"] == uid or uid in participants:
+                c["progress"] = calculate_challenge_progress(conn, c, user_id) or {
+                    "current": 0,
+                    "target": c.get("target_value", 0),
+                    "percent": 0
+                }
+                user_challenges.append(c)
+
+        return user_challenges
+
+    except Exception as e:
+        print("Get user challenges error:", e)
+        raise
     
 def add_participant_to_challenge(conn, challenge_id, user_id):
     cursor = conn.cursor()

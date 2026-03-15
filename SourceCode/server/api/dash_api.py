@@ -5,7 +5,7 @@ from server.controllers.user_store import get_user_id
 from server.controllers.friend_store import insert_friend, get_users_friends
 from server.controllers.like_store import toggle_like_friend, check_if_liked, get_total_likes, check_if_thumbs_up, get_total_thumbs_up, toggle_thumbs_up
 from server.controllers.club_store import get_user_clubs
-from server.controllers.challenges_store import get_user_challenges
+from server.controllers.challenges_store import get_dash_challenges
 dash_api = Blueprint('dash_api', __name__)
 
 
@@ -197,7 +197,7 @@ def fill_dash_challenges():
         #check if usrname exists already
         userID = get_user_id(conn, username)
         #send user challenges to dash
-        dash_challenges = get_user_challenges(conn, userID)
+        dash_challenges = get_dash_challenges(conn, userID)
     finally:
             conn.close()  
 

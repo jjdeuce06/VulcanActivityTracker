@@ -1,10 +1,11 @@
-from flask import Flask, request, jsonify, Blueprint
+from flask import Flask, request, jsonify, Blueprint, session
 from server.database.connect import get_db_connection
 from server.controllers.login_store import fetch_all_users
 from server.controllers.user_store import get_user_id
 from server.controllers.friend_store import insert_friend, get_users_friends
 from server.controllers.like_store import toggle_like_friend, check_if_liked, get_total_likes, check_if_thumbs_up, get_total_thumbs_up, toggle_thumbs_up
 from server.controllers.club_store import get_user_clubs
+from server.controllers.challenges_store import get_user_challenges
 dash_api = Blueprint('dash_api', __name__)
 
 
@@ -184,3 +185,27 @@ def fill_dash_clubs():
     return jsonify({
         "dash_clubs": dash_clubs
     })
+
+
+@dash_api.route("/fillDashChallenges", methods =["GET"])
+def fill_dash_challenges():
+
+    username = session.get("user_id", None)
+
+    conn = get_db_connection()
+    try:
+        #check if usrname exists already
+        userID = get_user_id(conn, username)
+        #send user challenges to dash
+        dash_challenges = get_user_challenges(conn, userID)
+        print("this is dash challenges:", dash_challenges)
+       
+    finally:
+            conn.close()  
+
+    return jsonify({
+        "dash_challenge": dash_challenges
+    })
+
+
+

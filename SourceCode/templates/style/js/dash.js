@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await fillDashFriends(username); // pass current user for filtering
   await dashLikes(username);
   await fillDashClub(username);
+  await fillDashChallenge();
 
 
   const fBtn = document.getElementById("friendBtn");
@@ -552,6 +553,10 @@ function populateDashClubs(clubs) {
   const container = document.getElementById("dash-clubs-container");
   container.innerHTML = "";
 
+  // Fill the club count using the array length
+  const clubCount = document.querySelector("#club-count");
+  clubCount.textContent = clubs?.length ?? 0;
+
   if (!clubs || clubs.length === 0) {
     container.innerHTML = `<div style="color:#777;">No clubs yet.</div>`;
     return;
@@ -570,6 +575,50 @@ function populateDashClubs(clubs) {
         <div class="club-title">${club.name}</div>
         <div class="club-members">${club.members?.length ?? 0} members</div>
       </div>
+    `;
+    container.appendChild(clubDiv);
+  });
+}
+
+
+
+
+
+async function fillDashChallenge(){
+  try {
+    const response = await fetch("/dash_api/fillDashChallenges", {method: "GET", });
+
+    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+
+    const data = await response.json();
+    const challenge = Array.isArray(data.dash_challenge) ? data.dash_challenge : [];
+    console.log("Dash Challenges", challenge);
+    populateDashClubs(challenge);
+  } catch (err) {
+    console.error("Failed to load friend challenges:", err);
+  }
+
+}
+
+function populateDashChallenge(challenge) {
+  const container = document.getElementById("challenge-list");
+  container.innerHTML = "";
+
+  if (!challenge || challenge.length === 0) {
+    container.innerHTML = `<div style="color:#777;">No challenge yet.</div>`;
+    return;
+  }
+
+  challenge.forEach(challenge => {
+    const challengeDiv = document.createElement("div");
+    challengeDiv.className = "challenge-item";
+
+    challengeDiv.innerHTML = `
+       <div class="challenge-badge"></div>
+        <div>
+            <div class="challenge-title">${challenge.name}</div>
+            <div class="challenge-meta">${challenge.participants} participants</div>
+        </div>
     `;
     container.appendChild(clubDiv);
   });

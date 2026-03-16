@@ -115,4 +115,21 @@ Track development milestones and weekly updates for the Vulcan Activity Tracker.
         View Progress →
   </a>
 </div>
+
+<div  style="
+    background:linear-gradient(135deg,#11175a,#070b3f);
+    color:#ffffff;
+    border-radius:16px;
+    padding:20px;
+    min-width:220px;
+    box-shadow:0 6px 16px rgba(0,0,0,0.3);
+  ">
+  <h3>📅 Week 8</h3>
+    <p><strong>Date:</strong> Mar 16, 2026</p>
+    <p>Fix Email Backend Issue, User Profile Section, Development on Other Pages.</p>
+
+  <a href="week8" style="color:#7dd3fc; font-weight:600;">
+        View Progress →
+  </a>
+</div>
 </div>

@@ -37,7 +37,6 @@ app.register_blueprint(password_api, url_prefix="/password_api")
 app.register_blueprint(map_api, url_prefix="/map_api")
 app.register_blueprint(settings_api, url_prefix="/settings_api")
 
-
 # Initialize / upgrade schema on app start
 with get_db_connection() as conn:
     init_or_upgrade_schema(conn)

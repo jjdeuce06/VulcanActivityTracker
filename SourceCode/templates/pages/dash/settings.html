@@ -1,0 +1,31 @@
+{% extends "base_temp/dashboard.html" %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/settings.css') }}">
+{% endblock %}
+
+
+{% block content %}
+<h1 class="settings-title">Account Settings</h1>
+<p class="settings-description">Manage your account details and profile settings.</p>
+
+<div class="settings-layout">
+  <div class="settings-card">
+    <h3>Change Username</h3>
+    <label for="newUsername">New Username</label>
+    <input type="text" id="newUsername" placeholder="Enter a new username">
+    <button id="changeUsernameBtn">Update Username</button>
+    <p id="usernameMessage" class="settings-message"></p>
+  </div>
+
+  <div class="settings-card danger">
+    <h3>Delete Account</h3>
+    <p>This action is permanent and cannot be undone.</p>
+    <button id="deleteAccountBtn">Delete My Account</button>
+    <p id="deleteMessage" class="settings-message"></p>
+  </div>
+</div>
+
+<script src="{{ url_for('style_folder.static', filename='js/settings.js') }}"></script>
+
+{% endblock %}

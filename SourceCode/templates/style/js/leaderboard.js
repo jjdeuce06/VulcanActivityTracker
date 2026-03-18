@@ -6,9 +6,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const thead = table.querySelector("thead") || table.createTHead();
   let headRow = thead.querySelector("tr");
   if (!headRow) headRow = thead.insertRow();
+
   const sortBy = document.getElementById("sortBy");
   const sortSport = document.getElementById("filterSport");
   const sortDirBtn = document.getElementById("sortDir");
+
+  let data = [];
 
   // Defaults
   sortBy.value = "score";
@@ -16,103 +19,58 @@ document.addEventListener("DOMContentLoaded", () => {
   sortDirBtn.dataset.dir = "desc";
   sortDirBtn.textContent = "Desc";
 
-  leaderboard_filter = sortSport.value || "all";
+  async function getLeaderboardData(leaderboardFilter) {
+    const response = await fetch(
+      `/activity_api/publicleaderboard?sport_type=${leaderboardFilter}`,
+      { method: "GET" }
+    );
 
-  // This holds the fetched leaderboard rows
-  let data = [];
-
-  async function getLeaderboardData(leaderboard_filter) {
-    const response = await fetch(`/activity_api/publicleaderboard?sport_type=${leaderboard_filter}`, { method: "GET" });
-    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error ${response.status}`);
+    }
 
     const payload = await response.json();
-
     return payload.leaderboard || [];
   }
 
-  function sortTableBySport(sport){
+  function sortTableBySport(sport) {
     const headersBySport = {
-    all: ["Rank", "Name", "Score", "Total Duration (minutes)", "Total Activities"],
-    running: ["Rank", "Name", "Miles Run", "Total Duration (minutes)", "Total Activities"],
-    cycling: ["Rank", "Name", "Miles Cycled", "Total Duration (minutes)", "Total Activities"],
-    swimming: ["Rank", "Name", "Miles Swam", "Total Duration (minutes)", "Total Activities"],
-    lifting: ["Rank", "Name", "Total Sets", "Total Duration (minutes)", "Total Activities"],
-    yoga: ["Rank", "Name", "Total Intensity", "Total Duration (minutes)", "Total Activities"],
-    walking: ["Rank", "Name", "Total Steps", "Total Duration (minutes)", "Total Activities"],
-    soccer: ["Rank", "Name", "Total Goals", "Total Assists", "Total Duration (minutes)", "Total Activities"],
-    baseball: ["Rank", "Name", "Total Hits", "Total Runs", "Total Duration (minutes)", "Total Activities"],
-    football: ["Rank", "Name", "Total Touchdowns", "Total Duration (minutes)", "Total Activities"],
-    tennis: ["Rank", "Name", "Total Score", "Total Duration (minutes)", "Total Activities"],
-    volleyball: ["Rank", "Name", "Total Kills", "Total Duration (minutes)", "Total Activities"],
-    basketball: ["Rank", "Name", "Total Points", "Total Rebounds", "Total Assists", "Total Duration (minutes)", "Total Activities"],
-    equestrian: ["Rank", "Name", "Total Distance (miles)", "Total Duration (minutes)", "Total Activities"],
-  };
+      all: ["Rank", "Name", "Score", "Total Duration (minutes)", "Total Activities"],
+      run: ["Rank", "Name", "Miles Run", "Total Duration (minutes)", "Total Activities"],
+      bike: ["Rank", "Name", "Miles Cycled", "Total Duration (minutes)", "Total Activities"],
+      swim: ["Rank", "Name", "Miles Swam", "Total Duration (minutes)", "Total Activities"],
+      lift: ["Rank", "Name", "Total Sets", "Total Duration (minutes)", "Total Activities"],
+      yoga: ["Rank", "Name", "Total Intensity", "Total Duration (minutes)", "Total Activities"],
+      walk: ["Rank", "Name", "Total Steps", "Total Duration (minutes)", "Total Activities"],
+      soccer: ["Rank", "Name", "Total Goals", "Total Assists", "Total Duration (minutes)", "Total Activities"],
+      baseball: ["Rank", "Name", "Total Hits", "Total Runs", "Total Duration (minutes)", "Total Activities"],
+      football: ["Rank", "Name", "Total Touchdowns", "Total Duration (minutes)", "Total Activities"],
+      tennis: ["Rank", "Name", "Total Score", "Total Duration (minutes)", "Total Activities"],
+      volleyball: ["Rank", "Name", "Total Kills", "Total Duration (minutes)", "Total Activities"],
+      basketball: ["Rank", "Name", "Total Points", "Total Rebounds", "Total Assists", "Total Duration (minutes)", "Total Activities"],
+      equestrian: ["Rank", "Name", "Total Distance (miles)", "Total Duration (minutes)", "Total Activities"],
+      hockey: ["Rank", "Name", "Total Goals", "Total Assists", "Total Duration (minutes)", "Total Activities"]
+    };
 
+    const normalizedSport = normalizeSport(sport);
+    const headers = headersBySport[normalizedSport] || headersBySport.all;
 
+    headRow.innerHTML = "";
 
-
-  const headers = headersBySport[sport] || headersBySport.all;
-
-  // Clear existing header cells
-  headRow.innerHTML = "";
-
-  // Build header cells
-  headers.forEach(text => {
-    const th = document.createElement("th");
-    th.textContent = text;
-    headRow.appendChild(th);
-  });
-  }
-
-  async function getLeaderboardData() {
-    const response = await fetch("/activity_api/publicleaderboard", { method: "GET" });
-    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-
-    const payload = await response.json();
-
-    return payload.leaderboard || [];
-  }
-
-  function sortTableBySport(sport){
-    const headersBySport = {
-    all: ["Rank", "Name", "Score", "Total Duration (minutes)", "Total Activities"],
-    running: ["Rank", "Name", "Miles Run", "Total Duration (minutes)", "Total Activities"],
-    cycling: ["Rank", "Name", "Miles Cycled", "Total Duration (minutes)", "Total Activities"],
-    swimming: ["Rank", "Name", "Miles Swam", "Total Duration (minutes)", "Total Activities"],
-    lifting: ["Rank", "Name", "Total Sets", "Total Duration (minutes)", "Total Activities"],
-    yoga: ["Rank", "Name", "Total Intensity", "Total Duration (minutes)", "Total Activities"],
-    walking: ["Rank", "Name", "Total Steps", "Total Duration (minutes)", "Total Activities"],
-    soccer: ["Rank", "Name", "Total Goals", "Total Assists", "Total Duration (minutes)", "Total Activities"],
-    baseball: ["Rank", "Name", "Total Hits", "Total Runs", "Total Duration (minutes)", "Total Activities"],
-    football: ["Rank", "Name", "Total Touchdowns", "Total Duration (minutes)", "Total Activities"],
-    tennis: ["Rank", "Name", "Total Score", "Total Duration (minutes)", "Total Activities"],
-    volleyball: ["Rank", "Name", "Total Kills", "Total Duration (minutes)", "Total Activities"],
-    basketball: ["Rank", "Name", "Total Points", "Total Rebounds", "Total Assists", "Total Duration (minutes)", "Total Activities"],
-    equestrian: ["Rank", "Name", "Total Distance (miles)", "Total Duration (minutes)", "Total Activities"],
-  };
-
-
-  const headers = headersBySport[sport] || headersBySport.all;
-
-  // Clear existing header cells
-  headRow.innerHTML = "";
-
-  // Build header cells
-  headers.forEach(text => {
-    const th = document.createElement("th");
-    th.textContent = text;
-    headRow.appendChild(th);
-  });
+    headers.forEach(text => {
+      const th = document.createElement("th");
+      th.textContent = text;
+      headRow.appendChild(th);
+    });
   }
 
   function render(rows) {
     tbody.innerHTML = "";
-    const sport = sortSport.value;
+    const sport = normalizeSport(sortSport.value);
 
     rows.forEach((row, idx) => {
       const activities = parseActivities(row);
       const filtered = filterBySport(activities, sport);
-
 
       const score = computeScore(row, sport);
       const minutes = totalDuration(filtered);
@@ -121,123 +79,118 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (sport === "soccer") {
         bodytr.innerHTML = `
-        <td>${idx + 1}</td>
-        <td>${row.name ?? ""}</td>
-        <td>${score.goals ?? 0}</td>
-        <td>${score.assists ?? 0}</td>
-        <td>${minutes ?? 0}</td>
-        <td>${count ?? 0}</td>
+          <td>${idx + 1}</td>
+          <td>${row.name ?? ""}</td>
+          <td>${score.goals ?? 0}</td>
+          <td>${score.assists ?? 0}</td>
+          <td>${minutes ?? 0}</td>
+          <td>${count ?? 0}</td>
+        `;
+      } else if (sport === "baseball") {
+        bodytr.innerHTML = `
+          <td>${idx + 1}</td>
+          <td>${row.name ?? ""}</td>
+          <td>${score.hits ?? 0}</td>
+          <td>${score.runs ?? 0}</td>
+          <td>${minutes ?? 0}</td>
+          <td>${count ?? 0}</td>
+        `;
+      } else if (sport === "basketball") {
+        bodytr.innerHTML = `
+          <td>${idx + 1}</td>
+          <td>${row.name ?? ""}</td>
+          <td>${score.points ?? 0}</td>
+          <td>${score.rebounds ?? 0}</td>
+          <td>${score.assists ?? 0}</td>
+          <td>${minutes ?? 0}</td>
+          <td>${count ?? 0}</td>
+        `;
+      } else if (sport === "yoga") {
+        bodytr.innerHTML = `
+          <td>${idx + 1}</td>
+          <td>${row.name ?? ""}</td>
+          <td>${score.intensity ?? 0}</td>
+          <td>${minutes ?? 0}</td>
+          <td>${count ?? 0}</td>
+        `;
+      } else if (sport === "football") {
+        bodytr.innerHTML = `
+          <td>${idx + 1}</td>
+          <td>${row.name ?? ""}</td>
+          <td>${score.touchdowns ?? 0}</td>
+          <td>${minutes ?? 0}</td>
+          <td>${count ?? 0}</td>
+        `;
+      } else if (sport === "volleyball") {
+        bodytr.innerHTML = `
+          <td>${idx + 1}</td>
+          <td>${row.name ?? ""}</td>
+          <td>${score.kills ?? 0}</td>
+          <td>${minutes ?? 0}</td>
+          <td>${count ?? 0}</td>
+        `;
+      } else if (sport === "walk") {
+        bodytr.innerHTML = `
+          <td>${idx + 1}</td>
+          <td>${row.name ?? ""}</td>
+          <td>${score ?? 0}</td>
+          <td>${minutes ?? 0}</td>
+          <td>${count ?? 0}</td>
+        `;
+      } else if (sport === "hockey") {
+        bodytr.innerHTML = `
+          <td>${idx + 1}</td>
+          <td>${row.name ?? ""}</td>
+          <td>${score.goals ?? 0}</td>
+          <td>${score.assists ?? 0}</td>
+          <td>${minutes ?? 0}</td>
+          <td>${count ?? 0}</td>
+        `;
+      } else {
+        bodytr.innerHTML = `
+          <td>${idx + 1}</td>
+          <td>${row.name ?? ""}</td>
+          <td>${score ?? 0}</td>
+          <td>${minutes ?? 0}</td>
+          <td>${count ?? 0}</td>
         `;
       }
 
-      else if (sport === "baseball") 
-        {
-        bodytr.innerHTML = `
-        <td>${idx + 1}</td>
-        <td>${row.name ?? ""}</td>
-        <td>${score.hits ?? 0}</td>
-        <td>${score.runs ?? 0}</td>
-        <td>${minutes ?? 0}</td>
-        <td>${count ?? 0}</td>
-        `;
-      }
-
-      else if (sport === "basketball") {
-        bodytr.innerHTML = `
-        <td>${idx + 1}</td>
-        <td>${row.name ?? ""}</td>
-        <td>${score.points ?? 0}</td>
-        <td>${score.rebounds ?? 0}</td>
-        <td>${score.assists ?? 0}</td>
-        <td>${minutes ?? 0}</td>
-        <td>${count ?? 0}</td>
-        `;
-      }
-
-      else if (sport === "yoga") 
-      {        
-        bodytr.innerHTML = `
-        <td>${idx + 1}</td>
-        <td>${row.name ?? ""}</td>
-        <td>${score.intensity ?? 0}</td>
-        <td>${minutes ?? 0}</td>
-        <td>${count ?? 0}</td>
-        `;
-      }
-
-      else if (sport === "football") 
-      {
-        bodytr.innerHTML = `
-        <td>${idx + 1}</td>
-        <td>${row.name ?? ""}</td>
-        <td>${score.touchdowns ?? 0}</td>
-        <td>${minutes ?? 0}</td>
-        <td>${count ?? 0}</td>
-        `;
-      }
-
-      else if (sport === "volleyball")
-      {
-        bodytr.innerHTML = `
-        <td>${idx + 1}</td>
-        <td>${row.name ?? ""}</td>
-        <td>${score.kills ?? 0}</td>
-        <td>${minutes ?? 0}</td>
-        <td>${count ?? 0}</td>
-        `;
-      }
-
-      else if (sport === "walking")
-      {
-        bodytr.innerHTML = `
-        <td>${idx + 1}</td>
-        <td>${row.name ?? ""}</td>  
-        <td>${score.steps ?? 0}</td>
-        <td>${minutes ?? 0}</td>
-        <td>${count ?? 0}</td>
-        `;
-      }
-
-      else{
-        bodytr.innerHTML = `
-        <td>${idx + 1}</td>
-        <td>${row.name ?? ""}</td>
-        <td>${score ?? 0}</td>
-        <td>${minutes ?? 0}</td>
-        <td>${count ?? 0}</td>
-        `;
-      }
       tbody.appendChild(bodytr);
-
-    
     });
   }
 
-  function sortAndRender() 
-  {
+  function sortAndRender() {
     const sport = sortSport.value || "all";
-    const key = sortBy.value;                  // score | name | totalMinutes | totalActivities
+    const key = sortBy.value;
     const dir = sortDirBtn.dataset.dir || "desc";
 
     const computed = buildComputedRows(data, sport);
 
-    // Choose tie-break order depending on what you're sorting by
     const tieBreakersByKey = {
       totalMinutes: ["score", "totalActivities", "name"],
       score: ["totalMinutes", "totalActivities", "name"],
       totalActivities: ["score", "totalMinutes", "name"],
-      name: ["score", "totalMinutes", "totalActivities"], // name already handled as primary
+      name: ["score", "totalMinutes", "totalActivities"]
     };
 
-
-    const tieBreakers = tieBreakersByKey[key] || ["score", "totalMinutes", "totalActivities", "name"];
+    const tieBreakers = tieBreakersByKey[key] || [
+      "score",
+      "totalMinutes",
+      "totalActivities",
+      "name"
+    ];
 
     function cmp(a, b, k, direction = dir) {
       const av = a[k];
       const bv = b[k];
 
       if (k === "name") {
-        const res = String(av ?? "").localeCompare(String(bv ?? ""), undefined, { sensitivity: "base" });
+        const res = String(av ?? "").localeCompare(
+          String(bv ?? ""),
+          undefined,
+          { sensitivity: "base" }
+        );
         return direction === "asc" ? res : -res;
       }
 
@@ -246,15 +199,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const sorted = [...computed].sort((a, b) => {
-      // primary compare
       let res = cmp(a, b, key, dir);
       if (res !== 0) return res;
 
-      // tie-break compares (usually keep these DESC regardless of primary dir)
       for (const t of tieBreakers) {
         res = cmp(a, b, t, t === "name" ? "asc" : "desc");
         if (res !== 0) return res;
       }
+
       return 0;
     });
 
@@ -274,60 +226,78 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   sortSport.addEventListener("change", async () => {
-  try {
-    sortTableBySport(sortSport.value);
-    data = await getLeaderboardData(sortSport.value || "all");
-    sortAndRender();
-  } catch (e) {
-    console.error(e);
-  }
+    try {
+      const sport = sortSport.value || "all";
+      sortTableBySport(sport);
+      data = await getLeaderboardData(sport);
+      sortAndRender();
+    } catch (e) {
+      console.error(e);
+    }
   });
 
-    function normalizeSport(s) {
+  function normalizeSport(s) {
     if (!s) return "";
     const v = String(s).toLowerCase().trim();
 
-    // Map DB values -> dropdown values
     const aliases = {
       running: "run",
       cycling: "bike",
-      swim: "swimming",
+      biking: "bike",
+      bike: "bike",
+      swim: "swim",
+      swimming: "swim",
       lifting: "lift",
-      yoga: "yoga",
+      lift: "lift",
       walking: "walk",
+      walk: "walk",
+      yoga: "yoga",
       soccer: "soccer",
       baseball: "baseball",
-      football: "football"
+      football: "football",
+      tennis: "tennis",
+      volleyball: "volleyball",
+      basketball: "basketball",
+      equestrian: "equestrian",
+      hockey: "hockey"
     };
 
     return aliases[v] || v;
   }
 
   function parseActivities(row) {
-      if (!row.activities) return [];
-      try {
-        const arr = JSON.parse(row.activities);
+    if (!row.activities) return [];
 
-        return arr.map(a => {
-          let details = a.details ?? a.Details ?? {};
-          if (typeof details === "string") {
-            try { details = JSON.parse(details); } catch { details = {}; }
+    try {
+      const arr = JSON.parse(row.activities);
+
+      return arr.map(a => {
+        let details = a.details ?? a.Details ?? {};
+        if (typeof details === "string") {
+          try {
+            details = JSON.parse(details);
+          } catch {
+            details = {};
           }
+        }
 
-          return {
-            activityType: normalizeSport(a.activityType ?? a.ActivityType ?? a.activity_type),
-            duration: Number(a.duration ?? a.Duration ?? 0) || 0,
-            details
-          };
-        });
-      } catch (e) {
-        console.error("Failed to parse activities for:", row.name, e);
-        return [];
-      }
+        return {
+          activityType: normalizeSport(
+            a.activityType ?? a.ActivityType ?? a.activity_type
+          ),
+          duration: Number(a.duration ?? a.Duration ?? 0) || 0,
+          details
+        };
+      });
+    } catch (e) {
+      console.error("Failed to parse activities for:", row.name, e);
+      return [];
+    }
   }
 
   function buildComputedRows(rawRows, sport) {
     const s = normalizeSport(sport);
+
     return rawRows.map(row => {
       const activities = parseActivities(row);
       const filtered = filterBySport(activities, s);
@@ -338,8 +308,6 @@ document.addEventListener("DOMContentLoaded", () => {
       let score = 0;
       let extra = {};
 
-      console.log("Computing: ", s);
-
       switch (s) {
         case "run":
         case "bike":
@@ -347,46 +315,67 @@ document.addEventListener("DOMContentLoaded", () => {
         case "equestrian":
           score = totalDistance(filtered);
           break;
+
         case "walk":
           score = totalSteps(filtered);
           break;
-        case "yoga":
-          score = yogaStats(filtered);
+
+        case "yoga": {
+          const ys = yogaStats(filtered);
+          score = ys.intensity;
           break;
+        }
+
         case "lift":
           score = totalSets(filtered);
-          console.log("LIFT DEBUG user:", row.name);
-          console.log("all activityTypes:", activities.map(a => a.activityType));
-          console.log("filtered lift activities:", filtered);
-          console.log("first lift details:", filtered[0]?.details);
           break;
-        case "soccer":
+
+        case "soccer": {
           const st = soccerStats(filtered);
           score = st.goals;
-          extra = {assists: st.assists};
+          extra = { assists: st.assists };
           break;
-        case "baseball":
+        }
+
+        case "baseball": {
           const bt = baseballStats(filtered);
           score = bt.hits;
-          extra = {runs: bt.runs};
+          extra = { runs: bt.runs };
           break;
-        case "football":
+        }
+
+        case "football": {
           const ft = footballStats(filtered);
           score = ft.touchdowns;
           break;
+        }
+
         case "tennis":
-          //return tennisStats(filtered);
           score = totalDuration(filtered);
           break;
-        case "volleyball":
+
+        case "volleyball": {
           const vt = volleyballStats(filtered);
           score = vt.kills;
           break;
-        case "basketball":
+        }
+
+        case "basketball": {
           const bbt = basketballStats(filtered);
           score = bbt.points;
-          extra = {rebounds: bbt.rebounds, assists: bbt.assists};
+          extra = {
+            rebounds: bbt.rebounds,
+            assists: bbt.assists
+          };
           break;
+        }
+
+        case "hockey": {
+          const ht = hockeyStats(filtered);
+          score = ht.goals;
+          extra = { assists: ht.assists };
+          break;
+        }
 
         default:
           score = totalDuration(filtered);
@@ -408,185 +397,170 @@ document.addEventListener("DOMContentLoaded", () => {
     return activities.filter(a => a.activityType === target);
   }
 
-  //activity computation of totals
   function totalDuration(activities) {
+    return activities.reduce((sum, a) => sum + (a.duration || 0), 0);
+  }
+
+  function totalDistance(activities) {
     return activities.reduce(
-      (sum, a) => sum + (a.duration || 0),
+      (sum, a) => sum + (Number(a.details?.distance) || 0),
       0
     );
   }
 
-  function totalCount(activities) {
-    return activities.length;
-  }
-
-  function totalDistance(activities) {
-    return activities.reduce((sum, a) => sum + (Number(a.details?.distance) || 0), 0);
-  }
-
   function totalSteps(activities) {
     return activities.reduce(
-      (sum, a) => sum + (a.details?.steps || 0),
+      (sum, a) => sum + (Number(a.details?.steps) || 0),
       0
     );
   }
 
   function totalSets(activities) {
-    return activities.reduce((sum, a) => sum + (a.details?.sets || 0), 0);
+    return activities.reduce(
+      (sum, a) => sum + (Number(a.details?.sets) || 0),
+      0
+    );
   }
 
   function yogaStats(activities) {
     const intensity = activities.reduce((acc, a) => {
-      acc.intensity += a.details?.intensity || 0;
+      acc.intensity += Number(a.details?.intensity) || 0;
       return acc;
-    }, {intensity: 0});
-    return {intensity: intensity.intensity};
-}
+    }, { intensity: 0 });
+
+    return { intensity: intensity.intensity };
+  }
 
   function soccerStats(activities) {
-    const goals = activities.reduce(
+    const totals = activities.reduce(
       (acc, a) => {
-        acc.goals += a.details?.goals || 0;
+        acc.goals += Number(a.details?.goals) || 0;
+        acc.assists += Number(a.details?.assists) || 0;
         return acc;
       },
-      {goals: 0, assists: 0}
+      { goals: 0, assists: 0 }
     );
 
-    const assists = activities.reduce( 
-      (acc, a) => {
-        acc.assists += a.details?.assists || 0;
-        return acc;
-      },
-      {goals: 0, assists: 0}
-    );
-    return {goals: goals.goals, assists: assists.assists};
+    return totals;
   }
 
   function baseballStats(activities) {
-    const hits = activities.reduce(
+    const totals = activities.reduce(
       (acc, a) => {
-        acc.hits += a.details?.hits || 0;
+        acc.hits += Number(a.details?.hits) || 0;
+        acc.runs += Number(a.details?.runs) || 0;
         return acc;
       },
-      {hits: 0, runs: 0}
+      { hits: 0, runs: 0 }
     );
 
-    const runs = activities.reduce(
-      (acc, a) => {
-        acc.runs += a.details?.runs || 0;
-        return acc;
-      },
-      {hits: 0, runs: 0}
-    );
-    return {hits: hits.hits, runs: runs.runs};
+    return totals;
   }
 
   function footballStats(activities) {
-    const touchdowns = activities.reduce(
+    const totals = activities.reduce(
       (acc, a) => {
-        acc.touchdowns += a.details?.touchdowns || 0;
+        acc.touchdowns += Number(a.details?.touchdowns) || 0;
         return acc;
       },
-      {touchdowns: 0}
+      { touchdowns: 0 }
     );
-    return {touchdowns: touchdowns.touchdowns};
-  }
 
-  function tennisStats(activities) {
+    return totals;
   }
 
   function volleyballStats(activities) {
-    const kills = activities.reduce(
-      (acc, a)=> {
-        acc.kills += a.details?.kills || 0;
+    const totals = activities.reduce(
+      (acc, a) => {
+        acc.kills += Number(a.details?.kills) || 0;
         return acc;
       },
-      {kills: 0}
+      { kills: 0 }
     );
-    return {kills: kills.kills};
+
+    return totals;
   }
 
   function basketballStats(activities) {
-    const points = activities.reduce(
+    const totals = activities.reduce(
       (acc, a) => {
-        acc.points += a.details?.points || 0;
-        return acc;
-      }, {points: 0, rebounds: 0, assists: 0}
-    );
-
-    const rebounds = activities.reduce(
-      (acc, a) => {
-        acc.rebounds += a.details?.rebounds || 0;
-        return acc;
-      }, {points: 0, rebounds: 0, assists: 0}
-    );
-
-    const assists = activities.reduce(
-      (acc, a) => {
-        acc.assists += a.details?.assists || 0;
-        return acc;
-      }, {points: 0, rebounds: 0, assists: 0}
-    );
-
-    return {points: points.points, rebounds: rebounds.rebounds, assists: assists.assists};
-  }
-
-  function walkingStats(activities) {
-    const steps = activities.reduce(
-      (acc, a) => {
-        acc.steps += a.details?.steps || 0;
+        acc.points += Number(a.details?.points) || 0;
+        acc.rebounds += Number(a.details?.rebounds) || 0;
+        acc.assists += Number(a.details?.assists) || 0;
         return acc;
       },
-      {steps: 0}
+      { points: 0, rebounds: 0, assists: 0 }
     );
-    return {steps: steps.steps};
+
+    return totals;
+  }
+
+  function hockeyStats(activities) {
+    const totals = activities.reduce(
+      (acc, a) => {
+        acc.goals += Number(a.details?.goals) || 0;
+        acc.assists +=
+          (Number(a.details?.primaryAssists) || 0) +
+          (Number(a.details?.secondaryAssists) || 0);
+        return acc;
+      },
+      { goals: 0, assists: 0 }
+    );
+
+    return totals;
   }
 
   function computeScore(row, sport) {
     const activities = parseActivities(row);
     const filtered = filterBySport(activities, sport);
 
-    switch (sport) {
-      case "running":
-      case "cycling":
-      case "swimming":
+    switch (normalizeSport(sport)) {
+      case "run":
+      case "bike":
+      case "swim":
       case "equestrian":
         return totalDistance(filtered);
-      case "walking":
+
+      case "walk":
         return totalSteps(filtered);
+
       case "yoga":
-        return yogaStats(filtered);
-      case "lifting":
+        return yogaStats(filtered).intensity;
+
+      case "lift":
         return totalSets(filtered);
+
       case "soccer":
         return soccerStats(filtered);
+
       case "baseball":
         return baseballStats(filtered);
+
       case "football":
         return footballStats(filtered);
+
       case "tennis":
-        //return tennisStats(filtered);
         return totalDuration(filtered);
+
       case "volleyball":
         return volleyballStats(filtered);
+
       case "basketball":
         return basketballStats(filtered);
+
+      case "hockey":
+        return hockeyStats(filtered);
 
       default:
         return totalDuration(filtered);
     }
   }
 
-  // ✅ Initial load: fetch -> store -> sort -> render
   (async function init() {
     try {
-      sortTableBySport(sortSport.value || "all");
-
-      data = await getLeaderboardData(sortSport.value || "all");
-
-      data = await getLeaderboardData();
-
-      data = await getLeaderboardData(sortSport.value || "all");
+      const sport = sortSport.value || "all";
+      sortTableBySport(sport);
+      data = await getLeaderboardData(sport);
       sortAndRender();
     } catch (err) {
       console.error("Failed to load leaderboard:", err);

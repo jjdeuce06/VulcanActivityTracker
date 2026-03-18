@@ -199,6 +199,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         <option>Off</option>
       </select>
     `,
+    hockey: `
+        <label>Goals</label>
+        <input type="number" name="goals" min="0">
+
+        <label> Primary Assists</label>
+        <input type="number" name="primaryAssists" min="0">
+
+        <label> Secondary Assists</label>
+        <input type="number" name="secondaryAssists" min="0">
+
+        <label>Notes</label>
+        <textarea name="notes" rows="3"></textarea>
+    `
   };
 
   function setFields(activityKey) 

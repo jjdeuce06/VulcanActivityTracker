@@ -4,13 +4,7 @@ import json
 
 def insert_club(conn, user_id, name, description): #inserts a new club into the database
     cursor = conn.cursor()
-    
-    cursor.execute("SELECT 1 FROM clubs WHERE ClubName = ?", (name,))
-    if cursor.fetchone():
-        raise ValueError("Club name already exists")
-        
     try:
-     
         cursor.execute("""
             INSERT INTO clubs (ClubName, Description, CreatorUserID)
             VALUES (?, ?, ?)
@@ -20,8 +14,6 @@ def insert_club(conn, user_id, name, description): #inserts a new club into the 
         print("Club inserted successfully")
 
     except Exception as e:
-        if "UNIQUE" in str(e).upper():
-            raise ValueError("Club name already exists")
         print("Insert club error:", e)
         raise
 
@@ -100,7 +92,7 @@ def add_member_to_club(conn, club_id, user_id, username): #adds a user to the me
             return members
 
         members.append(user_str)
-        #members.append(username) this will add both the user id then the username of the same user
+        #members.append(username)
         new_json = json.dumps(members)
         cursor.execute("UPDATE clubs SET Members = ?, UpdatedDate = SYSDATETIME() WHERE ClubID = ?", (new_json, club_id))
         conn.commit()
@@ -131,7 +123,7 @@ def remove_member_from_club(conn, club_id, user_id, username): #removes the user
             print("User not in members list or owner of club trying to leave") #
             return members
 
-        members = [m for m in members if m != user_str and m != username_str]
+        members = [m for m in members if m != str(user_id)]
         new_json = json.dumps(members)
         cursor.execute("UPDATE clubs SET Members = ?, UpdatedDate = SYSDATETIME() WHERE ClubID = ?", (new_json, club_id))
         conn.commit()
@@ -163,5 +155,22 @@ def remove_club_from_database(conn, club_id, user_id):
         print("Delete club error:", e)
         raise
 
+    finally:
+        cursor.close()
+
+def usernames_from_userids(conn, user_ids):
+    if not user_ids:
+        return []
+
+    cursor = conn.cursor()
+    try:
+        placeholders = ",".join("?" for _ in user_ids)
+        cursor.execute(
+            f"SELECT UserID, Username FROM [user] WHERE UserID IN ({placeholders})",
+            tuple(user_ids)
+        )
+        rows = cursor.fetchall()
+        id_to_name = {str(r.UserID): r.Username for r in rows}
+        return [id_to_name.get(str(uid)) for uid in user_ids if id_to_name.get(str(uid))]
     finally:
         cursor.close()

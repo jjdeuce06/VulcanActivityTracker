@@ -177,7 +177,7 @@ if (actionBtn) {
     const viewBtn = card.querySelector("button.view-club-btn");
     if (viewBtn) {
       viewBtn.addEventListener("click", () => {
-        window.location.href = `/club/${encodeURIComponent(club.name)}`;
+        window.location.href = `/club/${encodeURIComponent(club.id)}`;
       });
     }
   });

@@ -9,6 +9,7 @@ RUN dnf install -y \
         python3 \
         python3-pip \
         unixODBC \
+        curl \
     && dnf clean all \
     && rm -rf /var/cache/dnf
 
@@ -30,6 +31,9 @@ RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
 COPY . .
 
 
-EXPOSE 6455
+EXPOSE 8000
 
-CMD ["python3", "app.py"]
+#CMD ["python3", "app.py"]
+
+# Run with gunicorn
+CMD ["gunicorn", "-b", "0.0.0.0:8000", "app:app"]

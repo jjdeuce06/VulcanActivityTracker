@@ -6,7 +6,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const selectedActivityBtn = document.querySelector(".selected-activity");
   const clearBtn = document.querySelector(".clr-dropbtn");
   const username = localStorage.getItem("currentUser");
-  
+  const searchInput = document.getElementById('activity-searchbar');
+  const tableBody = document.getElementById('activities-body');
 
   const templates = {
     run: `
@@ -262,6 +263,23 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   await fillActivityTable(username);
+
+  searchInput.addEventListener('input', function(){
+    const filter = searchInput.value.toLowerCase();
+    const rows = tableBody.getElementsByTagName('tr');
+
+    for (let i = 0; i< rows.length; i++){
+      const cells = rows[i].getElementsByTagName('td');
+      let found = false;
+      for(let j = 0; j< cells.length; j++){
+        if (cells[j].textContent.toLowerCase().includes(filter)){
+          found = true;
+          break;
+        }
+      }
+      rows[i].style.display = found ? '' : 'none';
+    }
+  });
 });
 
 
@@ -377,3 +395,4 @@ function populateActivityTable(data){
   });
 
 }
+

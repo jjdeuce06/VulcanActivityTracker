@@ -351,3 +351,36 @@ h1 {
     max-width: none;
   }
 }
+
+/* container for search input */
+.activities-search-container {
+  display: flex;
+  justify-content: flex-end; /* right-align */
+  margin-bottom: 12px;
+}
+
+/* bubble-style search input */
+#activity-searchbar {
+  padding: 10px 18px;           /* bigger padding for pill shape */
+  border-radius: 30px;           /* fully rounded bubble */
+  border: 1px solid #444;
+  background: #070b3f;           /* matches your leaderboard card */
+  color: white;
+  font-size: 14px;
+  width: 220px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);  /* subtle floating effect */
+  transition: all 0.2s ease;
+}
+
+/* placeholder text */
+#activity-searchbar::placeholder {
+  color: #bbb;
+  opacity: 0.8;
+}
+
+/* focus effect like app controls */
+#activity-searchbar:focus {
+  outline: none;
+  border-color: #fff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}

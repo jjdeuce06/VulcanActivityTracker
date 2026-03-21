@@ -1,106 +1,44 @@
 {% extends "base_temp/dashboard.html" %}
 
 {% block content %}
-<style>
-  .lb-controls {
-  width: 70%;
-  margin: 15px auto;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: flex-end;
-  color: white;
-}
-
-.lb-controls select,
-.lb-controls button {
-  padding: 8px 10px;
-  border-radius: 6px;
-  border: 1px solid #444;
-  background: #2b2b2b;
-  color: white;
-  cursor: pointer;
-}
-
-.lb-controls button:hover {
-  background: #3a3a3a;
-}
-
-table {
-  font-family: Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  width: 70%;
-  margin: 0 auto;
-}
-
-td, th {
-  border: 1px solid #000000;
-  padding: 8px;
-  color: white;
-}
-
-/* Table body rows */
-tr {
-  background-color: #6b1414;   /* black rows */
-}
-
-tr:nth-child(even) {
-  background-color: #070b3f;   /* gray alternating rows */
-}
-
-tr:hover {
-  background-color: #808080;   /* hover effect */
-}
-
-th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: #070b3f;
-  color: white;
-}
-
-h1 {
-  text-align: center;
-}
-
-</style>
 <h1>Leaderboard</h1>
+<div class = "leaderboard-card">
 
-<div class="lb-controls">
+   <div class="lb-controls">
+    <div class="left-controls">
+      <select id="filterSport">
+        <option value="all" selected>All Sports</option>
+        <option value="running">Running</option>
+        <option value="lifting">Lifting</option>
+        <option value="cycling">Cycling</option>
+        <option value="swimming">Swimming</option>
+        <option value="yoga">Yoga</option>
+        <option value="walking">Walking</option>
+        <option value="soccer">Soccer</option>
+        <option value="basketball">Basketball</option>
+        <option value="tennis">Tennis</option>
+        <option value="volleyball">Volleyball</option>
+        <option value="equestrian">Equestrian</option>
+        <option value="football">Football</option>
+        <option value="baseball">Baseball</option>
+        <option value="hockey">Hockey</option>
+      </select>
+    </div>
+    <div class="right-controls">
+      <select id="sortBy">
+        <option value="score" selected>Score</option>
+        <option value="name">Name</option>
+        <option value="totalMinutes">Duration</option>
+        <option value="totalActivities">Activities</option>
+      </select>
+      <button id="sortDir" type="button" data-dir="desc">Desc</button>
+    </div>
+  </div>
 
-  <select id="filterSport">
-    <option value="all" selected>All Sports</option>
-    <option value="running">Running</option>
-    <option value="lifting">Lifting</option>
-    <option value="cycling">Cycling</option>
-    <option value="swimming">Swimming</option>
-    <option value="yoga">Yoga</option>
-    <option value="walking">Walking</option>
-    <option value="soccer">Soccer</option>
-    <option value="basketball">Basketball</option>
-    <option value="tennis">Tennis</option>
-    <option value="volleyball">Volleyball</option>
-    <option value="equestrian">Equestrian</option>
-    <option value="football">Football</option>
-    <option value="baseball">Baseball</option>
-    <option value="hockey">Hockey</option>
-  </select>
-
-  <select id="sortBy">
-    <option value="score" selected>Score</option>
-    <option value="name">Name</option>
-    <option value="totalMinutes">Duration</option>
-    <option value="totalActivities">Activities</option>
-  </select>
-
-  <button id="sortDir" type="button" data-dir="desc">Desc</button>
+  <table id="leaderboard">
+    <thead></thead>
+    <tbody></tbody>
+  </table>
 </div>
-
-<table id="leaderboard">
-  <thead></thead>
-  <tbody></tbody>
-</table>
-
 <script src="{{ url_for('style_folder.static', filename='js/leaderboard.js') }}"></script>
 {% endblock %}

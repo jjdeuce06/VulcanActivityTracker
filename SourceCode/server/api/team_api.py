@@ -176,8 +176,7 @@ def decline_invite_route():
     except Exception as e:
         print("Decline invite error:", e)
         return jsonify({"error": str(e)}), 500
-
-
+    
 @team_api.route("/teamdetail", methods=["POST"])
 def team_detail():
     try:
@@ -185,26 +184,47 @@ def team_detail():
         username = data.get("username")
         team_id = data.get("team_id")
 
-        if not username or not team_id:
-            return jsonify({"error": "Missing username or team_id"}), 400
+        print("teamdetail payload:", data)
 
-        conn = get_db_connection()
-        try:
-            user_id = get_user_id(conn, username)
-            if not user_id:
-                return jsonify({"error": "User not found"}), 404
+        if not team_id:
+            return jsonify({"error": "Missing team_id"}), 400
 
-            team = get_team_detail_for_user(conn, team_id, user_id)
+        demo_teams = {
+            "mens_soccer": {
+                "id": "mens_soccer",
+                "name": "Men's Soccer",
+                "sport": "Soccer",
+                "description": "Official private team dashboard for Men's Soccer.",
+                "coach_user_id": "demo-coach-id",
+                "coach_username": "Coach Demo",
+                "roster": [
+                    {"user_id": "1", "username": "Coach Demo", "role": "coach", "status": "accepted"},
+                    {"user_id": "2", "username": "Player One", "role": "player", "status": "accepted"},
+                    {"user_id": "3", "username": "Player Two", "role": "player", "status": "accepted"},
+                    {"user_id": "4", "username": "Player Three", "role": "player", "status": "accepted"}
+                ]
+            },
+            "mens_basketball": {
+                "id": "mens_basketball",
+                "name": "Men's Basketball",
+                "sport": "Basketball",
+                "description": "Official private team dashboard for Men's Basketball.",
+                "coach_user_id": "demo-coach-id",
+                "coach_username": "Coach Demo",
+                "roster": [
+                    {"user_id": "1", "username": "Coach Demo", "role": "coach", "status": "accepted"},
+                    {"user_id": "5", "username": "Guard One", "role": "player", "status": "accepted"},
+                    {"user_id": "6", "username": "Forward One", "role": "player", "status": "accepted"}
+                ]
+            }
+        }
 
-            if team is None:
-                return jsonify({"error": "Team not found"}), 404
+        team = demo_teams.get(team_id)
 
-            if team == "forbidden":
-                return jsonify({"error": "Unauthorized"}), 403
+        if not team:
+            return jsonify({"error": "Team not found"}), 404
 
-            return jsonify({"team": team}), 200
-        finally:
-            conn.close()
+        return jsonify({"team": team}), 200
 
     except Exception as e:
         print("Team detail error:", e)

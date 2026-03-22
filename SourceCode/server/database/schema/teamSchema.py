@@ -19,6 +19,7 @@ def create_teams_table(conn: pyodbc.Connection) -> None:
             CreatedDate DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
             UpdatedDate DATETIME2 NOT NULL DEFAULT SYSDATETIME()
         );
+        
         """)
         conn.commit()
         print("Teams table created successfully.")
@@ -46,6 +47,24 @@ def create_team_member_table(conn: pyodbc.Connection) -> None:
 
             CONSTRAINT FK_team_members_team FOREIGN KEY (TeamID) REFERENCES teams(TeamID),
             CONSTRAINT FK_team_members_user FOREIGN KEY (UserID) REFERENCES [user](UserID)
+        );
+                       
+        INSERT INTO team_members (TeamID, UserID, Role, Status, JoinedDate)
+        VALUES (
+            'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
+            'B28EA146-D7F7-4AA4-9B5E-E972C550BD32',
+            'coach',
+            'accepted',
+            SYSDATETIME()
+        );
+                       
+        INSERT INTO team_members (TeamID, UserID, Role, Status, JoinedDate)
+        VALUES (
+            'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA',
+            'FEE805A0-8839-4D06-A606-6220BA5ACD5B',
+            'player',
+            'accepted',
+            SYSDATETIME()
         );
         """)
         conn.commit()

@@ -155,29 +155,27 @@ def get_pending_team_invites(conn, user_id):
 def get_team_detail_for_user(conn, team_id, user_id):
     cursor = conn.cursor()
     try:
-        # first get team
         cursor.execute("""
-            SELECT TeamID, TeamName, Sport, Description, CoachUserID
-            FROM teams
-            WHERE TeamID = ?
+            SELECT t.TeamID, t.TeamName, t.Sport, t.Description, t.CoachUserID, u.Username AS CoachUsername
+            FROM teams t
+            JOIN [user] u ON t.CoachUserID = u.UserID
+            WHERE t.TeamID = ?
         """, (team_id,))
         team = cursor.fetchone()
 
         if not team:
             return None
 
-        # check access
-        cursor.execute("""
-            SELECT Role, Status
-            FROM team_members
-            WHERE TeamID = ? AND UserID = ?
-        """, (team_id, user_id))
-        membership = cursor.fetchone()
+        # cursor.execute("""
+        #     SELECT Role, Status
+        #     FROM team_members
+        #     WHERE TeamID = ? AND UserID = ?
+        # """, (team_id, user_id))
+        # membership = cursor.fetchone()
 
-        if not membership or membership.Status != "accepted":
-            return "forbidden"
+        # if not membership or membership.Status != "accepted":
+        #     return "forbidden"
 
-        # get roster
         cursor.execute("""
             SELECT u.UserID, u.Username, tm.Role, tm.Status
             FROM team_members tm
@@ -204,7 +202,44 @@ def get_team_detail_for_user(conn, team_id, user_id):
             "sport": team.Sport,
             "description": team.Description or "",
             "coach_user_id": str(team.CoachUserID),
+            "coach_username": team.CoachUsername,
             "roster": roster
         }
+
+    finally:
+        cursor.close()
+
+
+def invite_user_to_team(conn, team_id, coach_user_id, invited_user_id):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            SELECT TeamID
+            FROM teams
+            WHERE TeamID = ? AND CoachUserID = ?
+        """, (team_id, coach_user_id))
+        team = cursor.fetchone()
+
+        if not team:
+            raise ValueError("Only the coach can invite players")
+
+        cursor.execute("""
+            SELECT Status
+            FROM team_members
+            WHERE TeamID = ? AND UserID = ?
+        """, (team_id, invited_user_id))
+        existing = cursor.fetchone()
+
+        if existing:
+            raise ValueError("User already has a membership or pending invite")
+
+        cursor.execute("""
+            INSERT INTO team_members (TeamID, UserID, Role, Status)
+            VALUES (?, ?, 'player', 'invited')
+        """, (team_id, invited_user_id))
+
+        conn.commit()
+        return True
+
     finally:
         cursor.close()

@@ -1,0 +1,161 @@
+/* === MAIN CARD BUBBLE === */
+.leaderboard-card {
+  width: 75%;
+  margin: 40px auto;
+  padding: 20px 25px;
+  border-radius: 25px;
+  background: rgba(17, 4, 61, 0.282);
+  border: 1px solid #dcdcdc;
+
+  box-shadow: 
+    0 10px 25px rgba(0,0,0,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.6);
+
+  transition: all 0.2s ease;
+}
+
+/* subtle lift on hover */
+.leaderboard-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 15px 35px rgba(0,0,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.6);
+}
+
+
+/* === CONTROLS BUBBLE === */
+.lb-controls {
+  width: 70%;
+  margin: 25px auto;
+
+  display: flex;
+  justify-content: space-between; /* THIS is the key */
+
+  align-items: center;
+  padding: 12px 16px;
+
+  border-radius: 20px;
+  background: #070b3f;
+  color: white;
+}
+
+/* group right side items */
+.right-controls {
+  display: flex;
+  gap: 10px;
+}
+/* Inputs */
+.lb-controls select,
+.lb-controls button {
+  padding: 8px 12px;
+  border-radius: 10px;
+
+  border: 1px solid #444;
+  background: #2b2b2b;
+
+  color: white;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.lb-controls select:hover,
+.lb-controls button:hover{
+  background: #3a3a3a;
+  transform: translateY(-1px);
+}
+
+/* === TABLE === */
+#leaderboard {
+  width: 70%;
+  margin: 20px auto;
+
+  border-collapse: separate;
+  border-spacing: 0 10px;
+
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Header */
+#leaderboard th {
+  text-align: left;
+  padding: 10px 12px;
+  color: #070b3f;
+  font-weight: bold;
+}
+
+/* === ROW BUBBLES === */
+#leaderboard tbody tr {
+  background: #6b1414;
+  transition: all 0.2s ease;
+}
+
+/* Alternate color */
+#leaderboard tbody tr:nth-child(even) {
+  background: #070b3f;
+}
+
+/* Rounded row edges */
+#leaderboard tbody tr td:first-child {
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+
+#leaderboard tbody tr td:last-child {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+/* Cells */
+#leaderboard td {
+  padding: 14px 12px;
+  color: white;
+  border: none;
+}
+
+/* Hover effect */
+#leaderboard tbody tr:hover {
+  background: #808080;
+  transform: scale(1.01);
+}
+
+/* === SORT BUTTON STATE === */
+#sortDir[data-dir="asc"] {
+  background: #070b3f;
+}
+
+#sortDir[data-dir="desc"] {
+  background: #6b1414;
+}
+
+/* Winner badge circle */
+#leaderboard tbody tr td:first-child {
+  position: relative;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Top 3 badges */
+#leaderboard tbody tr:nth-child(1) td:first-child::before {
+  content: "🥇";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+}
+
+#leaderboard tbody tr:nth-child(2) td:first-child::before {
+  content: "🥈";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+}
+
+#leaderboard tbody tr:nth-child(3) td:first-child::before {
+  content: "🥉";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+}

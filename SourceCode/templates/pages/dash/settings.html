@@ -4,28 +4,94 @@
 <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/settings.css') }}">
 {% endblock %}
 
-
 {% block content %}
-<h1 class="settings-title">Account Settings</h1>
-<p class="settings-description">Manage your account details and profile settings.</p>
+<div class="settings-page">
 
-<div class="settings-layout">
-  <div class="settings-card">
-    <h3>Change Username</h3>
-    <label for="newUsername">New Username</label>
-    <input type="text" id="newUsername" placeholder="Enter a new username">
-    <button id="changeUsernameBtn">Update Username</button>
-    <p id="usernameMessage" class="settings-message"></p>
+  <div class="profile-header-card">
+    <div class="profile-header-left">
+      <div class="profile-avatar">
+        <div class="profile-avatar-text">
+          {{ session.username[0]|upper if session.username else "U" }}
+        </div>
+      </div>
+
+      <div class="profile-main-info">
+        <h1 class="settings-title">Account Settings</h1>
+        <p class="settings-description">Manage your account details and view your profile information.</p>
+
+        <div class="profile-meta">
+          <p><strong>Username:</strong> {{ session.username if session.username else "Current User" }}</p>
+          <p><strong>Email:</strong> {{ session.email if session.email else "user@example.com" }}</p>
+          <p><strong>Status:</strong> Active</p>
+          <p><strong>Role:</strong> Member</p>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="settings-card danger">
-    <h3>Delete Account</h3>
-    <p>This action is permanent and cannot be undone.</p>
-    <button id="deleteAccountBtn">Delete My Account</button>
-    <p id="deleteMessage" class="settings-message"></p>
+  <div class="settings-layout">
+
+    <div class="settings-card profile-info-card">
+      <h3>Profile Overview</h3>
+      <div class="profile-info-grid">
+        <div class="info-box">
+          <span class="info-label">Display Name</span>
+          <span class="info-value">{{ session.username if session.username else "Current User" }}</span>
+        </div>
+
+        <div class="info-box">
+          <span class="info-label">Email Address</span>
+          <span class="info-value">{{ session.email if session.email else "user@example.com" }}</span>
+        </div>
+
+        <div class="info-box">
+          <span class="info-label">Account Type</span>
+          <span class="info-value">Standard User</span>
+        </div>
+
+        <div class="info-box">
+          <span class="info-label">Status</span>
+          <span class="info-value">Active</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-card">
+      <h3>Change Username</h3>
+      <p>Update your username for your profile and account.</p>
+      <label for="newUsername">New Username</label>
+      <input type="text" id="newUsername" placeholder="Enter a new username">
+      <button id="changeUsernameBtn">Update Username</button>
+      <p id="usernameMessage" class="settings-message"></p>
+    </div>
+
+    <div class="settings-card">
+      <h3>Quick Stats</h3>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <span class="stat-number">12</span>
+          <span class="stat-label">Activities Logged</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-number">3</span>
+          <span class="stat-label">Teams Joined</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-number">5</span>
+          <span class="stat-label">Goals Set</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-card danger">
+      <h3>Delete Account</h3>
+      <p>This action is permanent and cannot be undone.</p>
+      <button id="deleteAccountBtn">Delete My Account</button>
+      <p id="deleteMessage" class="settings-message"></p>
+    </div>
+
   </div>
 </div>
 
 <script src="{{ url_for('style_folder.static', filename='js/settings.js') }}"></script>
-
 {% endblock %}

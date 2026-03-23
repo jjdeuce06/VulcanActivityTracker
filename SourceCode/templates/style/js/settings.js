@@ -1,52 +1,75 @@
 document.addEventListener("DOMContentLoaded", () => {
-
     const changeBtn = document.getElementById("changeUsernameBtn");
     const deleteBtn = document.getElementById("deleteAccountBtn");
 
     const usernameMessage = document.getElementById("usernameMessage");
     const deleteMessage = document.getElementById("deleteMessage");
 
-    changeBtn.addEventListener("click", async () => {
+    if (changeBtn) {
+        changeBtn.addEventListener("click", async () => {
+            const newUsernameInput = document.getElementById("newUsername");
+            const newUsername = newUsernameInput.value.trim();
 
-        const newUsername = document.getElementById("newUsername").value;
+            usernameMessage.textContent = "";
 
-        const response = await fetch("/settings_api/change-username", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username: newUsername
-            })
+            if (!newUsername) {
+                usernameMessage.textContent = "Please enter a new username.";
+                return;
+            }
+
+            try {
+                const response = await fetch("/settings_api/change-username", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        username: newUsername
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    localStorage.setItem("currentUser", newUsername);
+                    usernameMessage.textContent = result.message;
+
+                    const profileValues = document.querySelectorAll(".username-display");
+                    profileValues.forEach(el => {
+                        el.textContent = newUsername;
+                    });
+                } else {
+                    usernameMessage.textContent = result.message || "Failed to update username.";
+                }
+            } catch (error) {
+                console.error("Username update failed:", error);
+                usernameMessage.textContent = "Something went wrong while updating your username.";
+            }
         });
+    }
 
-        const result = await response.json();
+    if (deleteBtn) {
+        deleteBtn.addEventListener("click", async () => {
+            const confirmDelete = confirm("Are you sure you want to delete your account?");
+            if (!confirmDelete) return;
 
-        if(result.success){
-            localStorage.setItem("currentUser", newUsername);
-            usernameMessage.textContent = result.message;
-        }
-    });
+            deleteMessage.textContent = "";
 
+            try {
+                const response = await fetch("/settings_api/delete-account", {
+                    method: "DELETE"
+                });
 
-    deleteBtn.addEventListener("click", async () => {
+                const result = await response.json();
+                deleteMessage.textContent = result.message;
 
-        const confirmDelete = confirm("Are you sure you want to delete your account?");
-
-        if (!confirmDelete) return;
-
-        const response = await fetch("/settings_api/delete-account", {
-            method: "DELETE"
+                if (result.success) {
+                    window.location.href = "/";
+                }
+            } catch (error) {
+                console.error("Delete account failed:", error);
+                deleteMessage.textContent = "Something went wrong while deleting your account.";
+            }
         });
-
-        const result = await response.json();
-
-        deleteMessage.textContent = result.message;
-
-        if(result.success){
-            window.location.href = "/";
-        }
-
-    });
-
+    }
 });

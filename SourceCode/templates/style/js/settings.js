@@ -30,7 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const result = await response.json();
 
-                if (result.success) {
+                if (result.success) 
+                    {
                     localStorage.setItem("currentUser", newUsername);
                     usernameMessage.textContent = result.message;
 

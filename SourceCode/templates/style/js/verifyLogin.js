@@ -55,7 +55,7 @@ async function hashPassword(password){
 
 //Step 2: API to send hash
 
-async function sendLoginData(username, hashPassword){
+async function sendLoginData(username, hashPassword, email){
     const response = await fetch("/login_api/verify", {
         method: "POST",
         headers: {
@@ -63,7 +63,8 @@ async function sendLoginData(username, hashPassword){
         },
         body: JSON.stringify({
             username: username,
-            password: hashPassword
+            password: hashPassword,
+            email: email
         })
     });
 

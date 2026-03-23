@@ -24,6 +24,7 @@ def change_username():
         SET Username = ?
         WHERE UserID = ?
     """, new_username, user_id)
+    session["username"] = new_username
 
     conn.commit()
 
@@ -38,7 +39,7 @@ def change_username():
 @settings_api.route("/delete-account", methods=["DELETE"])
 def delete_account():
 
-    username = session.get("user_id")
+    username = session.get("username")
     if not username:
         return jsonify(success=False, message="Not logged in"), 401
 

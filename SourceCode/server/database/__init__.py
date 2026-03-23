@@ -42,3 +42,15 @@ def init_or_upgrade_schema(conn):
     from server.database.schema.teamSchema import create_team_member_table
     create_team_member_table(conn)
     print("team member table schema initialized or updated.")
+
+    from server.database.schema.teamSchema import create_team_coach_emails_table
+    create_team_coach_emails_table(conn)
+    print("team coach email table updated")
+
+    from server.database.schema.teamSchema import create_team_join_requests_table
+    create_team_join_requests_table(conn)
+    print("join request table created or initialized")
+
+    from server.database.schema.populateTeamSchema import seed_teams_and_coaches
+    seed_teams_and_coaches(conn)
+    print("populating tables")

@@ -177,54 +177,80 @@ def decline_invite_route():
         print("Decline invite error:", e)
         return jsonify({"error": str(e)}), 500
     
+from flask import session
+
 @team_api.route("/teamdetail", methods=["POST"])
 def team_detail():
     try:
         data = request.get_json() or {}
-        username = data.get("username")
         team_id = data.get("team_id")
-
-        print("teamdetail payload:", data)
 
         if not team_id:
             return jsonify({"error": "Missing team_id"}), 400
 
-        demo_teams = {
-            "mens_soccer": {
-                "id": "mens_soccer",
-                "name": "Men's Soccer",
-                "sport": "Soccer",
-                "description": "Official private team dashboard for Men's Soccer.",
-                "coach_user_id": "demo-coach-id",
-                "coach_username": "Coach Demo",
-                "roster": [
-                    {"user_id": "1", "username": "Coach Demo", "role": "coach", "status": "accepted"},
-                    {"user_id": "2", "username": "Player One", "role": "player", "status": "accepted"},
-                    {"user_id": "3", "username": "Player Two", "role": "player", "status": "accepted"},
-                    {"user_id": "4", "username": "Player Three", "role": "player", "status": "accepted"}
-                ]
-            },
-            "mens_basketball": {
-                "id": "mens_basketball",
-                "name": "Men's Basketball",
-                "sport": "Basketball",
-                "description": "Official private team dashboard for Men's Basketball.",
-                "coach_user_id": "demo-coach-id",
-                "coach_username": "Coach Demo",
-                "roster": [
-                    {"user_id": "1", "username": "Coach Demo", "role": "coach", "status": "accepted"},
-                    {"user_id": "5", "username": "Guard One", "role": "player", "status": "accepted"},
-                    {"user_id": "6", "username": "Forward One", "role": "player", "status": "accepted"}
-                ]
+        user_id = session.get("user_id")
+        if not user_id:
+            return jsonify({"error": "Not logged in"}), 401
+
+        conn = get_db_connection()
+        try:
+            cursor = conn.cursor()
+
+            # 🔒 Check if user is on team
+            cursor.execute("""
+                SELECT Role
+                FROM team_members
+                WHERE TeamID = ? AND UserID = ? AND Status = 'active'
+            """, (team_id, user_id))
+
+            membership = cursor.fetchone()
+            if not membership:
+                return jsonify({"error": "Unauthorized"}), 403
+
+            role = membership.Role
+
+            # 📦 Get team info
+            cursor.execute("""
+                SELECT TeamID, TeamName, Sport, Description
+                FROM teams
+                WHERE TeamID = ?
+            """, (team_id,))
+            team_row = cursor.fetchone()
+
+            if not team_row:
+                return jsonify({"error": "Team not found"}), 404
+
+            # 👥 Get roster
+            cursor.execute("""
+                SELECT u.UserID, u.Username, tm.Role, tm.Status
+                FROM team_members tm
+                JOIN [user] u ON tm.UserID = u.UserID
+                WHERE tm.TeamID = ?
+            """, (team_id,))
+            roster_rows = cursor.fetchall()
+
+            roster = []
+            for row in roster_rows:
+                roster.append({
+                    "user_id": str(row.UserID),
+                    "username": row.Username,
+                    "role": row.Role,
+                    "status": row.Status
+                })
+
+            team = {
+                "id": str(team_row.TeamID),
+                "name": team_row.TeamName,
+                "sport": team_row.Sport,
+                "description": team_row.Description,
+                "is_coach": role in ["coach", "admin"],
+                "roster": roster
             }
-        }
 
-        team = demo_teams.get(team_id)
+            return jsonify({"team": team}), 200
 
-        if not team:
-            return jsonify({"error": "Team not found"}), 404
-
-        return jsonify({"team": team}), 200
+        finally:
+            conn.close()
 
     except Exception as e:
         print("Team detail error:", e)

@@ -22,6 +22,8 @@ def create_challenges_table(conn: pyodbc.Connection) -> None:
                 TargetValue FLOAT NOT NULL,
                 StartDate DATE NOT NULL,
                 EndDate DATE NOT NULL,
+                IsCompleted BIT NOT NULL DEFAULT 0,
+                MedalsAwarded BIT NOT NULL DEFAULT 0,
                 CONSTRAINT FK_challenges_CreatorUser FOREIGN KEY (CreatorUserID) REFERENCES [user](UserID)
             )
         """)

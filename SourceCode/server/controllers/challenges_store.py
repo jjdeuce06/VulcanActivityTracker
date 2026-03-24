@@ -51,7 +51,9 @@ def get_all_challenges(conn):
                    ch.MetricType,
                    ch.TargetValue,
                    ch.StartDate,
-                   ch.EndDate
+                   ch.EndDate,
+                   ch.IsCompleted,
+                    ch.MedalsAwarded
             FROM challenges ch
             JOIN [user] u ON ch.CreatorUserID = u.UserID
             ORDER BY ch.StartDate DESC
@@ -78,7 +80,9 @@ def get_all_challenges(conn):
                 "metric_type": row.MetricType,
                 "target_value": row.TargetValue,
                 "start_date": str(row.StartDate),
-                "end_date": str(row.EndDate)
+                "end_date": str(row.EndDate),
+                "is_completed": bool(row.IsCompleted),
+                "medals_awarded": bool(row.MedalsAwarded),
             })
 
         return challenges
@@ -141,10 +145,13 @@ def get_dash_challenges(conn, user_id):
 def add_participant_to_challenge(conn, challenge_id, user_id):
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT Participants FROM challenges WHERE ChallengeID = ?", (challenge_id))
+        cursor.execute("SELECT Participants FROM challenges WHERE ChallengeID = ?", (challenge_id,))
         row = cursor.fetchone()
         if not row:
             raise ValueError("Challenge not found")
+        
+        if str(row.CreatorUserID) == str(user_id):
+            raise ValueError("Challenge owner cannot join their own challenge")
         
         participants_json = getattr(row, "Participants", None) or row[0]
         
@@ -366,3 +373,137 @@ def get_participant_details(conn, user_ids):
 
     finally:
         cursor.close()
+        
+def get_challenge_leaderboard(conn, challenge):
+    leaderboard = []
+
+    participant_ids = challenge.get("participants", [])
+    if not participant_ids:
+        return []
+
+    participant_details = get_participant_details(conn, participant_ids)
+
+    for participant in participant_details:
+        progress = calculate_challenge_progress(conn, challenge, participant["user_id"])
+
+        leaderboard.append({
+            "user_id": participant["user_id"],
+            "username": participant["username"],
+            "current": progress["current"],
+            "target": progress["target"],
+            "percent": progress["percent"]
+        })
+
+    leaderboard.sort(key=lambda p: p["current"], reverse=True)
+
+    for index, entry in enumerate(leaderboard, start=1):
+        entry["rank"] = index
+
+    return leaderboard
+
+def get_user_medals(conn, user_id):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT Medals FROM [user] WHERE UserID = ?", (user_id,))
+        row = cursor.fetchone()
+        if not row:
+            raise ValueError("User not found")
+
+        medals_json = getattr(row, "Medals", None) or row[0]
+        try:
+            medals = json.loads(medals_json) if medals_json else {}
+        except Exception:
+            medals = {}
+
+        return {
+            "gold": int(medals.get("gold", 0)),
+            "silver": int(medals.get("silver", 0)),
+            "bronze": int(medals.get("bronze", 0))
+        }
+    finally:
+        cursor.close()
+
+
+def add_medal_to_user(conn, user_id, medal_type):
+    cursor = conn.cursor()
+    try:
+        medals = get_user_medals(conn, user_id)
+
+        if medal_type not in medals:
+            raise ValueError("Invalid medal type")
+
+        medals[medal_type] += 1
+
+        cursor.execute(
+            "UPDATE [user] SET Medals = ? WHERE UserID = ?",
+            (json.dumps(medals), user_id)
+        )
+        conn.commit()
+        return medals
+    finally:
+        cursor.close()
+
+
+def award_challenge_medals(conn, challenge):
+    if challenge.get("medals_awarded"):
+        return
+
+    leaderboard = get_challenge_leaderboard(conn, challenge)
+
+    medal_order = ["gold", "silver", "bronze"]
+
+    for index, entry in enumerate(leaderboard[:3]):
+        add_medal_to_user(conn, entry["user_id"], medal_order[index])
+
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            UPDATE challenges
+            SET IsCompleted = 1,
+                MedalsAwarded = 1
+            WHERE ChallengeID = ?
+        """, (challenge["id"],))
+        conn.commit()
+    finally:
+        cursor.close()
+
+
+def finalize_expired_challenges(conn):
+    today = datetime.now().date()
+    all_challenges = get_all_challenges(conn)
+
+    for challenge in all_challenges:
+        if challenge.get("is_completed"):
+            continue
+
+        end_date = datetime.fromisoformat(challenge["end_date"]).date()
+
+        if end_date < today:
+            award_challenge_medals(conn, challenge)
+
+
+def get_visible_not_user_challenges(conn, user_id):
+    all_challenges = get_all_challenges(conn)
+    uid = str(user_id)
+    return [
+        c for c in all_challenges
+        if not c.get("is_completed")
+        and c["creator_user_id"] != uid
+        and uid not in c.get("participants", [])
+    ]
+
+
+def get_visible_user_challenges(conn, user_id):
+    all_challenges = get_all_challenges(conn)
+    uid = str(user_id)
+
+    user_challenges = [
+        c for c in all_challenges
+        if not c.get("is_completed")
+        and (c["creator_user_id"] == uid or uid in c.get("participants", []))
+    ]
+
+    for challenge in user_challenges:
+        challenge["progress"] = calculate_challenge_progress(conn, challenge, user_id)
+
+    return user_challenges

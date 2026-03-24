@@ -374,3 +374,227 @@ h1 {
     min-height: 38px;
     margin: 4px 0 8px 0;
 }
+.challengepage-details-column {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.challengepage-leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.leaderboard-row {
+  background: rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.leaderboard-row h4 {
+  margin: 0 0 8px 0;
+}
+
+.leaderboard-row p {
+  margin: 4px 0 8px;
+  font-size: 13px;
+  color: #cfcfcf;
+}
+
+.empty {
+  color: #cfcfcf;
+  margin: 0;
+}
+
+.challenge-detail-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.challenge-detail-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.challenge-detail-header h1 {
+  margin: 0;
+  font-size: 42px;
+  font-weight: 900;
+}
+
+.challenge-detail-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.challenge-detail-info-card,
+.challenge-detail-overview-card,
+.challenge-detail-leaderboard-card {
+  margin: 0;
+}
+
+.challenge-detail-info-card p,
+.challenge-detail-overview-card p {
+  margin: 10px 0;
+}
+
+.challenge-detail-overview-card #challenge-description {
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.challenge-back-btn {
+  margin-top: 16px;
+  width: auto;
+  padding: 10px 20px;
+}
+
+.challenge-detail-leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.challenge-detail-leaderboard-row {
+  display: grid;
+  grid-template-columns: 90px 1.2fr 2fr;
+  align-items: center;
+  gap: 18px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 16px 18px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.challenge-detail-rank {
+  font-weight: 900;
+  font-size: 20px;
+}
+
+.challenge-detail-name {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.challenge-detail-progress-text {
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #cfcfcf;
+}
+
+.empty {
+  color: #cfcfcf;
+  margin: 0;
+}
+
+@media (max-width: 850px) {
+  .challenge-detail-top {
+    grid-template-columns: 1fr;
+  }
+
+  .challenge-detail-leaderboard-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .challenge-detail-header h1 {
+    font-size: 32px;
+  }
+}
+
+.challenge-detail-leaderboard-header {
+  display: grid;
+  grid-template-columns: 90px 1.2fr 2fr;
+  gap: 18px;
+  align-items: center;
+  padding: 0 18px 10px 18px;
+  margin-bottom: 6px;
+  font-weight: 800;
+  font-size: 14px;
+  text-transform: uppercase;
+  color: #cfcfcf;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+@media (max-width: 850px) {
+  .challenge-detail-leaderboard-header {
+    display: none;
+  }
+}
+
+.challenge-title-card {
+  width: 100%;
+  max-width: 900px;
+  background: linear-gradient(145deg, #0b1170, #070b3f);
+  border-radius: 20px;
+  padding: 22px 28px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  text-align: center;
+}
+
+.challenge-title-card h1 {
+  margin: 0;
+  font-size: 42px;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.leaderboard-medal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  font-size: 22px;
+  vertical-align: middle;
+}
+
+.leaderboard-first {
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.4),
+    0 0 12px rgba(255, 215, 0, 0.10);
+}
+
+.leaderboard-second {
+  border: 1px solid rgba(192, 192, 192, 0.35);
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.4),
+    0 0 12px rgba(192, 192, 192, 0.10);
+}
+
+.leaderboard-third {
+  border: 1px solid rgba(205, 127, 50, 0.35);
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.4),
+    0 0 12px rgba(205, 127, 50, 0.10);
+}
+
+.challenge-medal-summary {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 10px 0 24px 0;
+}
+
+.challenge-medal-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #0b157a;
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+}

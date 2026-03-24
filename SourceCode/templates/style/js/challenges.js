@@ -138,7 +138,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!username) {
       console.warn("No logged-in user");
       renderChallenges("all-challenge-list", [], false);
-      renderChallenges("my-challenge-list", [], true);
+      renderChallenges("my-challenge-list", data.challenges || [], true);
+      renderMedals(data.medals || { gold: 0, silver: 0, bronze: 0 });
       return;
     }
 
@@ -360,4 +361,10 @@ function formatMetricLabel(metric) {
   };
 
   return labels[metric] || metric || "";
+}
+
+function renderMedals(medals) {
+  document.getElementById("gold-medal-count").textContent = medals?.gold ?? 0;
+  document.getElementById("silver-medal-count").textContent = medals?.silver ?? 0;
+  document.getElementById("bronze-medal-count").textContent = medals?.bronze ?? 0;
 }

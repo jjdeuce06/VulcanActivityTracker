@@ -7,32 +7,73 @@
 
 {% block content %}
 
-<div class="challenge-page">
-  <h1 class="page-description"id="challenge-name-heading">Challenge Name</h1>
-  
-  <div class="challengepage-layout">
-    <div class="challengepage-form">
-      <h2>About</h2>
-      <p id="challenge-description"></p>
-      
-      <p><strong>Creator: </strong><span id="challenge-creator"></span></p>
-      <p><strong>Activity Type: </strong><span id="challenge-activity-type"></span></p>
-      <p><strong>Metric Type: </strong><span id="challenge-metric-type"></span></p>
-      <p><strong>Target Value: </strong><span id="challenge-target-value"></span></p>
-      <p><strong>Start Date: </strong><span id="challenge-start-date"></span></p>
-      <p><strong>End Date: </strong><span id="challenge-end-date"></span></p>
-      <p><strong>Participants: </strong><span id="participant-count">0</span></p>
-
-      <button onclick="history.back()" class="secondary-btn" style="margin-top: 14px; width: auto; padding: 10px 20px;">Back</button>
+<div class="challengepage-page challenge-detail-page">
+  <div class="challenge-detail-header">
+    <div class="challenge-title-card">
+      <h1 id="challenge-name-heading">Challenge Name</h1>
     </div>
-    
-    <div class="card challengepage-card">
-      <h3>Participants</h3>
-      <div class="challengepage-list" id="participants-list">
-        <!-- participants will be populated here -->
-      </div>
+    <button id="challenge-action-btn" class="secondary-btn">Join Challenge</button>
+  </div>
+
+  <div class="challenge-detail-top">
+    <div class="challengepage-card challenge-detail-info-card">
+      <h3>Challenge Details</h3>
+
+      <p class="challenge-detail-date-line">
+        <strong>Dates:</strong>
+        <span id="challenge-start-date"></span> - <span id="challenge-end-date"></span>
+      </p>
+
+      <p class="challenge-detail-days-left">
+        <strong>Status:</strong> <span id="challenge-days-left"></span>
+      </p>
+
+      <p class="challenge-detail-goal">
+        <strong>Goal:</strong> <span id="challenge-goal-text"></span>
+      </p>
+
+      <p>
+        <strong>Activity Type:</strong>
+        <span id="challenge-activity-type"></span>
+      </p>
+
+      <p>
+        <strong>Metric Type:</strong>
+        <span id="challenge-metric-type"></span>
+      </p>
+
+      <p>
+        <strong>Target Value:</strong>
+        <span id="challenge-target-value"></span>
+      </p>
+
+      <p>
+        <strong>Participants:</strong>
+        <span id="participant-count">0</span>
+      </p>
+
+      <button onclick="history.back()" class="secondary-btn challenge-back-btn">Back</button>
+    </div>
+
+    <div class="challengepage-card challenge-detail-overview-card">
+      <h3>Challenge Overview</h3>
+      <p id="challenge-description">No description provided.</p>
     </div>
   </div>
+
+<div class="challengepage-card challenge-detail-leaderboard-card">
+  <h3>Leaderboard</h3>
+
+  <div class="challenge-detail-leaderboard-header">
+    <div>Rank</div>
+    <div>Name</div>
+    <div>Progress</div>
+  </div>
+
+  <div class="challenge-detail-leaderboard-list" id="leaderboard-list">
+    <!-- leaderboard rows go here -->
+  </div>
+</div>
 </div>
 
 <script src="{{ url_for('style_folder.static', filename='js/challenge_details.js') }}"></script>

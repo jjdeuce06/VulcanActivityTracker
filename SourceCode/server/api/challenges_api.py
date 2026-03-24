@@ -2,7 +2,12 @@
 from flask import Blueprint, request, jsonify
 from server.database.connect import get_db_connection
 from server.controllers.user_store import get_user_id
-from server.controllers.challenges_store import insert_challenge, get_all_challenges, get_not_user_challenges, get_user_challenges, add_participant_to_challenge, remove_participant_from_challenge, remove_challenge_from_database, challenge_name_exists, get_participant_details
+from server.controllers.challenges_store import (insert_challenge, get_all_challenges, get_not_user_challenges, get_user_challenges, 
+                                                 add_participant_to_challenge, remove_participant_from_challenge, remove_challenge_from_database,
+                                                 challenge_name_exists, get_participant_details, get_challenge_leaderboard,
+                                                 finalize_expired_challenges, get_visible_not_user_challenges, get_visible_user_challenges,
+                                                    get_user_medals)
+
 challenges_api = Blueprint('challenges_api', __name__)
 
 @challenges_api.route('/createchallenge', methods=['POST'])
@@ -70,7 +75,8 @@ def list_challenges():
             if not user_id:
                 return jsonify({"error": "User not found"}), 404
 
-            challenges = get_not_user_challenges(conn, user_id)
+            finalize_expired_challenges(conn)
+            challenges = get_visible_not_user_challenges(conn, user_id)
         finally:
             conn.close()
     except Exception as e:
@@ -94,14 +100,20 @@ def my_challenges():
             if not user_id:
                 return jsonify({"error": "User not found"}), 404
 
-            challenges = get_user_challenges(conn, user_id)
+            finalize_expired_challenges(conn)
+            challenges = get_visible_user_challenges(conn, user_id)
+            medals = get_user_medals(conn, user_id)
         finally:
             conn.close()
     except Exception as e:
         print("Error fetching user challenges:", e)
         return jsonify({"error": str(e)}), 500
 
-    return jsonify({"status": "success", "challenges": challenges}), 200
+    return jsonify({
+            "status": "success",
+            "challenges": challenges,
+            "medals": medals
+    }), 200
 
 @challenges_api.route('/join', methods=['POST']) #user joins a challenge and calls the add member to challenge function
 def join_challenge():
@@ -202,6 +214,9 @@ def challenge_detail():
             
             participant_details = get_participant_details(conn, challenge.get("participants", []))
             challenge["participant_details"] = participant_details
+
+            leaderboard = get_challenge_leaderboard(conn, challenge)
+            challenge["leaderboard"] = leaderboard
 
             return jsonify({"challenge": challenge}), 200
         finally:

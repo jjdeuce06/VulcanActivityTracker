@@ -1,14 +1,19 @@
 async function likeFeature(username, friendName) {
   const likeBtn = document.getElementById("like-friend-btn");
   const likeCount = document.getElementById("like-friend-count");
+  const FriendCount = document.getElementById("Ffriend-count");
 
   if (!likeBtn || !likeCount || !friendName) return;
 
   let isLiked = false;
   let totalLikes = 0;
+  let totalFriends = 0;
 
   function updateLikeUI() {
     likeCount.textContent = totalLikes;
+  }
+   function updateFriendUI() {
+    FriendCount.textContent = totalFriends;
   }
 
   //STEP 1: LOAD current likes (no toggle)
@@ -28,7 +33,9 @@ async function likeFeature(username, friendName) {
     if (res.ok) {
       isLiked = data.liked;
       totalLikes = data.total_likes;
+      totalFriends = data.friend_num;
       updateLikeUI();
+      updateFriendUI();
     }
 
   } catch (err) {

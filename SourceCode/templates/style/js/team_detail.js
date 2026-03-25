@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-const username = localStorage.getItem("currentUser") || "Coach Demo";
+  const username = localStorage.getItem("currentUser");
 
   if (!username) {
     alert("Please log in first.");
@@ -24,13 +24,13 @@ const username = localStorage.getItem("currentUser") || "Coach Demo";
     try {
       console.log("Loading team:", teamId, "for user:", username);
 
+    
       const resp = await fetch("/team_api/teamdetail", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          username,
           team_id: teamId
         })
       });
@@ -49,9 +49,13 @@ const username = localStorage.getItem("currentUser") || "Coach Demo";
 
       teamNameHeading.textContent = team.name || "Team";
       teamSport.textContent = team.sport || "Sport";
-      teamCoach.textContent = `Coach: ${team.coach_username || "Unknown"}`;
       teamMemberCount.textContent = `${roster.length} Member${roster.length === 1 ? "" : "s"}`;
       teamDescription.textContent = team.description || "No description provided.";
+
+      const coachMember = roster.find(member =>
+        member.role === "coach" || member.role === "admin"
+      );
+      teamCoach.textContent = `Coach: ${coachMember ? coachMember.username : "Unknown"}`;
 
       rosterList.innerHTML = "";
 
@@ -71,7 +75,7 @@ const username = localStorage.getItem("currentUser") || "Coach Demo";
         });
       }
 
-      const isCoach = true //String(team.coach_username).toLowerCase() === String(username).toLowerCase();
+      const isCoach = team.is_coach === true;
       coachTools.style.display = isCoach ? "block" : "none";
     } catch (err) {
       console.error("Error loading team:", err);

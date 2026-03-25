@@ -2,26 +2,28 @@ import pyodbc
 
 def create_team(conn, coach_user_id, team_name, sport, description):
     cursor = conn.cursor()
-    try:
-        cursor.execute("""
-            INSERT INTO teams (TeamName, Sport, Description, CoachUserID)
-            OUTPUT INSERTED.TeamID
-            VALUES (?, ?, ?, ?)
-        """, (team_name, sport, description, coach_user_id))
 
-        row = cursor.fetchone()
-        team_id = str(row[0])
+    cursor.execute("""
+        INSERT INTO teams (TeamName, Sport, Description)
+        OUTPUT inserted.TeamID
+        VALUES (?, ?, ?)
+    """, (team_name, sport, description))
 
-        # auto-add coach as accepted member
-        cursor.execute("""
-            INSERT INTO team_members (TeamID, UserID, Role, Status, JoinedDate)
-            VALUES (?, ?, 'coach', 'accepted', SYSDATETIME())
-        """, (team_id, coach_user_id))
+    row = cursor.fetchone()
+    if not row:
+        raise ValueError("Failed to create team")
 
-        conn.commit()
-        return team_id
-    finally:
-        cursor.close()
+    team_id = row.TeamID
+
+    cursor.execute("""
+        INSERT INTO team_members (TeamID, UserID, Role, Status)
+        VALUES (?, ?, 'coach', 'active')
+    """, (team_id, coach_user_id))
+
+    conn.commit()
+    cursor.close()
+
+    return str(team_id)
 
 
 def invite_user_to_team(conn, team_id, coach_user_id, invited_user_id):

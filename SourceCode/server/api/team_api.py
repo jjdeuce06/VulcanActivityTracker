@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from server.database.connect import get_db_connection
 from server.controllers.user_store import get_user_id
 from server.controllers.team_store import (
@@ -45,7 +45,7 @@ def create_team_route():
 def invite_to_team():
     try:
         data = request.get_json() or {}
-        username = data.get("username")  # coach username
+        username = data.get("username")
         invited_username = data.get("invited_username")
         team_id = data.get("team_id")
 
@@ -59,6 +59,16 @@ def invite_to_team():
 
             if not coach_user_id or not invited_user_id:
                 return jsonify({"error": "User not found"}), 404
+
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT 1
+                FROM team_members
+                WHERE TeamID = ? AND UserID = ? AND Role IN ('coach', 'admin') AND Status = 'active'
+            """, (team_id, coach_user_id))
+
+            if not cursor.fetchone():
+                return jsonify({"error": "Only coaches can invite users"}), 403
 
             invite_user_to_team(conn, team_id, coach_user_id, invited_user_id)
             return jsonify({"status": "success"}), 200
@@ -183,7 +193,9 @@ from flask import session
 def team_detail():
     try:
         data = request.get_json() or {}
+        print(data)
         team_id = data.get("team_id")
+        username = data.get("username")
 
         if not team_id:
             return jsonify({"error": "Missing team_id"}), 400
@@ -193,23 +205,24 @@ def team_detail():
             return jsonify({"error": "Not logged in"}), 401
 
         conn = get_db_connection()
+        print("DEBUG team_id:", team_id, type(team_id))
+        print("DEBUG session user_id:", session.get("user_id"), type(session.get("user_id")))
+        print("DEBUG username:", username, type(username))
         try:
             cursor = conn.cursor()
 
-            # 🔒 Check if user is on team
+            # Check membership
             cursor.execute("""
-                SELECT Role
+                SELECT Role, Status
                 FROM team_members
-                WHERE TeamID = ? AND UserID = ? AND Status = 'active'
+                WHERE TeamID = ? AND UserID = ?
             """, (team_id, user_id))
-
             membership = cursor.fetchone()
-            if not membership:
+
+            if not membership or membership.Status != "active":
                 return jsonify({"error": "Unauthorized"}), 403
 
-            role = membership.Role
-
-            # 📦 Get team info
+            # Get team info
             cursor.execute("""
                 SELECT TeamID, TeamName, Sport, Description
                 FROM teams
@@ -220,12 +233,19 @@ def team_detail():
             if not team_row:
                 return jsonify({"error": "Team not found"}), 404
 
-            # 👥 Get roster
+            # Get roster
             cursor.execute("""
                 SELECT u.UserID, u.Username, tm.Role, tm.Status
                 FROM team_members tm
                 JOIN [user] u ON tm.UserID = u.UserID
                 WHERE tm.TeamID = ?
+                ORDER BY
+                    CASE
+                        WHEN tm.Role = 'coach' THEN 0
+                        WHEN tm.Role = 'admin' THEN 1
+                        ELSE 2
+                    END,
+                    u.Username
             """, (team_id,))
             roster_rows = cursor.fetchall()
 
@@ -243,15 +263,45 @@ def team_detail():
                 "name": team_row.TeamName,
                 "sport": team_row.Sport,
                 "description": team_row.Description,
-                "is_coach": role in ["coach", "admin"],
+                "is_coach": membership.Role in ["coach", "admin"],
                 "roster": roster
             }
 
             return jsonify({"team": team}), 200
-
         finally:
             conn.close()
 
     except Exception as e:
         print("Team detail error:", e)
+        return jsonify({"error": str(e)}), 500
+    
+
+@team_api.route("/listallteams", methods=["GET"])
+def list_all_teams():
+    try:
+        conn = get_db_connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT TeamID, TeamName, Sport, Description
+                FROM teams
+                ORDER BY TeamName
+            """)
+            rows = cursor.fetchall()
+
+            teams = []
+            for row in rows:
+                teams.append({
+                    "TeamID": str(row.TeamID),
+                    "TeamName": row.TeamName,
+                    "Sport": row.Sport,
+                    "Description": row.Description
+                })
+
+            return jsonify({"teams": teams}), 200
+        finally:
+            conn.close()
+
+    except Exception as e:
+        print("List all teams error:", e)
         return jsonify({"error": str(e)}), 500

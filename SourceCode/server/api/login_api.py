@@ -39,36 +39,41 @@ def login():
 @login_api.route("/verify", methods=["POST"])
 def verify():
     data = request.get_json()
-    print(data)
-    user_id = data.get("user_id")
     username = data.get("username")
     password = data.get("password")
-    email = data.get("email")
 
     if not username or not password:
-        return jsonify({"error": "Missing username or password hash"}), 400
-    
+        return jsonify({"error": "Missing username or password"}), 400
+
     with get_db_connection() as conn:
-        stored_hash = fetch_login(conn, username)
-    if not stored_hash:
+        user = fetch_user_by_username(conn, username)   
+
+    if not user:
         return jsonify({"error": "Invalid username or password"}), 401
-    
-    
-    
 
     ph = PasswordHasher()
     try:
-        if ph.verify(stored_hash, password):
-            session["user_id"] = str(user_id)
-            session["username"] = username
-            session["email"] = email
-            print(f"User {username} logged in successfully in session")
-            return jsonify({"message": "Login successful", "username": username}), 200
-    except:
+        if ph.verify(user.PasswordHash, password):
+            session["username"] = user.Username
+            session["email"] = user.Email
+            session["user_id"] = user.UserID
+
+            print(f"User {user.Username} logged in successfully")
+            print("DEBUG session after login:", dict(session))
+
+            return jsonify({
+                "message": "Login successful",
+                "username": user.Username
+            }), 200
+        
+
+    except Exception:
         return jsonify({"error": "Invalid username or password"}), 401
 
 @login_api.route("/logout", methods=["POST"])
 def logout():
+    session.pop("user_id", None)
     session.pop("username", None)
+    session.pop("email", None)
     return jsonify({"message": "Logged out successfully"}), 200
 

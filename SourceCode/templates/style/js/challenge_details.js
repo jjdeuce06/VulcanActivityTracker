@@ -52,30 +52,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     return `${activityText} ${challenge.target_value} ${metricText}`;
   }
 
-  function getDaysLeftText(startDateStr, endDateStr) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+  function parseLocalDate(dateStr) {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
 
-    const startDate = new Date(startDateStr);
-    startDate.setHours(0, 0, 0, 0);
+ function getDaysLeftText(startDateStr, endDateStr) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
-    const endDate = new Date(endDateStr);
-    endDate.setHours(0, 0, 0, 0);
+  const startDate = parseLocalDate(startDateStr);
+  startDate.setHours(0, 0, 0, 0);
 
-    const msPerDay = 1000 * 60 * 60 * 24;
+  const endDate = parseLocalDate(endDateStr);
+  endDate.setHours(0, 0, 0, 0);
 
-    if (today < startDate) {
-      const daysUntilStart = Math.ceil((startDate - today) / msPerDay);
-      return `Starts in ${daysUntilStart} day${daysUntilStart === 1 ? "" : "s"}`;
-    }
+  const msPerDay = 1000 * 60 * 60 * 24;
 
-    if (today > endDate) {
-      return "Completed";
-    }
-
-    const daysLeft = Math.ceil((endDate - today) / msPerDay);
-    return `${daysLeft} day${daysLeft === 1 ? "" : "s"} left`;
+  if (today < startDate) {
+    const daysUntilStart = Math.round((startDate - today) / msPerDay);
+    return `Starts in ${daysUntilStart} day${daysUntilStart === 1 ? "" : "s"}`;
   }
+
+  if (today > endDate) {
+    return "Completed";
+  }
+
+  const daysLeft = Math.round((endDate - today) / msPerDay);
+  return `${daysLeft} day${daysLeft === 1 ? "" : "s"} left`;
+}
 
   function renderLeaderboard(leaderboard, metricType) {
     const leaderboardList = document.getElementById("leaderboard-list");

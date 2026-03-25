@@ -145,7 +145,7 @@ def get_dash_challenges(conn, user_id):
 def add_participant_to_challenge(conn, challenge_id, user_id):
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT Participants FROM challenges WHERE ChallengeID = ?", (challenge_id,))
+        cursor.execute("SELECT Participants, CreatorUserID FROM challenges WHERE ChallengeID = ?", (challenge_id,))
         row = cursor.fetchone()
         if not row:
             raise ValueError("Challenge not found")
@@ -418,7 +418,8 @@ def get_user_medals(conn, user_id):
         return {
             "gold": int(medals.get("gold", 0)),
             "silver": int(medals.get("silver", 0)),
-            "bronze": int(medals.get("bronze", 0))
+            "bronze": int(medals.get("bronze", 0)),
+            "completed": int(medals.get("completed", 0))
         }
     finally:
         cursor.close()
@@ -450,10 +451,15 @@ def award_challenge_medals(conn, challenge):
 
     leaderboard = get_challenge_leaderboard(conn, challenge)
 
+    # award top 3 medals
     medal_order = ["gold", "silver", "bronze"]
-
     for index, entry in enumerate(leaderboard[:3]):
         add_medal_to_user(conn, entry["user_id"], medal_order[index])
+
+    # award "completed" to every participant who met the goal
+    for entry in leaderboard:
+        if float(entry["current"]) >= float(entry["target"]):
+            add_medal_to_user(conn, entry["user_id"], "completed")
 
     cursor = conn.cursor()
     try:

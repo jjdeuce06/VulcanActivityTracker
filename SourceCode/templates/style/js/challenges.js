@@ -139,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.warn("No logged-in user");
       renderChallenges("all-challenge-list", [], false);
       renderChallenges("my-challenge-list", data.challenges || [], true);
-      renderMedals(data.medals || { gold: 0, silver: 0, bronze: 0 });
+      renderMedals(data.medals || { gold: 0, silver: 0, bronze: 0, completed: 0 });
       return;
     }
 
@@ -167,6 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (myResp.ok) {
       const data = await myResp.json();
       renderChallenges("my-challenge-list", data.challenges || [], true);
+      renderMedals(data.medals || { gold: 0, silver: 0, bronze: 0, completed: 0 });
     } else {
       console.error("Failed to load my challenges", myResp.status);
     }
@@ -367,4 +368,5 @@ function renderMedals(medals) {
   document.getElementById("gold-medal-count").textContent = medals?.gold ?? 0;
   document.getElementById("silver-medal-count").textContent = medals?.silver ?? 0;
   document.getElementById("bronze-medal-count").textContent = medals?.bronze ?? 0;
+  document.getElementById("completed-count").textContent = medals?.completed ?? 0;
 }

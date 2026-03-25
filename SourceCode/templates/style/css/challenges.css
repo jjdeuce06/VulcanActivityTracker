@@ -304,13 +304,17 @@ h1 {
 }
 
 .challengepage-create-btn {
-    background: #b22222;
-    color: white;
-    padding: 12px 18px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: bold;
-    white-space: nowrap;
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  background: #b22222;
+  color: #fff;
+  padding: 14px 22px;
+  border-radius: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.18);
 }
 
 .challengepage-create-btn:hover {
@@ -597,4 +601,53 @@ h1 {
   padding: 8px 14px;
   font-weight: 700;
   box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+}
+
+.challengepage-top-section {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 22px;
+  min-height: 170px;
+}
+
+.challengepage-header-card {
+  width: 100%;
+  max-width: 700px;
+  background: linear-gradient(145deg, #0b1170, #070b3f);
+  border-radius: 20px;
+  padding: 24px 28px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  text-align: center;
+}
+
+.challengepage-header-card h1 {
+  margin: 0 0 8px 0;
+  font-size: 42px;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.challengepage-header-card .challengepage-description {
+  margin: 0;
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.challenge-medals-title-card {
+  width: fit-content;
+  margin: 0 auto 12px auto;
+  background: linear-gradient(145deg, #0b1170, #070b3f);
+  border-radius: 14px;
+  padding: 10px 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+  text-align: center;
+}
+
+.challenge-medals-title-card h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 800;
 }

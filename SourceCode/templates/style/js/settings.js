@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const changeBtn = document.getElementById("changeUsernameBtn");
     const deleteBtn = document.getElementById("deleteAccountBtn");
 
@@ -72,4 +72,43 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    await fillQuickStats();
 });
+
+async function fillQuickStats(){
+
+  try {
+    const response = await fetch("/settings_api/fillActivityStat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error ${response.status}`);
+    }
+
+    const data = await response.json();
+    populateQuick(data);
+
+    return data;
+
+  } catch (err) {
+    console.error("Failed to load activities:", err);
+  }
+
+}
+function populateQuick(data) {
+  // Fill the activity count using the array length
+  const activityCountDiv = document.querySelector("#settingAStat");
+  activityCountDiv.textContent = data.activities ?? 0;
+
+   const ClubsCount = document.querySelector("#settingCStat");
+   ClubsCount.textContent = data.clubs ?? 0;
+
+   const goalCount = document.querySelector("#settingGStat");
+   goalCount.textContent = data.challenges ?? 0;
+
+}

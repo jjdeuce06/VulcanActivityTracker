@@ -92,6 +92,7 @@ async function fillQuickStats(){
 
     const data = await response.json();
     populateQuick(data);
+    fillDisplayInfo(data);
 
     return data;
 
@@ -111,4 +112,15 @@ function populateQuick(data) {
    const goalCount = document.querySelector("#settingGStat");
    goalCount.textContent = data.challenges ?? 0;
 
+}
+
+function fillDisplayInfo(data){
+
+    const displayName = document.querySelector("#settings-displayname");
+    displayName.textContent = data.name;
+    const displayEmail = document.querySelector("#settings-email");
+    displayEmail.textContent = data.email;
+
+    const profileName = document.querySelector("#profile-name");
+    profileName.textContent = data.name;
 }

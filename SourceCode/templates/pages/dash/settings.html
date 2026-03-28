@@ -10,9 +10,7 @@
   <div class="profile-header-card">
     <div class="profile-header-left">
       <div class="profile-avatar">
-        <div class="profile-avatar-text">
-          {{ session.username[0]|upper if session.username else "U" }}
-        </div>
+        <div class="profile-avatar-text" id="profile-name"></div>
       </div>
 
       <div class="profile-main-info">
@@ -21,7 +19,7 @@
 
         <div class="profile-meta">
           <p><strong>Username:</strong> {{ session.username if session.username else "Current User" }}</p>
-          <p><strong>Email:</strong> {{ session.email if session.email else "user@example.com" }}</p>
+          <!--<p><strong>Email:</strong> {{ session.email if session.email else "user@example.com" }}</p>-->
           <p><strong>Status:</strong> Active</p>
           <p><strong>Role:</strong> Member</p>
         </div>
@@ -36,12 +34,12 @@
       <div class="profile-info-grid">
         <div class="info-box">
           <span class="info-label">Display Name</span>
-          <span class="info-value">{{ session.username if session.username else "Current User" }}</span>
+          <span class="info-value" id="settings-displayname"></span>
         </div>
 
         <div class="info-box">
           <span class="info-label">Email Address</span>
-          <span class="info-value">{{ session.email if session.email else "user@example.com" }}</span>
+          <span class="info-value" id="settings-email"></span>
         </div>
 
         <div class="info-box">

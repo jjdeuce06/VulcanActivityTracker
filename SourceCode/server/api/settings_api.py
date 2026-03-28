@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, session
-from server.controllers.user_store import get_user_id
+from server.controllers.user_store import get_user_id, get_user_email
 from server.controllers.activity_store import get_user_activities
 from server.controllers.challenges_store import get_user_challenges
 from server.controllers.club_store import get_user_clubs
@@ -145,10 +145,16 @@ def activity_stat():
             activities = len(get_user_activities(conn, user_id))
             challenges = len(get_user_challenges(conn, user_id))
             clubs = len(get_user_clubs(conn, user_id))
+            email = get_user_email(conn, user_id)
         finally:
             conn.close()  #close conn
     except Exception as e:
         print("Error in enter_activity route:", e)
         return jsonify({"error": str(e)}), 500
 
-    return jsonify({"status": "success","activities": activities, "challenges": challenges, "clubs": clubs}), 200
+    return jsonify({"status": "success",
+                    "activities": activities, 
+                    "challenges": challenges, 
+                    "clubs": clubs,
+                    "name": username,
+                    "email": email }), 200

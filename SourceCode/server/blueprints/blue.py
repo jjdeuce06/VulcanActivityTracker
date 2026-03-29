@@ -47,3 +47,7 @@ def club_detail(club_name):
 @blue.route('/challenge/<challenge_name>')
 def challenge_detail(challenge_name):
     return render_template('pages/dash/challenge_details.html', active_page='challenges')
+
+@blue.route('/create_challenge')
+def create_challenge():
+    return render_template('pages/dash/challenge_create.html', active_page='challenges')

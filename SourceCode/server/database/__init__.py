@@ -54,3 +54,7 @@ def init_or_upgrade_schema(conn):
     from server.database.schema.populateTeamSchema import seed_teams_and_coaches
     seed_teams_and_coaches(conn)
     print("populating tables")
+
+    from server.database.schema.teamInviteSchema import create_team_invites_table
+    create_team_invites_table(conn)
+    print("creating invites table")

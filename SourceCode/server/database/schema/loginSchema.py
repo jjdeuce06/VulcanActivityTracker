@@ -19,6 +19,7 @@ def create_user_table(conn: pyodbc.Connection) -> None:
                 LastLogin DATETIME2 NULL,
                 FailedLoginAttempted INT DEFAULT 0,
                 TempPassword VARCHAR(255) NULL,
+                Medals NVARCHAR(MAX) NOT NULL DEFAULT '{"gold": 0, "silver": 0, "bronze": 0, "completed": 0}',
                 UpdatedDate DATETIME2 NOT NULL DEFAULT SYSDATETIME()
             )
         """)

@@ -1,0 +1,68 @@
+{% extends "base_temp/dashboard.html" %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/challenges.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="challengepage-page">
+
+
+    <form class="challengepage-form" id="create-challenge-form">
+        <h3>Create Challenge</h3>
+
+        <label>Challenge Name</label>
+        <input type="text" id="challenge-name" required>
+
+        <label>Description</label>
+        <textarea id="challenge-description" rows="3"></textarea>
+
+        <label>Activity Type</label>
+        <select id="challenge-activity-type" required>
+            <option value="run">Running</option>
+            <option value="bike">Cycling</option>
+            <option value="swim">Swimming</option>
+            <option value="lifting">Weightlifting</option>
+            <option value="walk">Walking</option>
+            <option value="yoga">Yoga</option>
+            <option value="soccer">Soccer</option>
+            <option value="baseball">Baseball</option>
+            <option value="football">Football</option>
+            <option value="tennis">Tennis</option>
+            <option value="volleyball">Volleyball</option>
+            <option value="basketball">Basketball</option>
+            <option value="equestrian">Equestrian</option>
+        </select>
+
+        <label>Metric Type</label>
+        <select id="challenge-metric-type" required>
+            <option value="distance">Distance</option>
+            <option value="time">Time</option>
+            <option value="count">Count</option>
+        </select>
+
+        <label id="challenge-target-label">Target Goal</label>
+        <input type="number" id="challenge-target" required min="1">
+
+        <label>Start Date</label>
+        <input type="date" id="start-date" required>
+
+        <label>End Date</label>
+        <input type="date" id="end-date" required>
+
+        <div class="challengepage-form-buttons">
+            <button type="submit" class="challengepage-submit-btn">
+                Create Challenge
+            </button>
+
+            <a href="/challenges" class="challengepage-cancel-btn">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+</div>
+
+<script src="{{ url_for('style_folder.static', filename='js/challenges.js') }}"></script>
+
+{% endblock %}

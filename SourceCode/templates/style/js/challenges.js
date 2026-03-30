@@ -1,13 +1,10 @@
 //challenges.js:
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("create-challenge-form"); 
-  if (!form) {
-    console.error("challenge-form not found");
-    return;
-  }
+  const form = document.getElementById("create-challenge-form");
 
   const activitySelect = document.getElementById("challenge-activity-type");
   const metricSelect = document.getElementById("challenge-metric-type");
+  const targetLabel = document.getElementById("challenge-target-label");
 
   const metricOptionsBySport = {
     run: ["distance", "time", "count"],
@@ -25,19 +22,114 @@ document.addEventListener("DOMContentLoaded", () => {
     basketball: ["points", "rebounds", "assists", "time", "count"]
   };
 
-  activitySelect.addEventListener("change", () => {
-    const sport = activitySelect.value;
-    const metrics = metricOptionsBySport[sport] || ["time", "count"];
+  const metricLabelsBySport = {
+  run: {
+    distance: "Total Running Distance (in miles)",
+    time: "Total Running Time (in minutes)",
+    count: "Total Run Count"
+  },
+  bike: {
+    distance: "Total Cycling Distance (in miles)",
+    time: "Total Cycling Time (in minutes)",
+    count: "Total Ride Count"
+  },
+  swim: {
+    distance: "Total Swimming Distance (in meters)",
+    time: "Total Swimming Time (in minutes)",
+    count: "Total Swim Count"
+  },
+  equestrian: {
+    distance: "Total Equestrian Distance (in miles)",
+    time: "Total Riding Time (in minutes)",
+    count: "Total Ride Count"
+  },
+  walk: {
+    steps: "Total Walking Steps",
+    time: "Total Walking Time (in minutes)",
+    count: "Total Walk Count"
+  },
+  lifting: {
+    sets: "Total Sets",
+    time: "Total Lifting Time (in minutes)",
+    count: "Total Workout Count"
+  },
+  yoga: {
+    intensity: "Total Yoga Intensity",
+    time: "Total Yoga Time (in minutes)",
+    count: "Total Yoga Session Count"
+  },
+  soccer: {
+    goals: "Total Goals",
+    assists: "Total Assists",
+    time: "Total Playing Time (in minutes)",
+    count: "Total Match Count"
+  },
+  baseball: {
+    hits: "Total Hits",
+    runs: "Total Runs",
+    time: "Total Playing Time (in minutes)",
+    count: "Total Game Count"
+  },
+  football: {
+    touchdowns: "Total Touchdowns",
+    time: "Total Playing Time (in minutes)",
+    count: "Total Game Count"
+  },
+  tennis: {
+    time: "Total Playing Time (in minutes)",
+    count: "Total Match Count"
+  },
+  volleyball: {
+    kills: "Total Kills",
+    time: "Total Playing Time (in minutes)",
+    count: "Total Match Count"
+  },
+  basketball: {
+    points: "Total Points",
+    rebounds: "Total Rebounds",
+    assists: "Total Assists",
+    time: "Total Playing Time (in minutes)",
+    count: "Total Game Count"
+  }
+};
 
-    metricSelect.innerHTML = "";
 
-    metrics.forEach(metric => {
-      const option = document.createElement("option");
-      option.value = metric;
-      option.textContent = metric.charAt(0).toUpperCase() + metric.slice(1);
-      metricSelect.appendChild(option);
+  function updateTargetLabel() {
+  if (!activitySelect || !metricSelect || !targetLabel) return;
+
+  const sport = activitySelect.value;
+  const metric = metricSelect.value;
+
+  const label =
+    metricLabelsBySport[sport] &&
+    metricLabelsBySport[sport][metric]
+      ? metricLabelsBySport[sport][metric]
+      : "Target Goal";
+
+  targetLabel.textContent = label;
+  }
+
+  if (activitySelect && metricSelect) {
+    activitySelect.addEventListener("change", () => {
+      const sport = activitySelect.value;
+      const metrics = metricOptionsBySport[sport] || ["time", "count"];
+
+      metricSelect.innerHTML = "";
+
+      metrics.forEach(metric => {
+        const option = document.createElement("option");
+        option.value = metric;
+        option.textContent = metric.charAt(0).toUpperCase() + metric.slice(1);
+        metricSelect.appendChild(option);
+      });
+
+      updateTargetLabel();
     });
-  });
+
+    metricSelect.addEventListener("change", updateTargetLabel);
+
+    updateTargetLabel();
+  }
 
   async function loadChallenges() {
   try {
@@ -46,7 +138,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!username) {
       console.warn("No logged-in user");
       renderChallenges("all-challenge-list", [], false);
-      renderChallenges("my-challenge-list", [], true);
+      renderChallenges("my-challenge-list", data.challenges || [], true);
+      renderMedals(data.medals || { gold: 0, silver: 0, bronze: 0, completed: 0 });
       return;
     }
 
@@ -74,6 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (myResp.ok) {
       const data = await myResp.json();
       renderChallenges("my-challenge-list", data.challenges || [], true);
+      renderMedals(data.medals || { gold: 0, silver: 0, bronze: 0, completed: 0 });
     } else {
       console.error("Failed to load my challenges", myResp.status);
     }
@@ -85,22 +179,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.loadChallenges = loadChallenges;//
 
+  if (form) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const username = localStorage.getItem("currentUser");
 
-    
-
     const data = {
-        username: username,
-        challengeName: document.getElementById("challenge-name").value.trim(),
-        description: document.getElementById("challenge-description").value.trim(),
-        activityType: document.getElementById("challenge-activity-type").value,
-        metricType: document.getElementById("challenge-metric-type").value,
-        targetValue: parseFloat(document.getElementById("challenge-target").value),
-        startDate: document.getElementById("start-date").value,
-        endDate: document.getElementById("end-date").value
+      username: username,
+      challengeName: document.getElementById("challenge-name").value.trim(),
+      description: document.getElementById("challenge-description").value.trim(),
+      activityType: document.getElementById("challenge-activity-type").value,
+      metricType: document.getElementById("challenge-metric-type").value,
+      targetValue: parseFloat(document.getElementById("challenge-target").value),
+      startDate: document.getElementById("start-date").value,
+      endDate: document.getElementById("end-date").value
     };
 
     if (!data.challengeName) {
@@ -122,12 +215,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       alert("Challenge created!");
       form.reset();
-      await loadChallenges();
+      window.location.href = "/challenges";
     } catch (err) {
       console.error("Create challenge error:", err);
-      alert("Failed to create challenge");
+      alert(err.message || "Failed to create challenge");
     }
   });
+}
 
   loadChallenges();
 });
@@ -152,18 +246,24 @@ function renderChallenges(containerId, challenges, isParticipant) {
     const isOwner = isParticipant && challenge.creator_username === currentUser
 
     card.innerHTML = `
+      <div class="challengepage-card-top">
       <h4>${challenge.name}</h4>
-      <p>${challenge.description || ""}</p>
+      <div class="challengepage-card-dates">
+        <span><strong>Start:</strong> ${challenge.start_date || ""}</span>
+        <span><strong>End:</strong> ${challenge.end_date || ""}</span>
+      </div>
+      </div>
+
+      <p class="challengepage-description-text">${challenge.description || ""}</p>
       <p>${participants.length} participants</p>
 
-        <p><strong>Activity:</strong> ${challenge.activity_type}</p>
-        <p><strong>Metric:</strong> ${challenge.metric_type}</p>
+      <p><strong>Activity:</strong> ${challenge.activity_type}</p>
+      <p><strong>Metric:</strong> ${challenge.metric_type}</p>
 
       ${isParticipant && challenge.progress ? `
     <div class="challenge-progress">
-      <p>
-        ${challenge.progress.current} / 
-        ${challenge.progress.target}
+      <p class="challengepage-progress-text">
+        ${challenge.progress.current} / ${challenge.progress.target} ${formatMetricLabel(challenge.metric_type)}
       </p>
       <div class="progress-container">
         <div class="progress-bar"
@@ -173,7 +273,7 @@ function renderChallenges(containerId, challenges, isParticipant) {
     </div>
     ` : ""}
 
-      <div style="display: flex; gap: 8px;">
+      <div class="challengepage-card-buttons">
       <button class="secondary-btn view-challenge-btn" data-challenge-id="${challenge.id}">
         View
       </button>
@@ -241,4 +341,32 @@ if (actionBtn) {
     }
 
   });
+}
+
+function formatMetricLabel(metric) {
+  const labels = {
+    distance: "miles",
+    time: "minutes",
+    count: "count",
+    steps: "steps",
+    sets: "sets",
+    intensity: "intensity",
+    goals: "goals",
+    assists: "assists",
+    hits: "hits",
+    runs: "runs",
+    touchdowns: "touchdowns",
+    kills: "kills",
+    points: "points",
+    rebounds: "rebounds"
+  };
+
+  return labels[metric] || metric || "";
+}
+
+function renderMedals(medals) {
+  document.getElementById("gold-medal-count").textContent = medals?.gold ?? 0;
+  document.getElementById("silver-medal-count").textContent = medals?.silver ?? 0;
+  document.getElementById("bronze-medal-count").textContent = medals?.bronze ?? 0;
+  document.getElementById("completed-count").textContent = medals?.completed ?? 0;
 }

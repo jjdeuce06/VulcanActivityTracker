@@ -2,7 +2,8 @@ from flask import Flask, request, jsonify, Blueprint,session
 from argon2 import PasswordHasher
 from server.database.connect import get_db_connection
 from server.controllers.login_store import store_login, fetch_login, fetch_all_users
-from server.database.team_queries import assign_coach_role_if_match, fetch_user_by_username
+from server.database.team_queries import link_coach_to_team, fetch_user_by_username
+from server.database.team_queries import assign_coach_role_if_match
 login_api = Blueprint('login_api', __name__)
 
 @login_api.route('/login', methods=['POST'])
@@ -32,7 +33,8 @@ def login():
         if not new_user:
             return jsonify({"error": "User created but could not be fetched"}), 500
 
-        assign_coach_role_if_match(conn, new_user.UserID, email)
+        link_coach_to_team(conn, new_user.UserID, email)
+        
 
     return jsonify({"status": "ok"}), 200
 
@@ -54,12 +56,26 @@ def verify():
     ph = PasswordHasher()
     try:
         if ph.verify(user.PasswordHash, password):
+            # after password is verified
+            session["user_id"] = str(user.UserID)
             session["username"] = user.Username
             session["email"] = user.Email
-            session["user_id"] = user.UserID
+
+            print("\n=== LOGIN DEBUG ===")
+            print("UserID:", user.UserID)
+            print("Username:", user.Username)
+            print("Email:", user.Email)
+
+            assign_coach_role_if_match(conn, user.UserID, user.Email)
+            link_coach_to_team(conn, user.UserID, user.Email)
 
             print(f"User {user.Username} logged in successfully")
             print("DEBUG session after login:", dict(session))
+
+            print("\n=== LOGIN DEBUG ===")
+            print("UserID (should be UUID):", user.UserID)
+            print("Email:", user.Email)
+            print("====================\n")
 
             return jsonify({
                 "message": "Login successful",
@@ -76,4 +92,3 @@ def logout():
     session.pop("username", None)
     session.pop("email", None)
     return jsonify({"message": "Logged out successfully"}), 200
-

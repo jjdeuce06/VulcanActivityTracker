@@ -15,8 +15,11 @@ def create_teams_table(conn: pyodbc.Connection) -> None:
             TeamName NVARCHAR(100) NOT NULL,
             Sport NVARCHAR(50) NOT NULL,
             Description NVARCHAR(255) NULL,
+            CoachUserID UNIQUEIDENTIFIER NULL,
             CreatedDate DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
             UpdatedDate DATETIME2 NOT NULL DEFAULT SYSDATETIME()
+            CONSTRAINT FK_teams_coach
+                FOREIGN KEY (CoachUserID) REFERENCES [user](UserID)
         );
         
         """)

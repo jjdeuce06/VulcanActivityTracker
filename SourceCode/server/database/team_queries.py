@@ -1,19 +1,20 @@
 def assign_coach_role_if_match(conn, user_id, email):
-    """
-    If the user's email matches a verified coach email for any team,
-    make sure they have an active 'coach' membership row in team_members.
-    """
+
     cursor = conn.cursor()
 
     cursor.execute("""
         SELECT TeamID
         FROM team_coach_emails
         WHERE LOWER(Email) = LOWER(?)
-          AND IsVerified = 1
+        AND IsVerified = 1
     """, (email,))
     rows = cursor.fetchall()
 
+    print("Matching Teams:", rows)
+
     for row in rows:
+        print("Processing TeamID:", row.TeamID)
+
         cursor.execute("""
             SELECT 1
             FROM team_members
@@ -22,11 +23,13 @@ def assign_coach_role_if_match(conn, user_id, email):
         """, (row.TeamID, user_id))
 
         if not cursor.fetchone():
+            print("➡️ Inserting coach membership")
             cursor.execute("""
                 INSERT INTO team_members (TeamID, UserID, Role, Status)
                 VALUES (?, ?, 'coach', 'active')
             """, (row.TeamID, user_id))
         else:
+            print("➡️ Updating existing membership to coach")
             cursor.execute("""
                 UPDATE team_members
                 SET Role = 'coach',
@@ -37,6 +40,7 @@ def assign_coach_role_if_match(conn, user_id, email):
 
     conn.commit()
     cursor.close()
+    print("=== END ASSIGN COACH DEBUG ===\n")
 
 
 def is_user_on_team(conn, user_id, team_id):
@@ -57,10 +61,22 @@ def is_user_on_team(conn, user_id, team_id):
 
 
 def is_user_team_coach(conn, user_id, team_id):
-    """
-    Returns True if the user is an active coach/admin on the team.
-    """
+    print("\n=== COACH CHECK DEBUG ===")
+    print("UserID:", user_id)
+    print("TeamID:", team_id)
+
     cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT Role, Status
+        FROM team_members
+        WHERE UserID = ?
+          AND TeamID = ?
+    """, (user_id, team_id))
+
+    row = cursor.fetchone()
+    print("DB Membership Row:", row)
+
     cursor.execute("""
         SELECT 1
         FROM team_members
@@ -69,9 +85,14 @@ def is_user_team_coach(conn, user_id, team_id):
           AND Status = 'active'
           AND Role IN ('coach', 'admin')
     """, (user_id, team_id))
-    row = cursor.fetchone()
+
+    result = cursor.fetchone()
+
+    print("Coach Authorization Result:", result is not None)
+    print("=== END COACH CHECK DEBUG ===\n")
+
     cursor.close()
-    return row is not None
+    return result is not None
 
 
 def user_can_view_team(conn, team_id, user_id, email=None):
@@ -180,6 +201,8 @@ def create_team_invite(conn, team_id, invited_user_id, invited_by_user_id):
     Prevents duplicate pending invites and inviting existing active members.
     """
     cursor = conn.cursor()
+
+    
 
     cursor.execute("""
         SELECT 1
@@ -339,3 +362,143 @@ def decline_team_invite(conn, invite_id, user_id):
     conn.commit()
     cursor.close()
     return True, "Invite declined"
+
+def user_can_access_team(conn, team_id, user_id):
+    print("\n=== ACCESS CHECK DEBUG ===")
+    print("UserID:", user_id)
+    print("TeamID:", team_id)
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT 1
+        FROM team_members
+        WHERE TeamID = ?
+          AND UserID = ?
+          AND Status IN ('active', 'accepted')
+    """, (team_id, user_id))
+
+    member = cursor.fetchone()
+    print("Membership Check:", member)
+
+    if member:
+        print("✅ Access granted via membership\n")
+        cursor.close()
+        return True
+
+    cursor.execute("""
+        SELECT Email
+        FROM [user]
+        WHERE UserID = ?
+    """, (user_id,))
+
+    user_row = cursor.fetchone()
+    print("User Row:", user_row)
+
+    if not user_row:
+        cursor.close()
+        return False
+
+    user_email = user_row.Email
+    print("User Email:", user_email)
+
+    cursor.execute("""
+        SELECT 1
+        FROM team_coach_emails
+        WHERE TeamID = ? AND Email = ?
+    """, (team_id, user_email))
+
+    email_match = cursor.fetchone()
+    print("Email Access Match:", email_match)
+
+    cursor.close()
+    return email_match is not None
+
+def get_team_details(conn, team_id):
+    cursor = conn.cursor()
+    try:
+        # 🔹 Get basic team info + coach username
+        cursor.execute("""
+            SELECT 
+                t.TeamID,
+                t.TeamName,
+                t.Sport,
+                t.Description,
+                t.CreatedDate,
+                t.UpdatedDate,
+                u.Username AS CoachUsername
+            FROM teams t
+            JOIN [user] u ON t.CoachUserID = u.UserID
+            WHERE t.TeamID = ?
+        """, (team_id,))
+
+        row = cursor.fetchone()
+        if not row:
+            return None
+
+        team = {
+            "team_id": str(row.TeamID),
+            "team_name": row.TeamName,
+            "sport": row.Sport,
+            "description": row.Description,
+            "coach": row.CoachUsername,
+            "created_date": str(row.CreatedDate),
+            "updated_date": str(row.UpdatedDate),
+            "members": []
+        }
+
+        # 🔹 Get members
+        cursor.execute("""
+            SELECT u.Username, tm.Role, tm.Status
+            FROM team_members tm
+            JOIN [user] u ON tm.UserID = u.UserID
+            WHERE tm.TeamID = ?
+        """, (team_id,))
+
+        members = cursor.fetchall()
+
+        for m in members:
+            team["members"].append({
+                "username": m.Username,
+                "role": m.Role,
+                "status": m.Status
+            })
+
+        return team
+
+    finally:
+        cursor.close()
+
+def link_coach_to_team(conn, user_id, email):
+    print("\n=== LINK COACH DEBUG ===")
+    print("UserID:", user_id)
+    print("Email:", email)
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT TeamID
+        FROM team_coach_emails
+        WHERE Email = ?
+    """, (email,))
+
+    matches = cursor.fetchall()
+    print("Matching Teams from email:", matches)
+
+    cursor.execute("""
+        UPDATE teams
+        SET CoachUserID = ?
+        WHERE CoachUserID IS NULL
+        AND TeamID IN (
+            SELECT TeamID
+            FROM team_coach_emails
+            WHERE Email = ?
+        )
+    """, (user_id, email))
+
+    print("Rows updated:", cursor.rowcount)
+
+    conn.commit()
+    cursor.close()
+
+    print("=== END LINK COACH DEBUG ===\n")

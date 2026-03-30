@@ -132,6 +132,7 @@ Track development milestones and weekly updates for the Vulcan Activity Tracker.
         View Progress →
   </a>
 </div>
+
 <div  style="
     background:linear-gradient(135deg,#11175a,#070b3f);
     color:#ffffff;
@@ -141,10 +142,27 @@ Track development milestones and weekly updates for the Vulcan Activity Tracker.
     box-shadow:0 6px 16px rgba(0,0,0,0.3);
   ">
   <h3>📅 Week 10</h3>
-    <p><strong>Date:</strong> Mar 30, 2026</p>
+    <p><strong>Date:</strong> Mar 23, 2026</p>
     <p>Ui Updates, Server Rebuild.</p>
 
   <a href="week10" style="color:#7dd3fc; font-weight:600;">
+        View Progress →
+  </a>
+</div>
+
+<div  style="
+    background:linear-gradient(135deg,#11175a,#070b3f);
+    color:#ffffff;
+    border-radius:16px;
+    padding:20px;
+    min-width:220px;
+    box-shadow:0 6px 16px rgba(0,0,0,0.3);
+  ">
+  <h3>📅 Week 11</h3>
+    <p><strong>Date:</strong> Mar 30, 2026</p>
+    <p>Much Progress On Different Pages, Azure Set Up.</p>
+
+  <a href="week11" style="color:#7dd3fc; font-weight:600;">
         View Progress →
   </a>
 </div>

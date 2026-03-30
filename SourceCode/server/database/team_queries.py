@@ -1,5 +1,4 @@
 def assign_coach_role_if_match(conn, user_id, email):
-
     cursor = conn.cursor()
 
     cursor.execute("""

@@ -74,6 +74,8 @@ def like_friend():
             #toggle
             liked, total_likes = toggle_like_friend(conn, userID, friendID)
 
+        sendFriendNumber = len(get_users_friends(conn, friendID))
+
     finally:
         conn.commit()
         conn.close()
@@ -81,7 +83,8 @@ def like_friend():
     return jsonify({
         "status": "ok",
         "liked": liked,
-        "total_likes": total_likes
+        "total_likes": total_likes,
+        "friend_num": sendFriendNumber
     })
 
 

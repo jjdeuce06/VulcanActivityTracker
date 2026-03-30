@@ -174,10 +174,10 @@ def club_detail():
         try:
             clubs = get_all_clubs(conn)
 
-            # 🔥 ADD DEBUG HERE
+            # ADD DEBUG HERE
             print("Available IDs:", [repr(c["id"]) for c in clubs])
 
-            # 🔥 KEEP YOUR MATCH
+            # KEEP YOUR MATCH
             club = next((c for c in clubs if str(c["id"]).strip() == str(club_id).strip()), None)
 
             print("Matched club:", club)

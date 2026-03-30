@@ -10,9 +10,7 @@
   <div class="profile-header-card">
     <div class="profile-header-left">
       <div class="profile-avatar">
-        <div class="profile-avatar-text">
-          {{ session.username[0]|upper if session.username else "U" }}
-        </div>
+        <div class="profile-avatar-text" id="profile-name"></div>
       </div>
 
       <div class="profile-main-info">
@@ -21,7 +19,7 @@
 
         <div class="profile-meta">
           <p><strong>Username:</strong> {{ session.username if session.username else "Current User" }}</p>
-          <p><strong>Email:</strong> {{ session.email if session.email else "user@example.com" }}</p>
+          <!--<p><strong>Email:</strong> {{ session.email if session.email else "user@example.com" }}</p>-->
           <p><strong>Status:</strong> Active</p>
           <p><strong>Role:</strong> Member</p>
         </div>
@@ -29,19 +27,19 @@
     </div>
   </div>
 
-  <div class="settings-layout">
+  
 
-    <div class="settings-card profile-info-card">
+    <div class="settings-card profile-info-card centerend-overview">
       <h3>Profile Overview</h3>
       <div class="profile-info-grid">
         <div class="info-box">
           <span class="info-label">Display Name</span>
-          <span class="info-value">{{ session.username if session.username else "Current User" }}</span>
+          <span class="info-value" id="settings-displayname"></span>
         </div>
 
         <div class="info-box">
           <span class="info-label">Email Address</span>
-          <span class="info-value">{{ session.email if session.email else "user@example.com" }}</span>
+          <span class="info-value" id="settings-email"></span>
         </div>
 
         <div class="info-box">
@@ -56,39 +54,40 @@
       </div>
     </div>
 
-    <div class="settings-card">
-      <h3>Change Username</h3>
-      <p>Update your username for your profile and account.</p>
-      <label for="newUsername">New Username</label>
-      <input type="text" id="newUsername" placeholder="Enter a new username">
-      <button id="changeUsernameBtn">Update Username</button>
-      <p id="usernameMessage" class="settings-message"></p>
-    </div>
+    <div class="settings-layout">
+      <div class="settings-card">
+        <h3>Change Username</h3>
+        <p>Update your username for your profile and account.</p>
+        <label for="newUsername">New Username</label>
+        <input type="text" id="newUsername" placeholder="Enter a new username">
+        <button id="changeUsernameBtn">Update Username</button>
+        <p id="usernameMessage" class="settings-message"></p>
+      </div>
 
-    <div class="settings-card">
-      <h3>Quick Stats</h3>
-      <div class="stats-grid">
-        <div class="stat-box">
-          <span class="stat-number">12</span>
-          <span class="stat-label">Activities Logged</span>
-        </div>
-        <div class="stat-box">
-          <span class="stat-number">3</span>
-          <span class="stat-label">Teams Joined</span>
-        </div>
-        <div class="stat-box">
-          <span class="stat-number">5</span>
-          <span class="stat-label">Goals Set</span>
+      <div class="settings-card">
+        <h3>Quick Stats</h3>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <span class="stat-number" id="settingAStat">0</span>
+            <span class="stat-label">Activities Logged</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-number" id="settingCStat">0</span>
+            <span class="stat-label">Clubs Joined</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-number" id="settingGStat">0</span>
+            <span class="stat-label">Goals Set</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="settings-card danger">
-      <h3>Delete Account</h3>
-      <p>This action is permanent and cannot be undone.</p>
-      <button id="deleteAccountBtn">Delete My Account</button>
-      <p id="deleteMessage" class="settings-message"></p>
-    </div>
+      <div class="settings-card danger">
+        <h3>Delete Account</h3>
+        <p>This action is permanent and cannot be undone.</p>
+        <button id="deleteAccountBtn">Delete My Account</button>
+        <p id="deleteMessage" class="settings-message"></p>
+      </div>
 
   </div>
 </div>

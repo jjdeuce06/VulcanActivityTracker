@@ -35,12 +35,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let filteredTeams = allTeams.filter(team => {
       const name = (team.TeamName || "").toLowerCase();
+      console.log(name);
 
-      if (selectedGender === "women") {
+      if (selectedGender === "women") 
+      {
         return name.includes("women");
       }
-
-      return name.includes("men");
+      else if (selectedGender === "men")
+      {
+        return name.includes(" men");
+      }
     });
 
     if (filteredTeams.length === 0) {
@@ -64,58 +68,4 @@ document.addEventListener("DOMContentLoaded", () => {
   genderSelect.addEventListener("change", renderTeams);
 
   fetchAllTeams();
-
-  async function loadInvites() {
-  const response = await fetch("/team_api/invites", {
-    method: "GET",
-    credentials: "include"
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    console.error("Failed to load invites:", data.error);
-    return [];
-  }
-
-  return data.invites || [];
-}
-
-async function acceptInvite(teamId) {
-  const response = await fetch("/team_api/acceptinvite", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    credentials: "include",
-    body: JSON.stringify({ team_id: teamId })
-  });
-
-  const data = await response.json();
-  if (!response.ok) {
-    alert(data.error || "Failed to accept invite");
-    return false;
-  }
-
-  return true;
-}
-
-async function declineInvite(teamId) {
-  const response = await fetch("/team_api/declineinvite", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    credentials: "include",
-    body: JSON.stringify({ team_id: teamId })
-  });
-
-  const data = await response.json();
-  if (!response.ok) {
-    alert(data.error || "Failed to decline invite");
-    return false;
-  }
-
-  return true;
-}
 });

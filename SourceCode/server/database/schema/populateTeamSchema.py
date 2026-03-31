@@ -98,7 +98,7 @@ def seed_teams_and_coaches(conn: pyodbc.Connection) -> None:
         ]
     },
     {
-        "team_name": "PennWest Baseball",
+        "team_name": "PennWest Men's Baseball",
         "sport": "Baseball",
         "description": "Official men's baseball team",
         "coach_emails": [

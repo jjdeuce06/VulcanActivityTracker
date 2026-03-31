@@ -1,128 +1,7 @@
 {% extends "base_temp/dashboard.html" %}
 
 {% block content %}
-<style>
-  .team-detail-page {
-    width: 90%;
-    max-width: 1100px;
-    margin: 0 auto;
-    color: white;
-  }
-
-  .team-header {
-    background: linear-gradient(145deg, #070b3f, #0b1170);
-    border-radius: 16px;
-    padding: 28px;
-    margin-bottom: 25px;
-    box-shadow: 0 8px 22px rgba(0,0,0,0.35);
-  }
-
-  .team-header h1 {
-    margin: 0 0 10px 0;
-    font-size: 32px;
-    color: white;
-  }
-
-  .team-meta {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    margin-top: 10px;
-  }
-
-  .team-pill {
-    background: rgba(255,255,255,0.12);
-    padding: 8px 14px;
-    border-radius: 999px;
-    font-size: 13px;
-  }
-
-  .team-description {
-    margin-top: 18px;
-    color: #d7d9f5;
-  }
-
-  .team-grid {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 20px;
-  }
-
-  .team-panel {
-    background: #070b3f;
-    border-radius: 16px;
-    padding: 22px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
-  }
-
-  .team-panel h2 {
-    margin-top: 0;
-    margin-bottom: 16px;
-    font-size: 20px;
-    color: white;
-  }
-
-  .roster-list,
-  .announcement-list,
-  .schedule-list {
-    display: grid;
-    gap: 12px;
-  }
-
-  .roster-item,
-  .announcement-item,
-  .schedule-item {
-    background: #0d145a;
-    border-radius: 10px;
-    padding: 12px 14px;
-    color: #e8eaff;
-  }
-
-  .coach-tools {
-    margin-top: 24px;
-    padding-top: 18px;
-    border-top: 1px solid rgba(255,255,255,0.12);
-  }
-
-  .coach-tools form {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .coach-tools input {
-    flex: 1;
-    min-width: 220px;
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid #2a317a;
-    background: #0d145a;
-    color: white;
-  }
-
-  .team-btn {
-    padding: 10px 14px;
-    border-radius: 8px;
-    border: none;
-    background: linear-gradient(145deg, #0b1170, #6b1414);
-    color: white;
-    cursor: pointer;
-  }
-
-  .team-btn:hover {
-    background: linear-gradient(145deg, #1018a0, #8b1a1a);
-  }
-
-  .empty-state {
-    color: #c7c9e6;
-  }
-
-  @media (max-width: 850px) {
-    .team-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>
+<link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/team_detail.css') }}">
 
 <div class="team-detail-page">
   <div class="team-header">
@@ -140,47 +19,72 @@
   </div>
 
   <div class="team-grid">
-    <div class="team-panel">
-      <h2>Roster</h2>
-      <div id="roster-list" class="roster-list">
-        <p class="empty-state">Loading roster...</p>
-      </div>
-
-      <div class="coach-tools" id="coach-tools" style="display:none;">
-        <h2>Coach Tools</h2>
-        <form id="invite-player-form">
-          <input
-            type="text"
-            id="invite-username"
-            placeholder="Enter username to invite"
-            required
-          >
-          <button type="submit" class="team-btn">Invite Player</button>
-        </form>
-      </div>
-    </div>
-
-    <div class="team-panel">
-      <h2>Announcements</h2>
-      <div id="announcement-list" class="announcement-list">
-        <div class="announcement-item">No announcements yet.</div>
-      </div>
-    </div>
-
-    <div class="team-panel">
-      <h2>Upcoming Schedule</h2>
-      <div id="schedule-list" class="schedule-list">
-        <div class="schedule-item">No events scheduled yet.</div>
-      </div>
-    </div>
-
-    <div class="team-panel">
-      <h2>Team Leaderboard</h2>
-      <div id="team-leaderboard-preview">
-        <p class="empty-state">Leaderboard preview goes here.</p>
-      </div>
+  <!-- LEFT COLUMN -->
+  <div class="team-panel">
+    <h2>Roster</h2>
+    <div id="roster-list" class="roster-list">
+      <p class="empty-state">Loading roster...</p>
     </div>
   </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="team-panel">
+    <h2>Announcements</h2>
+    <div id="announcement-list" class="announcement-list">
+      <p class="empty-state">Loading announcements...</p>
+    </div>
+  </div>
+
+  <!-- LEFT COLUMN -->
+  <div class="team-panel" id="coach-tools-panel" style="display:none;">
+    <h2>Coach Tools</h2>
+
+    <form id="invite-player-form" class="coach-form">
+      <input type="text" id="invite-username" placeholder="Enter username to invite" required>
+      <button type="submit" class="team-btn">Invite Player</button>
+    </form>
+
+    <form id="announcement-form" class="coach-form">
+      <input type="text" id="announcement-title" placeholder="Announcement title" required>
+      <textarea id="announcement-body" placeholder="Write announcement here..." required></textarea>
+      <button type="submit" class="team-btn">Post Announcement</button>
+    </form>
+
+    <form id="schedule-form" class="coach-form">
+      <input type="text" id="schedule-title" placeholder="Event title" required>
+
+      <select id="schedule-type" required>
+        <option value="">Select type</option>
+        <option value="Practice">Practice</option>
+        <option value="Game">Game</option>
+        <option value="Meeting">Meeting</option>
+        <option value="Workout">Workout</option>
+      </select>
+
+      <input type="datetime-local" id="schedule-date" required>
+      <input type="text" id="schedule-location" placeholder="Location">
+      <textarea id="schedule-notes" placeholder="Extra notes..."></textarea>
+
+      <button type="submit" class="team-btn">Create Event</button>
+    </form>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="team-panel">
+    <h2>Upcoming Schedule</h2>
+    <div id="schedule-list" class="schedule-list">
+      <p class="empty-state">Loading schedule...</p>
+    </div>
+  </div>
+
+  <!-- FULL WIDTH (optional) -->
+  <div class="team-panel" style="grid-column: span 2;">
+    <h2>Team Leaderboard</h2>
+    <div id="team-leaderboard-preview">
+      <p class="empty-state">Leaderboard coming soon.</p>
+    </div>
+  </div>
+</div>
 </div>
 
 <script src="{{ url_for('style_folder.static', filename='js/team_detail.js') }}"></script>

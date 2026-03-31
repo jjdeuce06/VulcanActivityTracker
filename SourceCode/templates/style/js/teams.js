@@ -64,4 +64,58 @@ document.addEventListener("DOMContentLoaded", () => {
   genderSelect.addEventListener("change", renderTeams);
 
   fetchAllTeams();
+
+  async function loadInvites() {
+  const response = await fetch("/team_api/invites", {
+    method: "GET",
+    credentials: "include"
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    console.error("Failed to load invites:", data.error);
+    return [];
+  }
+
+  return data.invites || [];
+}
+
+async function acceptInvite(teamId) {
+  const response = await fetch("/team_api/acceptinvite", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    credentials: "include",
+    body: JSON.stringify({ team_id: teamId })
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    alert(data.error || "Failed to accept invite");
+    return false;
+  }
+
+  return true;
+}
+
+async function declineInvite(teamId) {
+  const response = await fetch("/team_api/declineinvite", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    credentials: "include",
+    body: JSON.stringify({ team_id: teamId })
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    alert(data.error || "Failed to decline invite");
+    return false;
+  }
+
+  return true;
+}
 });

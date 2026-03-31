@@ -1,3 +1,5 @@
+from datetime import datetime
+
 def assign_coach_role_if_match(conn, user_id, email):
     cursor = conn.cursor()
 
@@ -501,3 +503,108 @@ def link_coach_to_team(conn, user_id, email):
     cursor.close()
 
     print("=== END LINK COACH DEBUG ===\n")
+
+
+def create_team_announcement(conn, team_id, created_by_user_id, title, body):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            INSERT INTO team_announcements (TeamID, CreatedByUserID, Title, Body)
+            VALUES (?, ?, ?, ?)
+        """, (team_id, created_by_user_id, title, body))
+        conn.commit()
+        return True
+    finally:
+        cursor.close()
+
+
+def get_team_announcements(conn, team_id):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            SELECT
+                a.AnnouncementID,
+                a.Title,
+                a.Body,
+                a.CreatedAt,
+                u.Username AS CreatedByUsername
+            FROM team_announcements a
+            JOIN [user] u
+            ON a.CreatedByUserID = u.UserID
+            WHERE a.TeamID = ?
+            ORDER BY a.CreatedAt DESC
+        """, (team_id,))
+        rows = cursor.fetchall()
+
+        announcements = []
+        for row in rows:
+            announcements.append({
+                "announcement_id": str(row.AnnouncementID),
+                "title": row.Title,
+                "body": row.Body,
+                "created_at": row.CreatedAt.isoformat() if row.CreatedAt else None,
+                "created_by": row.CreatedByUsername
+            })
+        return announcements
+    finally:
+        cursor.close()
+
+
+def create_team_schedule_event(conn, team_id, created_by_user_id, event_title, event_type, event_date, location, notes):
+    cursor = conn.cursor()
+    try:
+        try:
+            parsed_event_date = datetime.fromisoformat(event_date)
+        except ValueError:
+            raise ValueError("Invalid event date format")
+
+        cursor.execute("""
+            INSERT INTO team_schedule
+            (TeamID, CreatedByUserID, EventTitle, EventType, EventDate, Location, Notes)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (
+            team_id,
+            created_by_user_id,
+            event_title,
+            event_type,
+            parsed_event_date,
+            location,
+            notes
+        ))
+
+        conn.commit()
+        return True
+    finally:
+        cursor.close()
+
+
+def get_team_schedule(conn, team_id):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            SELECT
+                ScheduleEventID,
+                EventTitle,
+                EventType,
+                EventDate,
+                Location,
+                Notes
+            FROM team_schedule
+            WHERE TeamID = ?
+            ORDER BY EventDate ASC
+        """, (team_id,))
+        rows = cursor.fetchall()
+
+        events = []
+        for row in rows:
+            events.append({
+                "event_id": str(row.ScheduleEventID),
+                "title": row.EventTitle,
+                "event_type": row.EventType,
+                "event_date": row.EventDate.isoformat() if row.EventDate else None,
+                "location": row.Location,
+                "notes": row.Notes
+            })
+        return events
+    finally:
+        cursor.close()

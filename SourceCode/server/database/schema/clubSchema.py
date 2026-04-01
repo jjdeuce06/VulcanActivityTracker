@@ -15,6 +15,8 @@ def create_clubs_table(conn: pyodbc.Connection) -> None:
                 ClubName NVARCHAR(255) NOT NULL UNIQUE,
                 Description NVARCHAR(MAX) NULL,
                 CreatorUserID UNIQUEIDENTIFIER NOT NULL,
+                SportType NVARCHAR(100) NOT NULL,
+                IsPrivate BIT NOT NULL DEFAULT 0,
                 Members NVARCHAR(MAX) NULL DEFAULT '[]', -- JSON for member user IDs
                 CreatedDate DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
                 UpdatedDate DATETIME2 NOT NULL DEFAULT SYSDATETIME(),

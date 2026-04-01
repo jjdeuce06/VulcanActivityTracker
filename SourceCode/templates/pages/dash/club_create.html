@@ -1,0 +1,68 @@
+{% extends "base_temp/dashboard.html" %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/clubs.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="clubs-page create-club-page">
+
+  <div class="clubs-topbar-card single-page-header">
+    <div class="clubs-topbar-text">
+      <h1>Create Club</h1>
+      <p class="page-description">
+        Start a new club and invite others to join.
+      </p>
+    </div>
+  </div>
+
+  <form id="clubs-form" class="clubs-form create-club-form">
+    <h3>Create Club</h3>
+
+    <label>Club Name</label>
+    <input type="text" name="club_name" id="club-name" required>
+
+    <label>Club Description</label>
+    <textarea name="description" id="club-description"></textarea>
+
+    <label>Sport Type</label>
+    <select id="club-sport-type" required>
+        <option value="run">Running</option>
+        <option value="bike">Cycling</option>
+        <option value="swim">Swimming</option>
+        <option value="lifting">Weightlifting</option>
+        <option value="walk">Walking</option>
+        <option value="yoga">Yoga</option>
+        <option value="soccer">Soccer</option>
+        <option value="baseball">Baseball</option>
+        <option value="football">Football</option>
+        <option value="tennis">Tennis</option>
+        <option value="volleyball">Volleyball</option>
+        <option value="basketball">Basketball</option>
+        <option value="equestrian">Equestrian</option>
+        <option value="multisport">Multisport</option>
+    </select>
+
+    <label>Club Privacy</label>
+    <div class="club-radio-group">
+        <label class="club-radio-option">
+            <input type="radio" name="club_privacy" value="public" checked>
+            Public
+        </label>
+        <label class="club-radio-option">
+            <input type="radio" name="club_privacy" value="private">
+            Private
+        </label>
+    </div>
+
+    <div class="create-club-actions">
+        <button type="submit">Create Club</button>
+        <a href="/clubs" class="secondary-btn">Cancel</a>    
+    </div>
+</form>
+</div>
+
+<script src="{{ url_for('style_folder.static', filename='js/clubs.js') }}"></script>
+
+{% endblock %}

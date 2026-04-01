@@ -6,24 +6,47 @@
 
 {% block content %}
 
-<div class="clubs-page">
-  <h1 class="page-description"id="club-name-heading">Club Name</h1>
-  
-  <div class="clubs-layout">
-    <div class="clubs-form">
-      <h2>About</h2>
-      <p id="club-description"></p>
-      <p><strong>Members: </strong><span id="member-count">0</span></p>
-      <button onclick="history.back()" class="secondary-btn" style="margin-top: 14px; width: auto; padding: 10px 20px;">Back</button>
+<div class="club-detail-page">
+
+  <div class="club-detail-header">
+    <div class="club-title-card">
+      <h1 id="club-name-heading">Club Name</h1>
     </div>
-    
-    <div class="card clubs-card">
-      <h3>Members</h3>
-      <div class="clubs-list" id="members-list">
-        <!-- Members will be populated here -->
+  </div>
+
+  <div class="club-detail-description-card">
+    <h3>About This Club</h3>
+    <p id="club-description">No description provided.</p>
+  </div>
+
+  <div class="club-detail-main">
+    <div class="club-detail-left">
+      <div class="club-detail-tabs">
+        <button class="club-tab-btn active" data-tab="leaderboard">Club Leaderboard</button>
+        <button class="club-tab-btn" data-tab="recent">Recent Activity</button>
+        <button class="club-tab-btn" data-tab="members">Members</button>
+      </div>
+
+      <div class="club-detail-table-card">
+        <div id="club-tab-content">
+          <!-- JS fills this -->
+        </div>
+      </div>
+    </div>
+
+    <div class="club-detail-right">
+      <div class="club-detail-side-card">
+        <h3>Club Info</h3>
+        <p><strong>Members:</strong> <span id="member-count">0</span></p>
+        <p><strong>Sport:</strong> <span id="club-sport-type">Unknown</span></p>
+        <p><strong>Privacy:</strong> <span id="club-privacy">Public</span></p>
+
+        <button id="club-action-btn" class="secondary-btn">Join Club</button>
+        <button onclick="history.back()" class="secondary-btn club-back-btn">Back</button>
       </div>
     </div>
   </div>
+
 </div>
 
 <script src="{{ url_for('style_folder.static', filename='js/club_details.js') }}"></script>

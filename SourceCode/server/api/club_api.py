@@ -1,8 +1,11 @@
 from flask import Blueprint, request, jsonify
 from server.database.connect import get_db_connection
 from server.controllers.user_store import get_user_id
-from server.controllers.club_store import insert_club, get_all_clubs,get_not_user_clubs, get_user_clubs, add_member_to_club, remove_member_from_club, remove_club_from_database, usernames_from_userids
-
+from server.controllers.club_store import (
+    insert_club, get_all_clubs,get_not_user_clubs, get_user_clubs,
+    add_member_to_club, remove_member_from_club, remove_club_from_database,
+    usernames_from_userids, get_club_this_week_leaderboard, get_club_last_week_leaders
+)
 club_api = Blueprint('club_api', __name__)
 
 @club_api.route('/createclub', methods=['POST']) #gets the data from the request and calls the insert club function
@@ -10,11 +13,14 @@ def create_club():
     try:
         data = request.get_json()
         print("Create club payload:", data)
+
         username = data.get("username")
         name = data.get("club_name")
         description = data.get("description")
-        
-        if not username or not name:
+        sport_type = data.get("sport_type")
+        privacy = data.get("privacy", "public")
+
+        if not username or not name or not sport_type:
             return jsonify({"error": "Missing data"}), 400
 
         conn = get_db_connection()
@@ -23,7 +29,7 @@ def create_club():
             if not user_id:
                 return jsonify({"error": "User not found"}), 404
 
-            insert_club(conn, user_id, name, description)
+            insert_club(conn, user_id, name, description, sport_type, privacy)
             return jsonify({"status": "success"}), 201
         finally:
             conn.close()
@@ -164,8 +170,7 @@ def club_detail():
     try:
         data = request.get_json() or {}
         club_id = data.get("club_id")
-
-        print("Received club_id:", repr(club_id), type(club_id))
+        username = data.get("username")
 
         if not club_id:
             return jsonify({"error": "Missing club_id"}), 400
@@ -173,23 +178,35 @@ def club_detail():
         conn = get_db_connection()
         try:
             clubs = get_all_clubs(conn)
-
-            # ADD DEBUG HERE
-            print("Available IDs:", [repr(c["id"]) for c in clubs])
-
-            # KEEP YOUR MATCH
-            club = next((c for c in clubs if str(c["id"]).strip() == str(club_id).strip()), None)
-
-            print("Matched club:", club)
+            club = next(
+                (c for c in clubs if str(c["id"]).strip() == str(club_id).strip()),
+                None
+            )
 
             if not club:
-                return jsonify({
-                    "error": "Club not found",
-                    "received": club_id,
-                    "available": [c["id"] for c in clubs]
-                }), 404
+                return jsonify({"error": "Club not found"}), 404
 
-            club["member_usernames"] = usernames_from_userids(conn, club.get("members", []))
+            owner_and_members = [str(club.get("creator_user_id"))] + [
+                str(uid) for uid in club.get("members", [])
+            ]
+            owner_and_members = list(dict.fromkeys(owner_and_members))
+
+            club["member_usernames"] = usernames_from_userids(conn, owner_and_members)
+            club["total_members"] = len(owner_and_members)
+
+            club["is_owner"] = False
+            club["is_member"] = False
+
+            if username:
+                user_id = get_user_id(conn, username)
+                if user_id:
+                    uid = str(user_id)
+                    club["is_owner"] = str(club.get("creator_user_id")) == uid
+                    club["is_member"] = uid in owner_and_members
+
+            club["this_week_leaderboard"] = get_club_this_week_leaderboard(conn, club)
+            club["last_week_leaders"] = get_club_last_week_leaders(conn, club)
+
             return jsonify({"club": club}), 200
 
         finally:

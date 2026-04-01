@@ -140,3 +140,43 @@ az containerapp scale set --name vulcan-app --resource-group vulcan-rg --min-rep
 * [Azure Container Apps Documentation](https://learn.microsoft.com/en-us/azure/container-apps/)
 * [Azure for Students](https://azure.microsoft.com/en-us/free/students/)
 * [Gunicorn WSGI Server](https://gunicorn.org/)
+
+
+
+# -------------------------------
+# VulcanActivityTracker Azure Deployment steps
+# -------------------------------
+
+# 1️⃣ Open WSL or Git Bash
+cd /path/to/VulcanActivityTracker
+
+# 2️⃣ Login to Azure (once per session)
+az login
+# → choose your Azure Student account
+# → browser will open, select account
+
+# 3️⃣ Verify subscription and credits
+az account show
+
+# 4️⃣ Deploy app
+bash deploy.sh
+# → reads .env, builds Docker images, deploys Flask + MSSQL
+# → wait a few minutes, Azure will give public URL
+# → Flask app is now live
+
+# 5️⃣ Access your app
+# URL format:
+# https://<APP_NAME>.<REGION>.azurecontainerapps.io
+# Example: https://vulcan-app.eastus.azurecontainerapps.io
+
+# 6️⃣ After demo, clean up to save credits
+bash cleanup.sh
+# → deletes resource group and all containers
+# → free up your Azure Student credits
+
+# 7️⃣ Tips
+# - Only deploy when needed for demo or presentation
+# - .env file must exist and have DB_PASS, DB_USER, DB_NAME, DB_SERVER
+# - Logs: az containerapp logs --name vulcan-app --resource-group vulcan-rg
+# - Verify deployed env vars:
+#   az containerapp show --name vulcan-app --resource-group vulcan-rg --query "properties.template.containers[0].env"

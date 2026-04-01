@@ -652,3 +652,65 @@
 .club-leaderboard-table-time {
   grid-template-columns: 90px 1.5fr 1fr;
 }
+
+/* Club recent activity feed cards */
+.club-recent-feed-card {
+  background: linear-gradient(135deg, #1a1c3f, #070b3f);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 18px;
+  position: relative;
+  padding-bottom: 50px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+.club-recent-feed-card .feed-title {
+  font-size: 22px;
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.club-recent-feed-card .feed-meta {
+  font-size: 13px;
+  color: #ccc;
+  margin-bottom: 12px;
+}
+
+.club-recent-feed-card .feed-details,
+.club-recent-feed-card .feed-notes {
+  color: #ccc;
+  font-size: 14px;
+}
+
+.club-recent-feed-card .stat {
+  position: absolute;
+  bottom: 15px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.club-recent-feed-card .onActivity-likebtn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-size: 20px;
+  transition: transform 0.15s ease;
+}
+
+.club-recent-feed-card .onActivity-likebtn:hover {
+  transform: scale(1.2);
+}
+
+.club-recent-feed-card .onActivity-like-count {
+  color: #fff;
+  font-weight: 700;
+}
+
+.disabled-like-btn {
+  pointer-events: none;
+}

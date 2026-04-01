@@ -51,6 +51,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.loadClubs = loadClubs;
 
+  window.addEventListener("pageshow", () => {
+  if (window.loadClubs) {
+    window.loadClubs();
+  }
+});
+
   if (form) {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -116,23 +122,52 @@ function renderClubs(containerId, clubs, isMember) {
     const members = club.members !== undefined ? club.members : [];
     const totalMembers = club.total_members !== undefined ? club.total_members : (members.length + 1);
     const isOwner = isMember && club.creator_username === currentUser;
+    const hasPendingRequest = !!club.has_pending_request;
 
-    card.innerHTML = `
-      <h4>${club.name}</h4>
-      <p class="clubpage-description-text">${club.description || "No description provided."}</p>
-      <p>${totalMembers} members</p>
-      <p>Sport: ${club.sport_type || "Unknown"}</p>
-      <p>${club.is_private ? "Private Club" : "Public Club"}</p>
+let action = "";
+let actionLabel = "";
 
-      <div class="clubpage-card-buttons">
-        <button class="secondary-btn view-club-btn" data-club-id="${club.id}">
-          View
-        </button>
-        <button class="secondary-btn" data-club-id="${club.id}" data-action="${isOwner ? 'delete' : (isMember ? 'leave' : 'join')}">
-          ${isOwner ? "Delete" : (isMember ? "Leave" : "Join")}
-        </button>
-      </div>
-    `;
+console.log("club card", club.name, {
+  is_private: club.is_private,
+  has_pending_request: club.has_pending_request,
+  isOwner,
+  isMember
+});
+
+if (isOwner) {
+  action = "delete";
+  actionLabel = "Delete";
+} else if (isMember) {
+  action = "leave";
+  actionLabel = "Leave";
+} else if (club.is_private) {
+  if (hasPendingRequest) {
+    action = "cancel_request";
+    actionLabel = "Cancel Join Request";
+  } else {
+    action = "request_join";
+    actionLabel = "Request to Join";
+  }
+} else {
+  action = "join";
+  actionLabel = "Join";
+}
+
+card.innerHTML = `
+  <h4>${club.name}</h4>
+  <p class="clubpage-description-text">${club.description || "No description provided."}</p>
+  <p>${totalMembers} members</p>
+  <p>${club.is_private ? "Private Club" : "Public Club"}</p>
+
+  <div class="clubpage-card-buttons">
+    <button class="secondary-btn view-club-btn" data-club-id="${club.id}">
+      View
+    </button>
+    <button class="secondary-btn" data-club-id="${club.id}" data-action="${action}">
+      ${actionLabel}
+    </button>
+  </div>
+`;
 
     container.appendChild(card);
 
@@ -154,6 +189,10 @@ function renderClubs(containerId, clubs, isMember) {
           endpoint = "/club_api/deleteclub";
         } else if (action === "leave") {
           endpoint = "/club_api/leave";
+        } else if (action === "request_join") {
+          endpoint = "/club_api/requestjoin";
+        } else if (action === "cancel_request") {
+          endpoint = "/club_api/cancelrequest";
         } else {
           endpoint = "/club_api/join";
         }

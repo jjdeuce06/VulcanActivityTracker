@@ -57,7 +57,7 @@ def init_or_upgrade_schema(conn):
 
     from server.database.schema.teamInviteSchema import create_team_invites_table
     create_team_invites_table(conn)
-    print("creating invites table")
+    print("creating team invites table")
 
     from server.database.schema.announcementSchema import create_team_announcements_table
     create_team_announcements_table(conn)
@@ -66,3 +66,7 @@ def init_or_upgrade_schema(conn):
     from server.database.schema.scheduleSchema import create_team_schedule_table
     create_team_schedule_table(conn)
     print("Creating team schedule table")
+    
+    from server.database.schema.clubInviteSchema import create_clubs_invites_table
+    create_clubs_invites_table(conn)
+    print("creating clubs invites table")

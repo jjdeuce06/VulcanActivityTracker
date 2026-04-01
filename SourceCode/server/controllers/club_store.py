@@ -284,3 +284,178 @@ def get_club_last_week_leaders(conn, club):
 
     leaderboard = get_club_leaderboard_for_range(conn, club, last_week_start, last_week_end)
     return leaderboard[:3]
+
+import json
+
+def create_club_join_request(conn, club_id, requesting_user_id, club_owner_user_id):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            INSERT INTO club_join_requests (ClubID, RequestingUserID, ClubOwnerUserID, Status)
+            VALUES (?, ?, ?, 'pending')
+        """, (club_id, requesting_user_id, club_owner_user_id))
+        conn.commit()
+        return True
+    finally:
+        cursor.close()
+
+
+def cancel_club_join_request(conn, club_id, requesting_user_id):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            DELETE FROM club_join_requests
+            WHERE ClubID = ? AND RequestingUserID = ? AND Status = 'pending'
+        """, (club_id, requesting_user_id))
+
+        if cursor.rowcount == 0:
+            raise ValueError("Join request not found")
+
+        conn.commit()
+        return True
+    finally:
+        cursor.close()
+
+
+def get_pending_club_requests_for_owner(conn, owner_user_id):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            SELECT
+                cjr.RequestID,
+                cjr.ClubID,
+                c.ClubName,
+                c.SportType,
+                c.Description,
+                u.Username AS RequestingUsername,
+                cjr.RequestingUserID
+            FROM club_join_requests cjr
+            JOIN clubs c ON cjr.ClubID = c.ClubID
+            JOIN [user] u ON cjr.RequestingUserID = u.UserID
+            WHERE cjr.ClubOwnerUserID = ? AND cjr.Status = 'pending'
+            ORDER BY cjr.CreatedAt DESC
+        """, (owner_user_id,))
+
+        rows = cursor.fetchall()
+        requests = []
+        for row in rows:
+            requests.append({
+                "id": str(row.RequestID),
+                "club_id": str(row.ClubID),
+                "name": row.ClubName,
+                "sport": row.SportType,
+                "description": row.Description or "",
+                "requesting_username": row.RequestingUsername,
+                "requesting_user_id": str(row.RequestingUserID)
+            })
+        return requests
+    finally:
+        cursor.close()
+
+
+def get_user_pending_club_request(conn, club_id, requesting_user_id):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            SELECT RequestID
+            FROM club_join_requests
+            WHERE ClubID = ? AND RequestingUserID = ? AND Status = 'pending'
+        """, (club_id, requesting_user_id))
+        row = cursor.fetchone()
+        return bool(row)
+    finally:
+        cursor.close()
+
+
+def accept_club_join_request(conn, club_id, requesting_user_id, owner_user_id):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            SELECT RequestID
+            FROM club_join_requests
+            WHERE ClubID = ? AND RequestingUserID = ? AND ClubOwnerUserID = ? AND Status = 'pending'
+        """, (club_id, requesting_user_id, owner_user_id))
+
+        if not cursor.fetchone():
+            raise ValueError("Pending request not found")
+
+        members = add_member_to_club(conn, club_id, requesting_user_id, None)
+
+        cursor.execute("""
+            UPDATE club_join_requests
+            SET Status = 'accepted'
+            WHERE ClubID = ? AND RequestingUserID = ? AND ClubOwnerUserID = ? AND Status = 'pending'
+        """, (club_id, requesting_user_id, owner_user_id))
+
+        conn.commit()
+        return members
+    finally:
+        cursor.close()
+
+
+def decline_club_join_request(conn, club_id, requesting_user_id, owner_user_id):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            UPDATE club_join_requests
+            SET Status = 'declined'
+            WHERE ClubID = ? AND RequestingUserID = ? AND ClubOwnerUserID = ? AND Status = 'pending'
+        """, (club_id, requesting_user_id, owner_user_id))
+
+        if cursor.rowcount == 0:
+            raise ValueError("Pending request not found")
+
+        conn.commit()
+        return True
+    finally:
+        cursor.close()
+        
+def get_username_map_for_user_ids(conn, user_ids):
+    if not user_ids:
+        return {}
+
+    cursor = conn.cursor()
+    try:
+        placeholders = ",".join("?" for _ in user_ids)
+        cursor.execute(
+            f"SELECT UserID, Username FROM [user] WHERE UserID IN ({placeholders})",
+            tuple(user_ids)
+        )
+        rows = cursor.fetchall()
+        return {str(r.UserID): r.Username for r in rows}
+    finally:
+        cursor.close()
+
+
+def get_club_recent_activities(conn, club, limit=25):
+    owner_and_members = [str(club.get("creator_user_id"))] + [
+        str(uid) for uid in club.get("members", [])
+    ]
+    owner_and_members = list(dict.fromkeys(owner_and_members))
+
+    if not owner_and_members:
+        return []
+
+    username_map = get_username_map_for_user_ids(conn, owner_and_members)
+    recent = []
+
+    for user_id in owner_and_members:
+        activities = get_user_activities(conn, user_id)
+
+        public_activities = [
+            act for act in activities
+            if str(act.get("visibility", "")).lower() == "public"
+        ]
+
+        for act in public_activities:
+            act_copy = dict(act)
+            act_copy["username"] = username_map.get(str(user_id), "Unknown User")
+            act_copy["user_id"] = str(user_id)
+            recent.append(act_copy)
+
+    recent.sort(
+        key=lambda a: a.get("date") or "",
+        reverse=True
+    )
+
+    return recent[:limit]

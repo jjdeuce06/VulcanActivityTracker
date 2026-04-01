@@ -24,7 +24,8 @@ ROUTES = {
     "/challenges": ("pages/dash/challenges.html", "challenges"),
     "/resetpassword": ("pages/reset_password.html", None),
     "/resetpassword": ("pages/reset_password.html", None),
-    "/settings": ("pages/dash/settings.html", "settings")
+    "/settings": ("pages/dash/settings.html", "settings"),
+    "/inbox": ("pages/dash/inbox.html", "inbox")
 }  
 
 def make_view(tpl, active_page):
@@ -48,6 +49,9 @@ def club_detail(club_name):
 def challenge_detail(challenge_name):
     return render_template('pages/dash/challenge_details.html', active_page='challenges')
 
+@blue.route('/teams/<team_id>')
+def team_detail(team_id):
+    return render_template('pages/dash/team_detail.html', active_page='teams')
 @blue.route('/create_challenge')
 def create_challenge():
     return render_template('pages/dash/challenge_create.html', active_page='challenges')

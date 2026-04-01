@@ -12,6 +12,7 @@ from server.database.connect import get_db_connection
 from server.database import init_or_upgrade_schema
 from server.api.maps_api import map_api
 from server.api.settings_api import settings_api
+from server.api.team_api import team_api
 
 from dotenv import load_dotenv
 import os

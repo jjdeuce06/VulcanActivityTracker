@@ -1,0 +1,241 @@
+.team-detail-page {
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
+  color: white;
+}
+
+.team-header {
+  background: linear-gradient(145deg, #070b3f, #0b1170);
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+}
+
+.team-header h1 {
+  margin: 0 0 10px 0;
+  font-size: 32px;
+  color: white;
+}
+
+.team-meta {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.team-pill {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+}
+
+.team-description {
+  margin-top: 18px;
+  color: #d7d9f5;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 20px;
+}
+
+.team-panel {
+  background: #070b3f;
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.team-panel h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 20px;
+  color: white;
+}
+
+.roster-list,
+.announcement-list,
+.schedule-list {
+  display: grid;
+  gap: 12px;
+}
+
+.roster-item,
+.announcement-item,
+.schedule-item {
+  background: #0d145a;
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: #e8eaff;
+}
+
+.item-title {
+  font-weight: 800;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.item-meta {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #c7c9e6;
+}
+
+.coach-tools {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.coach-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.coach-form input,
+.coach-form select,
+.coach-form textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #2a317a;
+  background: #0d145a;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+.coach-form textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.team-btn {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(145deg, #0b1170, #6b1414);
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.team-btn:hover {
+  background: linear-gradient(145deg, #1018a0, #8b1a1a);
+}
+
+.empty-state {
+  color: #c7c9e6;
+}
+
+@media (max-width: 850px) {
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.roster-list {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.team-leaderboard-card {
+  width: 100%;
+  margin: 10px 0 0 0;
+  padding: 20px;
+  border-radius: 20px;
+  background: rgba(17, 4, 61, 0.282);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.team-leaderboard-card .lb-controls {
+  width: 100%;
+  margin: 0 0 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: #070b3f;
+  color: white;
+}
+
+.team-leaderboard-card .right-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.team-leaderboard-card .lb-controls select,
+.team-leaderboard-card .lb-controls button {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #444;
+  background: #2b2b2b;
+  color: white;
+  cursor: pointer;
+}
+
+.team-leaderboard-card .lb-controls select:hover,
+.team-leaderboard-card .lb-controls button:hover {
+  background: #3a3a3a;
+}
+
+#teamLeaderboard {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#teamLeaderboard th {
+  text-align: left;
+  padding: 10px 12px;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+#teamLeaderboard tbody tr {
+  background: #6b1414;
+  transition: all 0.2s ease;
+}
+
+#teamLeaderboard tbody tr:nth-child(even) {
+  background: #070b3f;
+}
+
+#teamLeaderboard tbody tr td:first-child {
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+
+#teamLeaderboard tbody tr td:last-child {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+#teamLeaderboard td {
+  padding: 14px 12px;
+  color: white;
+  border: none;
+}
+
+#teamLeaderboard tbody tr:hover {
+  background: #808080;
+  transform: scale(1.01);
+}
+
+#teamSortDir[data-dir="asc"] {
+  background: #070b3f;
+}
+
+#teamSortDir[data-dir="desc"] {
+  background: #6b1414;
+}

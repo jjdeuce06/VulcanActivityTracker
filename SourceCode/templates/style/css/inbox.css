@@ -1,0 +1,97 @@
+/* =========================
+   Inbox Page Styling
+   ========================= */
+
+body.dashboard-page .inbox-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Page title */
+body.dashboard-page .inbox-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: #070b3f;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+/* Invite card (matches your bubble cards) */
+body.dashboard-page .invite-card {
+  background: linear-gradient(135deg, #1b1f5f, #070b3f);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+body.dashboard-page .invite-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+/* Team name */
+body.dashboard-page .invite-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+/* Meta info */
+body.dashboard-page .invite-meta {
+  font-size: 14px;
+  color: #ccc;
+  margin-bottom: 12px;
+}
+
+/* Button container */
+body.dashboard-page .invite-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Accept button */
+body.dashboard-page .btn-accept {
+  padding: 8px 14px;
+  background: #6b1414;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+body.dashboard-page .btn-accept:hover {
+  transform: translateY(-2px);
+  background: #8a1c1c;
+}
+
+/* Decline button */
+body.dashboard-page .btn-decline {
+  padding: 8px 14px;
+  background: transparent;
+  color: #ffffff;
+  border: 2px solid #6b1414;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+body.dashboard-page .btn-decline:hover {
+  transform: translateY(-2px);
+  background: #1b1f5f;
+}
+
+/* Empty state */
+body.dashboard-page .no-invites {
+  text-align: center;
+  color: #888;
+  font-size: 16px;
+  margin-top: 40px;
+}

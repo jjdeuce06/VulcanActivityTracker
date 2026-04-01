@@ -1,68 +1,71 @@
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
+  const teamsContainer = document.getElementById("teams-container");
+  const genderSelect = document.getElementById("sortByGender");
 
-    const teamsContainer = document.getElementById("teams-container");
-    const mensTeams = {
-        "Men's Soccer": "mens_soccer",
-        "Men's Basketball": "mens_basketball",
-        "Men's Cross Country": "mens_cross_country",
-        "Men's Football": "mens_football",
-        "Men's Golf": "mens_golf",
-        "Men's Baseball": "mens_baseball",
-        "Men's Track and Field": "mens_track_and_field",
-    };
+  let allTeams = [];
 
-    const womensTeams = {
-        "Women's Soccer": "womens_soccer",
-        "Women's Basketball": "womens_basketball",
-        "Women's Cross Country": "womens_cross_country",
-        "Women's Track and Field": "womens_track_and_field",
-        "Women's Flag Football": "womens_flag_football",
-        "Women's Softball": "womens_softball",
-        "Women's Swimming": "womens_swimming",
-        "Women's Tennis": "womens_tennis",
-        "Women's Volleyball": "womens_volleyball",
-    };
-
-    const defaultTeams = mensTeams; // Default
-
-
-    document.getElementById("sortByGender").addEventListener("change", (event) => {
-        const selectedGender = event.target.value;
-        teamsContainer.innerHTML = ""; // Clear existing teams
-
-        let teamsToDisplay = {};
-        if (selectedGender === "men") {
-            teamsToDisplay = mensTeams;
-        } else if (selectedGender === "women") {
-            teamsToDisplay = womensTeams;
+  async function fetchAllTeams() {
+    try {
+      const response = await fetch("/team_api/listallteams", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
         }
+      });
 
-        for (const [teamName, teamId] of Object.entries(teamsToDisplay)) {
-            const teamElement = document.createElement("div");
-            teamElement.classList.add("team");
-            teamElement.innerHTML = `
-                <h3>${teamName}</h3>
-                <a href="/teams/${teamId}">View Team</a>
-            `;
-            teamsContainer.appendChild(teamElement);
-        }
+      const result = await response.json();
+
+      if (!response.ok) {
+        teamsContainer.innerHTML = `<p>${result.error || "Failed to load teams."}</p>`;
+        return;
+      }
+
+      allTeams = result.teams || [];
+      renderTeams();
+    } catch (error) {
+      console.error("Error fetching teams:", error);
+      teamsContainer.innerHTML = "<p>Something went wrong while loading teams.</p>";
+    }
+  }
+
+  function renderTeams() {
+    teamsContainer.innerHTML = "";
+
+    const selectedGender = genderSelect.value;
+
+    let filteredTeams = allTeams.filter(team => {
+      const name = (team.TeamName || "").toLowerCase();
+      console.log(name);
+
+      if (selectedGender === "women") 
+      {
+        return name.includes("women");
+      }
+      else if (selectedGender === "men")
+      {
+        return name.includes(" men");
+      }
     });
 
-
-    function loadTeams(teams) {
-        teamsContainer.innerHTML = "";
-        for (const [teamName, teamId] of Object.entries(teams)) {
-            const teamElement = document.createElement("div");
-            teamElement.classList.add("team");
-            teamElement.innerHTML = `
-                <h3>${teamName}</h3>
-                <a href="/teams/${teamId}">View Team</a>
-            `;
-            teamsContainer.appendChild(teamElement);
-        }
+    if (filteredTeams.length === 0) {
+      teamsContainer.innerHTML = "<p>No teams found.</p>";
+      return;
     }
 
-    // Load default teams on page load
-    loadTeams(defaultTeams);
-    
+    filteredTeams.forEach(team => {
+      const teamElement = document.createElement("div");
+      teamElement.classList.add("team");
+
+      teamElement.innerHTML = `
+        <h3>${team.TeamName}</h3>
+        <a href="/teams/${team.TeamID}">View Team</a>
+      `;
+
+      teamsContainer.appendChild(teamElement);
     });
+  }
+
+  genderSelect.addEventListener("change", renderTeams);
+
+  fetchAllTeams();
+});

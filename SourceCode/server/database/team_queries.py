@@ -608,3 +608,50 @@ def get_team_schedule(conn, team_id):
         return events
     finally:
         cursor.close()
+
+def get_team_leaderboard(conn, team_id, sport_type="all"):
+    cursor = conn.cursor()
+
+    try:
+        print("➡️ Fetching team leaderboard for:", team_id)
+
+        cursor.execute("""
+            SELECT 
+                u.Username AS name,
+                COALESCE(
+                    '[' + STRING_AGG(
+                        CONCAT(
+                            '{"activityType":"', a.ActivityType,
+                            '","duration":', ISNULL(CAST(a.Duration AS VARCHAR), '0'),
+                            ',"details":', ISNULL(a.Details, '{}'),
+                            '}'
+                        ), ','
+                    ) + ']',
+                    '[]'
+                ) AS activities
+            FROM team_members tm
+            JOIN [user] u ON tm.UserID = u.UserID
+            LEFT JOIN activity a ON a.UserID = u.UserID
+            WHERE tm.TeamID = ?
+            GROUP BY u.Username
+            ORDER BY u.Username
+        """, (team_id,))
+
+        rows = cursor.fetchall()
+
+        leaderboard = []
+        for row in rows:
+            leaderboard.append({
+                "name": row.name,
+                "activities": row.activities
+            })
+
+        print("✅ Team leaderboard rows:", len(leaderboard))
+        return leaderboard
+
+    except Exception as e:
+        print("❌ get_team_leaderboard error:", e)
+        return []
+
+    finally:
+        cursor.close()

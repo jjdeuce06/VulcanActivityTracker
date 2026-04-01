@@ -159,3 +159,31 @@ def activity_stat():
                     "clubs": clubs,
                     "name": username,
                     "email": email }), 200
+
+
+@settings_api.route('/get-user-info', methods=['GET'])
+def get_user_info():
+    username = session.get('user_id')  # ⚠️ you're storing username here
+
+    if not username:
+        return jsonify({"error": "Not logged in"}), 401
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT Username, Email
+        FROM [user]
+        WHERE Username = ?
+    """, username)
+
+    row = cursor.fetchone()
+    cursor.close()
+
+    if not row:
+        return jsonify({"error": "User not found"}), 404
+
+    return jsonify({
+        "name": row.Username,
+        "email": row.Email
+    })

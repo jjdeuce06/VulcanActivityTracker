@@ -17,7 +17,8 @@ from server.database.team_queries import (
     is_user_team_coach,
     get_team_announcements,
     create_team_schedule_event,
-    get_team_schedule
+    get_team_schedule,
+    get_team_leaderboard
 )
 
 team_api = Blueprint("team_api", __name__)
@@ -464,4 +465,27 @@ def get_schedule_route(team_id):
 
     except Exception as e:
         print("Get schedule error:", e)
+        return jsonify({"error": str(e)}), 500
+
+@team_api.route("/leaderboard/<team_id>", methods=["GET"])
+def team_leaderboard(team_id):
+    try:
+        user_id = session.get("user_id")
+        sport_type = request.args.get("sport_type", "all")
+
+        if not user_id:
+            return jsonify({"error": "Not logged in"}), 401
+
+        conn = get_db_connection()
+        try:
+            if not user_can_access_team(conn, team_id, user_id):
+                return jsonify({"error": "Unauthorized"}), 403
+
+            leaderboard = get_team_leaderboard(conn, team_id, sport_type)
+            return jsonify({"leaderboard": leaderboard}), 200
+        finally:
+            conn.close()
+
+    except Exception as e:
+        print("Team leaderboard error:", e)
         return jsonify({"error": str(e)}), 500

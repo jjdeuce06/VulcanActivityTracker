@@ -102,6 +102,25 @@ async function fillQuickStats(){
   }
 
 }
+
+async function loadUserInfo() {
+  try {
+    const response = await fetch("/settings_api/get-user-info");
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch user info");
+    }
+
+    const data = await response.json();
+
+    fillDisplayInfo(data);
+
+  } catch (err) {
+    console.error("Error loading user info:", err);
+  }
+}
+
+
 function populateQuick(data) {
   // Fill the activity count using the array length
   const activityCountDiv = document.querySelector("#settingAStat");
@@ -115,6 +134,9 @@ function populateQuick(data) {
 
 }
 
+
+document.addEventListener("DOMContentLoaded", loadUserInfo);
+
 function fillDisplayInfo(data){
 
     const displayName = document.querySelector("#settings-displayname");
@@ -124,4 +146,6 @@ function fillDisplayInfo(data){
 
     const profileName = document.querySelector("#profile-name");
     profileName.textContent = data.name;
+
+    
 }

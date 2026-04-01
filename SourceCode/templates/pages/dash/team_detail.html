@@ -79,11 +79,47 @@
 
   <!-- FULL WIDTH (optional) -->
   <div class="team-panel" style="grid-column: span 2;">
-    <h2>Team Leaderboard</h2>
-    <div id="team-leaderboard-preview">
-      <p class="empty-state">Leaderboard coming soon.</p>
+  <h2>Team Leaderboard</h2>
+
+  <div class="leaderboard-card team-leaderboard-card">
+    <div class="lb-controls">
+      <div class="left-controls">
+        <select id="teamFilterSport">
+          <option value="all" selected>All Sports</option>
+          <option value="running">Running</option>
+          <option value="lifting">Lifting</option>
+          <option value="cycling">Cycling</option>
+          <option value="swimming">Swimming</option>
+          <option value="yoga">Yoga</option>
+          <option value="walking">Walking</option>
+          <option value="soccer">Soccer</option>
+          <option value="basketball">Basketball</option>
+          <option value="tennis">Tennis</option>
+          <option value="volleyball">Volleyball</option>
+          <option value="equestrian">Equestrian</option>
+          <option value="football">Football</option>
+          <option value="baseball">Baseball</option>
+          <option value="hockey">Hockey</option>
+        </select>
+      </div>
+
+      <div class="right-controls">
+        <select id="teamSortBy">
+          <option value="score" selected>Score</option>
+          <option value="name">Name</option>
+          <option value="totalMinutes">Duration</option>
+          <option value="totalActivities">Activities</option>
+        </select>
+        <button id="teamSortDir" type="button" data-dir="desc">Desc</button>
+      </div>
     </div>
+
+    <table id="teamLeaderboard">
+      <thead></thead>
+      <tbody></tbody>
+    </table>
   </div>
+</div>
 </div>
 </div>
 

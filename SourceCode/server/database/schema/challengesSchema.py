@@ -13,7 +13,7 @@ def create_challenges_table(conn: pyodbc.Connection) -> None:
         cursor.execute("""
             CREATE TABLE [challenges] (
                 ChallengeID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-                ChallengeName NVARCHAR(255) NOT NULL,
+                ChallengeName NVARCHAR(255) NOT NULL UNIQUE,
                 Description NVARCHAR(MAX) NULL,
                 CreatorUserID UNIQUEIDENTIFIER NOT NULL,
                 Participants NVARCHAR(MAX) NULL DEFAULT '[]', -- JSON for participants user IDs
@@ -22,6 +22,8 @@ def create_challenges_table(conn: pyodbc.Connection) -> None:
                 TargetValue FLOAT NOT NULL,
                 StartDate DATE NOT NULL,
                 EndDate DATE NOT NULL,
+                IsCompleted BIT NOT NULL DEFAULT 0,
+                MedalsAwarded BIT NOT NULL DEFAULT 0,
                 CONSTRAINT FK_challenges_CreatorUser FOREIGN KEY (CreatorUserID) REFERENCES [user](UserID)
             )
         """)

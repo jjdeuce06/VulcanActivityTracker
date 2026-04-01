@@ -52,3 +52,6 @@ def challenge_detail(challenge_name):
 @blue.route('/teams/<team_id>')
 def team_detail(team_id):
     return render_template('pages/dash/team_detail.html', active_page='teams')
+@blue.route('/create_challenge')
+def create_challenge():
+    return render_template('pages/dash/challenge_create.html', active_page='challenges')

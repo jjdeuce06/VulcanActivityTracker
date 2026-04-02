@@ -29,7 +29,12 @@
         <li><a class="{% if active_page == 'leaderboard' %}active{% endif %}" href="/leaderboard">Leaderboard</a></li>
         <li><a class="{% if active_page == 'challenges' %}active{% endif %}" href="/challenges">Challenges</a></li>
         <li><a class="{% if active_page == 'settings' %}active{% endif %}" href="/settings">Settings</a></li>
-        <li><a class="{% if active_page == 'inbox' %}active{% endif %}" href="/inbox">Inbox</a></li>
+        <li>
+          <a class="{% if active_page == 'inbox' %}active{% endif %}" href="/inbox" style="position: relative;">
+            Inbox
+            <span id="inbox-dot" class="notif-dot" style="display:none;"></span>
+          </a>
+        </li>
       </ul>
 
       <div class="nav-actions">

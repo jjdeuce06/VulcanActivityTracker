@@ -1,14 +1,18 @@
 from flask import Flask, request, jsonify
 import pyodbc
 import json
+from datetime import datetime, timedelta
+from server.controllers.activity_store import get_user_activities
 
-def insert_club(conn, user_id, name, description): #inserts a new club into the database
+def insert_club(conn, user_id, name, description, sport_type, privacy): #inserts a new club into the database
     cursor = conn.cursor()
     try:
+        is_private = 1 if str(privacy).lower() == "private" else 0
+
         cursor.execute("""
-            INSERT INTO clubs (ClubName, Description, CreatorUserID)
-            VALUES (?, ?, ?)
-        """, (name, description, user_id))
+            INSERT INTO clubs (ClubName, Description, CreatorUserID, SportType, IsPrivate)
+            VALUES (?, ?, ?, ?, ?)
+        """, (name, description, user_id, sport_type, is_private))
 
         conn.commit()
         print("Club inserted successfully")
@@ -24,7 +28,14 @@ def get_all_clubs(conn):    #gets all clubs from the database
     cursor = conn.cursor()
     try:
         cursor.execute("""
-            SELECT c.ClubID, c.ClubName, c.Description, c.CreatorUserID, u.Username AS CreatorUsername, c.Members
+            SELECT c.ClubID,
+            c.ClubName,
+            c.Description,
+            c.CreatorUserID,
+            u.Username AS CreatorUsername,
+            c.Members,
+            c.SportType,
+            c.IsPrivate
             FROM clubs c
             JOIN [user] u ON c.CreatorUserID = u.UserID
             ORDER BY c.ClubName
@@ -43,7 +54,10 @@ def get_all_clubs(conn):    #gets all clubs from the database
                 "description": row.Description or "",
                 "creator_user_id": str(row.CreatorUserID),
                 "creator_username": row.CreatorUsername,
-                "members": [str(m) for m in members]
+                "members": [str(m) for m in members],
+                "total_members": 1 + len([str(m) for m in members]),  # owner + joined members
+                "sport_type": row.SportType,
+                "is_private": bool(row.IsPrivate),
             })
         return clubs
     except Exception as e:
@@ -174,3 +188,274 @@ def usernames_from_userids(conn, user_ids):
         return [id_to_name.get(str(uid)) for uid in user_ids if id_to_name.get(str(uid))]
     finally:
         cursor.close()
+        
+def club_uses_distance_ranking(sport_type):
+    return sport_type in {"run", "bike", "swim", "walk", "equestrian", "multisport"}
+
+
+def get_club_member_details(conn, club):
+    members = club.get("members", []) or []
+    creator_id = str(club.get("creator_user_id"))
+
+    all_ids = [creator_id] + [str(uid) for uid in members if str(uid) != creator_id]
+    return usernames_from_userids(conn, all_ids), all_ids
+
+
+def get_week_range(reference_date=None):
+    if reference_date is None:
+        reference_date = datetime.now()
+
+    start_of_week = reference_date - timedelta(days=reference_date.weekday())
+    start_of_week = start_of_week.replace(hour=0, minute=0, second=0, microsecond=0)
+    end_of_week = start_of_week + timedelta(days=7)
+
+    return start_of_week, end_of_week
+
+
+def calculate_club_member_stats(conn, user_id, sport_type, start_date, end_date):
+    activities = get_user_activities(conn, user_id)
+
+    total_distance = 0.0
+    total_time = 0.0
+
+    for activity in activities:
+        if activity.get("activity_type") != sport_type and sport_type != "multisport":
+            continue
+
+        try:
+            activity_date = datetime.fromisoformat(activity["date"])
+        except Exception:
+            continue
+
+        if not (start_date <= activity_date < end_date):
+            continue
+
+        total_distance += float(activity.get("distance", 0) or 0)
+        total_time += float(activity.get("duration", 0) or 0)
+
+    return {
+        "distance": round(total_distance, 2),
+        "time": round(total_time, 2)
+    }
+
+
+def get_club_leaderboard_for_range(conn, club, start_date, end_date):
+    member_ids = [str(club.get("creator_user_id"))] + [str(uid) for uid in club.get("members", [])]
+    member_ids = list(dict.fromkeys(member_ids))
+
+    usernames = usernames_from_userids(conn, member_ids)
+    id_to_username = dict(zip(member_ids, usernames))
+
+    sport_type = club.get("sport_type")
+    use_distance = club_uses_distance_ranking(sport_type)
+
+    leaderboard = []
+
+    for user_id in member_ids:
+        stats = calculate_club_member_stats(conn, user_id, sport_type, start_date, end_date)
+
+        leaderboard.append({
+            "user_id": user_id,
+            "username": id_to_username.get(user_id, "Unknown User"),
+            "distance": stats["distance"],
+            "time": stats["time"]
+        })
+
+    if use_distance:
+        leaderboard.sort(key=lambda x: (x["distance"], x["time"]), reverse=True)
+    else:
+        leaderboard.sort(key=lambda x: x["time"], reverse=True)
+
+    for index, entry in enumerate(leaderboard, start=1):
+        entry["rank"] = index
+
+    return leaderboard
+
+
+def get_club_this_week_leaderboard(conn, club):
+    start_of_week, end_of_week = get_week_range()
+    return get_club_leaderboard_for_range(conn, club, start_of_week, end_of_week)
+
+
+def get_club_last_week_leaders(conn, club):
+    this_week_start, _ = get_week_range()
+    last_week_start = this_week_start - timedelta(days=7)
+    last_week_end = this_week_start
+
+    leaderboard = get_club_leaderboard_for_range(conn, club, last_week_start, last_week_end)
+    return leaderboard[:3]
+
+import json
+
+def create_club_join_request(conn, club_id, requesting_user_id, club_owner_user_id):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            INSERT INTO club_join_requests (ClubID, RequestingUserID, ClubOwnerUserID, Status)
+            VALUES (?, ?, ?, 'pending')
+        """, (club_id, requesting_user_id, club_owner_user_id))
+        conn.commit()
+        return True
+    finally:
+        cursor.close()
+
+
+def cancel_club_join_request(conn, club_id, requesting_user_id):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            DELETE FROM club_join_requests
+            WHERE ClubID = ? AND RequestingUserID = ? AND Status = 'pending'
+        """, (club_id, requesting_user_id))
+
+        if cursor.rowcount == 0:
+            raise ValueError("Join request not found")
+
+        conn.commit()
+        return True
+    finally:
+        cursor.close()
+
+
+def get_pending_club_requests_for_owner(conn, owner_user_id):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            SELECT
+                cjr.RequestID,
+                cjr.ClubID,
+                c.ClubName,
+                c.SportType,
+                c.Description,
+                u.Username AS RequestingUsername,
+                cjr.RequestingUserID
+            FROM club_join_requests cjr
+            JOIN clubs c ON cjr.ClubID = c.ClubID
+            JOIN [user] u ON cjr.RequestingUserID = u.UserID
+            WHERE cjr.ClubOwnerUserID = ? AND cjr.Status = 'pending'
+            ORDER BY cjr.CreatedAt DESC
+        """, (owner_user_id,))
+
+        rows = cursor.fetchall()
+        requests = []
+        for row in rows:
+            requests.append({
+                "id": str(row.RequestID),
+                "club_id": str(row.ClubID),
+                "name": row.ClubName,
+                "sport": row.SportType,
+                "description": row.Description or "",
+                "requesting_username": row.RequestingUsername,
+                "requesting_user_id": str(row.RequestingUserID)
+            })
+        return requests
+    finally:
+        cursor.close()
+
+
+def get_user_pending_club_request(conn, club_id, requesting_user_id):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            SELECT RequestID
+            FROM club_join_requests
+            WHERE ClubID = ? AND RequestingUserID = ? AND Status = 'pending'
+        """, (club_id, requesting_user_id))
+        row = cursor.fetchone()
+        return bool(row)
+    finally:
+        cursor.close()
+
+
+def accept_club_join_request(conn, club_id, requesting_user_id, owner_user_id):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            SELECT RequestID
+            FROM club_join_requests
+            WHERE ClubID = ? AND RequestingUserID = ? AND ClubOwnerUserID = ? AND Status = 'pending'
+        """, (club_id, requesting_user_id, owner_user_id))
+
+        if not cursor.fetchone():
+            raise ValueError("Pending request not found")
+
+        members = add_member_to_club(conn, club_id, requesting_user_id, None)
+
+        cursor.execute("""
+            UPDATE club_join_requests
+            SET Status = 'accepted'
+            WHERE ClubID = ? AND RequestingUserID = ? AND ClubOwnerUserID = ? AND Status = 'pending'
+        """, (club_id, requesting_user_id, owner_user_id))
+
+        conn.commit()
+        return members
+    finally:
+        cursor.close()
+
+
+def decline_club_join_request(conn, club_id, requesting_user_id, owner_user_id):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            UPDATE club_join_requests
+            SET Status = 'declined'
+            WHERE ClubID = ? AND RequestingUserID = ? AND ClubOwnerUserID = ? AND Status = 'pending'
+        """, (club_id, requesting_user_id, owner_user_id))
+
+        if cursor.rowcount == 0:
+            raise ValueError("Pending request not found")
+
+        conn.commit()
+        return True
+    finally:
+        cursor.close()
+        
+def get_username_map_for_user_ids(conn, user_ids):
+    if not user_ids:
+        return {}
+
+    cursor = conn.cursor()
+    try:
+        placeholders = ",".join("?" for _ in user_ids)
+        cursor.execute(
+            f"SELECT UserID, Username FROM [user] WHERE UserID IN ({placeholders})",
+            tuple(user_ids)
+        )
+        rows = cursor.fetchall()
+        return {str(r.UserID): r.Username for r in rows}
+    finally:
+        cursor.close()
+
+
+def get_club_recent_activities(conn, club, limit=25):
+    owner_and_members = [str(club.get("creator_user_id"))] + [
+        str(uid) for uid in club.get("members", [])
+    ]
+    owner_and_members = list(dict.fromkeys(owner_and_members))
+
+    if not owner_and_members:
+        return []
+
+    username_map = get_username_map_for_user_ids(conn, owner_and_members)
+    recent = []
+
+    for user_id in owner_and_members:
+        activities = get_user_activities(conn, user_id)
+
+        public_activities = [
+            act for act in activities
+            if str(act.get("visibility", "")).lower() == "public"
+        ]
+
+        for act in public_activities:
+            act_copy = dict(act)
+            act_copy["username"] = username_map.get(str(user_id), "Unknown User")
+            act_copy["user_id"] = str(user_id)
+            recent.append(act_copy)
+
+    recent.sort(
+        key=lambda a: a.get("date") or "",
+        reverse=True
+    )
+
+    return recent[:limit]

@@ -5,40 +5,34 @@
 {% endblock %}
 
 {% block content %}
+<div class="clubpage-page">
 
-<div class="clubs-page">
+  <div class="clubpage-top-section">
+    <div class="clubpage-header-card">
+      <h1>Clubs</h1>
+      <p class="clubpage-description">
+        Join clubs, track group activity, and stay motivated together.
+      </p>
+    </div>
 
-  <h1>Clubs</h1>
-  <p class="page-description">
-    Join clubs, track group activity, and stay motivated together.
-  </p>
+    <a href="/create_club" class="clubpage-create-btn">
+      + Create Club
+    </a>
+  </div>
 
+  <div class="clubpage-layout">
 
-  <div class="clubs-layout">
-
-    <form id="clubs-form" class="clubs-form">
-
-          <label>Club Name</label>
-          <input type="text" name="club_name" id="club-name" required>
-
-          <label>Club Description</label>
-          <textarea name="description" id="club-description"></textarea>
-
-          <button type="submit">Create Club</button>
-    </form>
-    
-    <div class="card clubs-card">
+    <div class="clubpage-card">
       <h3>My Clubs</h3>
-      <div class="clubs-list" id="my-clubs-list">
-        <!-- club cards will be injected here -->
+      <div class="clubpage-list" id="my-clubs-list">
+        <!-- JS will inject clubs here -->
       </div>
     </div>
 
-   
-    <div class="card clubs-card">
-        <h3>Find a Club</h3>
-        <div class="clubs-list" id="all-clubs-list">
-            <!-- club cards will be injected here -->
+    <div class="clubpage-card">
+      <h3>All Clubs</h3>
+      <div class="clubpage-list" id="all-clubs-list">
+        <!-- JS will inject clubs here -->
       </div>
     </div>
 
@@ -46,5 +40,4 @@
 </div>
 
 <script src="{{ url_for('style_folder.static', filename='js/clubs.js') }}"></script>
-
 {% endblock %}

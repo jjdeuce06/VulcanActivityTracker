@@ -25,8 +25,37 @@ document.addEventListener("DOMContentLoaded", async () => {
     const selectedUser = e.target.value;
     addFriend(selectedUser);
   });
+
+  checkInboxNotifications();
 });
 
+
+async function checkInboxNotifications() {
+  try {
+    const res = await fetch("/team_api/invites", {
+      method: "GET",
+      credentials: "include"
+    });
+
+    if (!res.ok) return;
+
+    const data = await res.json();
+    const invites = data.invites || [];
+
+    const dot = document.getElementById("inbox-dot");
+
+    if (!dot) return;
+
+    if (invites.length > 0) {
+      dot.style.display = "inline-block";
+    } else {
+      dot.style.display = "none";
+    }
+
+  } catch (err) {
+    console.error("Inbox notification check failed:", err);
+  }
+}
 
 async function fillDashFriends(currentUser) {
   try {

@@ -1,0 +1,127 @@
+{% extends "base_temp/dashboard.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/team_detail.css') }}">
+
+<div class="team-detail-page">
+  <div class="team-header">
+    <h1 id="team-name-heading">Team Name</h1>
+
+    <div class="team-meta">
+      <span class="team-pill" id="team-sport">Sport</span>
+      <span class="team-pill" id="team-coach">Coach</span>
+      <span class="team-pill" id="team-member-count">0 Members</span>
+    </div>
+
+    <p class="team-description" id="team-description">
+      Team description goes here.
+    </p>
+  </div>
+
+  <div class="team-grid">
+  <!-- LEFT COLUMN -->
+  <div class="team-panel">
+    <h2>Roster</h2>
+    <div id="roster-list" class="roster-list">
+      <p class="empty-state">Loading roster...</p>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="team-panel">
+    <h2>Announcements</h2>
+    <div id="announcement-list" class="announcement-list">
+      <p class="empty-state">Loading announcements...</p>
+    </div>
+  </div>
+
+  <!-- LEFT COLUMN -->
+  <div class="team-panel" id="coach-tools-panel" style="display:none;">
+    <h2>Coach Tools</h2>
+
+    <form id="invite-player-form" class="coach-form">
+      <input type="text" id="invite-username" placeholder="Enter username to invite" required>
+      <button type="submit" class="team-btn">Invite Player</button>
+    </form>
+
+    <form id="announcement-form" class="coach-form">
+      <input type="text" id="announcement-title" placeholder="Announcement title" required>
+      <textarea id="announcement-body" placeholder="Write announcement here..." required></textarea>
+      <button type="submit" class="team-btn">Post Announcement</button>
+    </form>
+
+    <form id="schedule-form" class="coach-form">
+      <input type="text" id="schedule-title" placeholder="Event title" required>
+
+      <select id="schedule-type" required>
+        <option value="">Select type</option>
+        <option value="Practice">Practice</option>
+        <option value="Game">Game</option>
+        <option value="Meeting">Meeting</option>
+        <option value="Workout">Workout</option>
+      </select>
+
+      <input type="datetime-local" id="schedule-date" required>
+      <input type="text" id="schedule-location" placeholder="Location">
+      <textarea id="schedule-notes" placeholder="Extra notes..."></textarea>
+
+      <button type="submit" class="team-btn">Create Event</button>
+    </form>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="team-panel">
+    <h2>Upcoming Schedule</h2>
+    <div id="schedule-list" class="schedule-list">
+      <p class="empty-state">Loading schedule...</p>
+    </div>
+  </div>
+
+  <!-- FULL WIDTH (optional) -->
+  <div class="team-panel" style="grid-column: span 2;">
+  <h2>Team Leaderboard</h2>
+
+  <div class="leaderboard-card team-leaderboard-card">
+    <div class="lb-controls">
+      <div class="left-controls">
+        <select id="teamFilterSport">
+          <option value="all" selected>All Sports</option>
+          <option value="running">Running</option>
+          <option value="lifting">Lifting</option>
+          <option value="cycling">Cycling</option>
+          <option value="swimming">Swimming</option>
+          <option value="yoga">Yoga</option>
+          <option value="walking">Walking</option>
+          <option value="soccer">Soccer</option>
+          <option value="basketball">Basketball</option>
+          <option value="tennis">Tennis</option>
+          <option value="volleyball">Volleyball</option>
+          <option value="equestrian">Equestrian</option>
+          <option value="football">Football</option>
+          <option value="baseball">Baseball</option>
+          <option value="hockey">Hockey</option>
+        </select>
+      </div>
+
+      <div class="right-controls">
+        <select id="teamSortBy">
+          <option value="score" selected>Score</option>
+          <option value="name">Name</option>
+          <option value="totalMinutes">Duration</option>
+          <option value="totalActivities">Activities</option>
+        </select>
+        <button id="teamSortDir" type="button" data-dir="desc">Desc</button>
+      </div>
+    </div>
+
+    <table id="teamLeaderboard">
+      <thead></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+</div>
+</div>
+
+<script src="{{ url_for('style_folder.static', filename='js/team_detail.js') }}"></script>
+{% endblock %}

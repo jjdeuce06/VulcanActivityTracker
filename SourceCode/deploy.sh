@@ -49,4 +49,15 @@ az containerapp container set \
   --cpu 1 --memory 2Gi \
   --env-vars SA_PASSWORD=$DB_PASS ACCEPT_EULA=Y MSSQL_PID=Developer
 
-echo "Done! Your app is deploying..."
+echo "Fetching application URL..."
+
+URL=$(az containerapp show \
+  --name $APP \
+  --resource-group $RG \
+  --query properties.configuration.ingress.fqdn \
+  --output tsv)
+
+echo "----------------------------------------"
+echo "🚀 Your app is live at:"
+echo "https://$URL"
+echo "----------------------------------------"

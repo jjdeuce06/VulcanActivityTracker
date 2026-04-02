@@ -1,3 +1,4 @@
-#!/bin/bash
-
-az group delete --name vulcan-rg --yes --no-wait
+az containerapp update \
+  --name vulcan-app \
+  --resource-group vulcan-rg \
+  --min-replicas 0

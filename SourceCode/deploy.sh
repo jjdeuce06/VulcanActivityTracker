@@ -20,6 +20,10 @@ az containerapp env create \
   --resource-group $RG \
   --location $LOCATION
 
+# Enable ACR admin for authentication
+echo "Enabling ACR admin..."
+az acr update -n $ACR --admin-enabled true
+
 # Get ACR credentials
 ACR_USERNAME=$(az acr credential show -n $ACR --query username -o tsv)
 ACR_PASSWORD=$(az acr credential show -n $ACR --query passwords[0].value -o tsv)
@@ -45,23 +49,53 @@ az containerapp create \
   --target-port 8000 \
   --ingress external \
   --cpu 0.5 --memory 1Gi \
-  --env-vars DB_SERVER=$DB_SERVER DB_USER=$DB_USER DB_PASS=$DB_PASS DB_NAME=$DB_NAME
+  --env-vars DB_SERVER=mssql DB_USER=$DB_USER DB_PASS=$DB_PASS DB_NAME=$DB_NAME
 
 echo "Adding MSSQL container..."
-az containerapp container set \
+az containerapp revision set \
   --name $APP \
   --resource-group $RG \
-  --container-name mssql \
-  --image mcr.microsoft.com/azure-sql-edge \
-  --cpu 1 --memory 2Gi \
-  --env-vars SA_PASSWORD=$DB_PASS ACCEPT_EULA=Y MSSQL_PID=Developer
+  --containers '[
+    {
+      "name": "mssql",
+      "image": "mcr.microsoft.com/azure-sql-edge",
+      "cpu": 1,
+      "memory": "2Gi",
+      "env": [
+        {"name": "SA_PASSWORD", "value": "'"$DB_PASS"'"},
+        {"name": "ACCEPT_EULA", "value": "Y"},
+        {"name": "MSSQL_PID", "value": "Developer"}
+      ]
+    }
+  ]'
 
-echo "Fetching application URL..."
-URL=$(az containerapp show \
-  --name $APP \
-  --resource-group $RG \
-  --query properties.configuration.ingress.fqdn \
-  --output tsv)
+echo "Waiting for containers to be ready..."
+# Loop until the app has a URL and all containers are ready
+while true; do
+    STATUS=$(az containerapp show \
+      --name $APP \
+      --resource-group $RG \
+      --query "properties.provisioningState" -o tsv)
+    
+    READY=$(az containerapp show \
+      --name $APP \
+      --resource-group $RG \
+      --query "properties.latestRevisionName" -o tsv)
+
+    URL=$(az containerapp show \
+      --name $APP \
+      --resource-group $RG \
+      --query properties.configuration.ingress.fqdn \
+      --output tsv)
+    
+    if [[ "$STATUS" == "Succeeded" && -n "$URL" ]]; then
+        echo "Containers are ready!"
+        break
+    else
+        echo "Waiting for containers to start..."
+        sleep 10
+    fi
+done
 
 echo "----------------------------------------"
 echo "🚀 Your app is live at:"

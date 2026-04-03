@@ -20,6 +20,10 @@ az containerapp env create \
   --resource-group $RG \
   --location $LOCATION
 
+# Get ACR credentials
+ACR_USERNAME=$(az acr credential show -n $ACR --query username -o tsv)
+ACR_PASSWORD=$(az acr credential show -n $ACR --query passwords[0].value -o tsv)
+
 echo "Logging into ACR..."
 az acr login --name $ACR
 
@@ -35,6 +39,9 @@ az containerapp create \
   --resource-group $RG \
   --environment $ENV \
   --image $ACR.azurecr.io/vulcan-platform-dev:latest \
+  --registry-login-server $ACR.azurecr.io \
+  --registry-username $ACR_USERNAME \
+  --registry-password $ACR_PASSWORD \
   --target-port 8000 \
   --ingress external \
   --cpu 0.5 --memory 1Gi \
@@ -50,7 +57,6 @@ az containerapp container set \
   --env-vars SA_PASSWORD=$DB_PASS ACCEPT_EULA=Y MSSQL_PID=Developer
 
 echo "Fetching application URL..."
-
 URL=$(az containerapp show \
   --name $APP \
   --resource-group $RG \

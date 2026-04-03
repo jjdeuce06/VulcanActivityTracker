@@ -9,7 +9,7 @@ set +a
 # -------------------------
 RG="vulcan-rg"
 LOCATION="eastus"
-ENV="vulcan-env"
+ENV="vulcan-env2"        # <-- NEW environment
 MSSQL_APP="vulcan-mssql"
 FLASK_APP="vulcan-flask"
 ACR="vulcanacr"
@@ -29,7 +29,7 @@ fi
 # Create Container Apps environment if missing
 # -------------------------
 if ! az containerapp env show --name $ENV --resource-group $RG &> /dev/null; then
-    echo "=== Creating Container Apps environment $ENV ==="
+    echo "=== Creating new Container Apps environment $ENV ==="
     az containerapp env create \
       --name $ENV \
       --resource-group $RG \
@@ -44,7 +44,7 @@ until [[ "$(az containerapp env show --name $ENV --resource-group $RG --query pr
     echo "Environment not ready yet, waiting 15s..."
     sleep 15
 done
-echo "✅ Environment is ready."
+echo "✅ Environment $ENV is ready."
 
 # -------------------------
 # Ensure ACR admin enabled
@@ -71,7 +71,8 @@ if az containerapp show --name $MSSQL_APP --resource-group $RG &> /dev/null; the
       --name $MSSQL_APP \
       --resource-group $RG \
       --cpu 1 --memory 2Gi \
-      --env-vars SA_PASSWORD=$DB_PASS ACCEPT_EULA=Y MSSQL_PID=Developer
+      --env-vars SA_PASSWORD=$DB_PASS ACCEPT_EULA=Y MSSQL_PID=Developer \
+      --environment $ENV
 else
     echo "Creating MSSQL app..."
     az containerapp create \
@@ -108,7 +109,8 @@ if az containerapp show --name $FLASK_APP --resource-group $RG &> /dev/null; the
       --env-vars DB_SERVER=$MSSQL_APP DB_USER=$DB_USER DB_PASS=$DB_PASS DB_NAME=$DB_NAME \
       --registry-login-server $ACR.azurecr.io \
       --registry-username $ACR_USERNAME \
-      --registry-password $ACR_PASSWORD
+      --registry-password $ACR_PASSWORD \
+      --environment $ENV
 else
     echo "Creating Flask app..."
     az containerapp create \

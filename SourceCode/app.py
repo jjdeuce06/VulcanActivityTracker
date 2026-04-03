@@ -43,5 +43,7 @@ with get_db_connection() as conn:
     init_or_upgrade_schema(conn)
 
 if __name__ == '__main__':
-    port = int(os.environ("PORT", 8000))
+    # port = int(os.environ("PORT", 8000))
+    # app.run(host="0.0.0.0", port=port, debug=True)
+    port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port, debug=True)

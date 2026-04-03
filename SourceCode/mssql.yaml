@@ -1,0 +1,23 @@
+name: vulcan-mssql
+location: eastus
+properties:
+  managedEnvironmentId: "/subscriptions/244ea045-e19c-4693-8e82-5024c4219492/resourceGroups/vulcan-rg/providers/Microsoft.App/managedEnvironments/vulcan-env2"
+  template:
+    containers:
+      - name: vulcan-mssql
+        image: mcr.microsoft.com/azure-sql-edge
+        resources:
+          cpu: 1
+          memory: 2Gi
+        env:
+          - name: SA_PASSWORD
+            value: "VulcanP@ssw0rd!"
+          - name: ACCEPT_EULA
+            value: "Y"
+          - name: MSSQL_PID
+            value: "Developer"
+        ports:
+          - port: 1433
+    scale:
+      minReplicas: 0
+      maxReplicas: 1

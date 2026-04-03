@@ -4,7 +4,9 @@ set -a
 source .env
 set +a
 
+# -------------------------
 # Config
+# -------------------------
 RG="vulcan-rg"
 LOCATION="eastus"
 ENV="vulcan-env"
@@ -13,8 +15,10 @@ FLASK_APP="vulcan-flask"
 ACR="vulcanacr"
 FLASK_IMAGE="$ACR.azurecr.io/vulcan-platform-dev:latest"
 
-echo "=== Checking for existing resources and cleaning up ==="
-# Delete apps if they exist
+# -------------------------
+# Clean up old apps/env
+# -------------------------
+echo "=== Cleaning up old apps and environment ==="
 for app in $MSSQL_APP $FLASK_APP; do
   if az containerapp show --name $app --resource-group $RG &> /dev/null; then
     echo "Deleting existing Container App $app..."
@@ -22,40 +26,50 @@ for app in $MSSQL_APP $FLASK_APP; do
   fi
 done
 
-# Delete environment if exists
 if az containerapp env show --name $ENV --resource-group $RG &> /dev/null; then
     echo "Deleting existing Container App environment $ENV..."
     az containerapp env delete --name $ENV --resource-group $RG --yes
 fi
 
-# Delete resource group if exists
-if az group show --name $RG &> /dev/null; then
-    echo "Deleting existing resource group $RG..."
-    az group delete --name $RG --yes --no-wait
-    echo "Waiting for deletion to complete..."
-    az group wait --name $RG --deleted
+# -------------------------
+# Create resource group if missing
+# -------------------------
+if ! az group show --name $RG &> /dev/null; then
+    echo "=== Creating resource group $RG ==="
+    az group create --name $RG --location $LOCATION
+else
+    echo "Resource group $RG already exists. Skipping creation."
 fi
 
-echo "=== Creating resource group ==="
-az group create --name $RG --location $LOCATION
-
-echo "=== Creating Container Apps environment ==="
+# -------------------------
+# Create Container Apps environment
+# -------------------------
+echo "=== Creating Container Apps environment $ENV ==="
 az containerapp env create \
   --name $ENV \
   --resource-group $RG \
   --location $LOCATION
 
-echo "=== Enabling ACR Admin ==="
+# -------------------------
+# Ensure ACR admin enabled
+# -------------------------
+echo "=== Ensuring ACR $ACR is enabled ==="
 az acr update -n $ACR --admin-enabled true
 ACR_USERNAME=$(az acr credential show -n $ACR --query username -o tsv)
 ACR_PASSWORD=$(az acr credential show -n $ACR --query passwords[0].value -o tsv)
 az acr login -n $ACR
 
-echo "=== Building and pushing Flask image ==="
+# -------------------------
+# Build and push Flask image
+# -------------------------
+echo "=== Building and pushing Flask image to ACR ==="
 docker build -t $FLASK_IMAGE .
 docker push $FLASK_IMAGE
 
-echo "=== Deploying MSSQL (internal) ==="
+# -------------------------
+# Deploy MSSQL (internal)
+# -------------------------
+echo "=== Deploying MSSQL Container App (internal) ==="
 az containerapp create \
   --name $MSSQL_APP \
   --resource-group $RG \
@@ -66,13 +80,16 @@ az containerapp create \
   --min-replicas 1 --max-replicas 1 \
   --env-vars SA_PASSWORD=$DB_PASS ACCEPT_EULA=Y MSSQL_PID=Developer
 
-echo "Waiting for MSSQL to start..."
+echo "Waiting for MSSQL to be running..."
 while [[ "$(az containerapp show --name $MSSQL_APP --resource-group $RG --query properties.runningStatus -o tsv)" != "Running" ]]; do
   echo "MSSQL not ready yet, waiting 10s..."
   sleep 10
 done
 
-echo "=== Deploying Flask (external) ==="
+# -------------------------
+# Deploy Flask (external)
+# -------------------------
+echo "=== Deploying Flask Container App (external) ==="
 az containerapp create \
   --name $FLASK_APP \
   --resource-group $RG \
@@ -86,7 +103,9 @@ az containerapp create \
   --registry-username $ACR_USERNAME \
   --registry-password $ACR_PASSWORD
 
-echo "=== Fetching Flask URL ==="
+# -------------------------
+# Fetch Flask URL
+# -------------------------
 URL=$(az containerapp show \
   --name $FLASK_APP \
   --resource-group $RG \

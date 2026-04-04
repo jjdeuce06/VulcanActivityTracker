@@ -127,6 +127,9 @@ def thumbs_up_friend():
 
         if not userID or not friendID:
             return jsonify({"status": "error"}), 400
+        
+        if str(userID) == str(friendID):
+            return jsonify({"status": "error", "message": "You cannot like your own activity"}), 403
 
         # fetch
         if action == "get":

@@ -1,92 +1,104 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("clubs-form"); 
-  if (!form) {
-    console.error("clubs-form not found");
-    return;
-  }
+  const form = document.getElementById("clubs-form");
 
   async function loadClubs() {
-  try {
-    const username = localStorage.getItem("currentUser");
+    const allList = document.getElementById("all-clubs-list");
+    const myList = document.getElementById("my-clubs-list");
 
-    if (!username) {
-      console.warn("No logged-in user");
-      renderClubs("all-clubs-list", [], false);
-      renderClubs("my-clubs-list", [], true);
-      return;
-    }
-
-    // Fetch clubs user is NOT part of
-    const allResp = await fetch("/club_api/listclubs", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username })
-    });
-
-    if (allResp.ok) {
-      const data = await allResp.json();
-      renderClubs("all-clubs-list", data.clubs || [], false);
-    } else {
-      console.error("Failed to load clubs", allResp.status);
-    }
-
-    // Fetch user's clubs
-    const myResp = await fetch("/club_api/myclubs", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username })
-    });
-
-    if (myResp.ok) {
-      const data = await myResp.json();
-      renderClubs("my-clubs-list", data.clubs || [], true);
-    } else {
-      console.error("Failed to load my clubs", myResp.status);
-    }
-
-  } catch (err) {
-    console.error("Error loading clubs:", err);
-  }
-}
-
-  window.loadClubs = loadClubs;//
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const name = document.getElementById("club-name").value.trim();
-    const description = document.getElementById("club-description").value.trim();
-    const username = localStorage.getItem("currentUser");
-
-    if (!name) {
-      alert("Club name required");
-      return;
-    }
+    // If we're not on the clubs listing page, don't try to load club lists
+    if (!allList && !myList) return;
 
     try {
-      const response = await fetch("/club_api/createclub", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          club_name: name,
-          description,
-          username
-        })
-      });
+      const username = localStorage.getItem("currentUser");
 
-      if (!response.ok) {
-        const err = await response.json().catch(() => ({}));
-        throw new Error(err.error || `HTTP ${response.status}`);
+      if (!username) {
+        console.warn("No logged-in user");
+        renderClubs("all-clubs-list", [], false);
+        renderClubs("my-clubs-list", [], true);
+        return;
       }
 
-      alert("Club created!");
-      form.reset();
-      await loadClubs();
+      const allResp = await fetch("/club_api/listclubs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username })
+      });
+
+      if (allResp.ok) {
+        const data = await allResp.json();
+        renderClubs("all-clubs-list", data.clubs || [], false);
+      } else {
+        console.error("Failed to load clubs", allResp.status);
+      }
+
+      const myResp = await fetch("/club_api/myclubs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username })
+      });
+
+      if (myResp.ok) {
+        const data = await myResp.json();
+        renderClubs("my-clubs-list", data.clubs || [], true);
+      } else {
+        console.error("Failed to load my clubs", myResp.status);
+      }
+
     } catch (err) {
-      console.error("Create club error:", err);
-      alert("Failed to create club");
+      console.error("Error loading clubs:", err);
     }
-  });
+  }
+
+  window.loadClubs = loadClubs;
+
+  window.addEventListener("pageshow", () => {
+  if (window.loadClubs) {
+    window.loadClubs();
+  }
+});
+
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("club-name").value.trim();
+      const description = document.getElementById("club-description").value.trim();
+      const sportType = document.getElementById("club-sport-type").value;
+      const privacy = document.querySelector('input[name="club_privacy"]:checked')?.value || "public";
+      const username = localStorage.getItem("currentUser");
+
+      if (!name) {
+        alert("Club name required");
+        return;
+      }
+
+      try {
+        const response = await fetch("/club_api/createclub", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            club_name: name,
+            description,
+            sport_type: sportType,
+            privacy,
+            username
+          })
+        });
+
+        if (!response.ok) {
+          const err = await response.json().catch(() => ({}));
+          throw new Error(err.error || `HTTP ${response.status}`);
+        }
+
+        alert("Club created!");
+        form.reset();
+        window.location.href = "/clubs";
+      } catch (err) {
+        console.error("Create club error:", err);
+        alert("Failed to create club");
+      }
+    });
+  }
 
   loadClubs();
 });
@@ -105,74 +117,108 @@ function renderClubs(containerId, clubs, isMember) {
 
   clubs.forEach(club => {
     const card = document.createElement("div");
-    card.className = "club-item";
+    card.className = "clubpage-item";
 
     const members = club.members !== undefined ? club.members : [];
+    const totalMembers = club.total_members !== undefined ? club.total_members : (members.length + 1);
     const isOwner = isMember && club.creator_username === currentUser;
+    const hasPendingRequest = !!club.has_pending_request;
 
-    card.innerHTML = `
-      <h4>${club.name}</h4>
-      <p>${club.description || ""}</p>
-      <p>${members.length} members</p>
-      <div style="display: flex; gap: 8px;">
-      <button class="secondary-btn view-club-btn" data-club-id="${club.id}">
-        View
-      </button>
-      <button class="secondary-btn" data-club-id="${club.id}" data-action="${isOwner ? 'delete' : (isMember ? 'leave' : 'join')}">
-        ${isOwner ? "Delete" : (isMember ? "Leave" : "Join")}
-      </button>
-      </div>
-    `;
+let action = "";
+let actionLabel = "";
+
+console.log("club card", club.name, {
+  is_private: club.is_private,
+  has_pending_request: club.has_pending_request,
+  isOwner,
+  isMember
+});
+
+if (isOwner) {
+  action = "delete";
+  actionLabel = "Delete";
+} else if (isMember) {
+  action = "leave";
+  actionLabel = "Leave";
+} else if (club.is_private) {
+  if (hasPendingRequest) {
+    action = "cancel_request";
+    actionLabel = "Cancel Join Request";
+  } else {
+    action = "request_join";
+    actionLabel = "Request to Join";
+  }
+} else {
+  action = "join";
+  actionLabel = "Join";
+}
+
+card.innerHTML = `
+  <h4>${club.name}</h4>
+  <p class="clubpage-description-text">${club.description || "No description provided."}</p>
+  <p>${totalMembers} members</p>
+  <p>${club.is_private ? "Private Club" : "Public Club"}</p>
+
+  <div class="clubpage-card-buttons">
+    <button class="secondary-btn view-club-btn" data-club-id="${club.id}">
+      View
+    </button>
+    <button class="secondary-btn" data-club-id="${club.id}" data-action="${action}">
+      ${actionLabel}
+    </button>
+  </div>
+`;
 
     container.appendChild(card);
 
-   
+    const actionBtn = card.querySelector("button.secondary-btn[data-action]");
+    if (actionBtn) {
+      actionBtn.addEventListener("click", async () => {
+        const username = localStorage.getItem("currentUser");
+        if (!username) {
+          alert("Please log in to continue.");
+          return;
+        }
 
-    const actionBtn = card.querySelector("button.secondary-btn[data-action]");  // Get the second button
-if (actionBtn) {
-  actionBtn.addEventListener("click", async () => {
-    const username = localStorage.getItem("currentUser");
-    if (!username) {
-      alert("Please log in to continue.");
-      return;
-    }
-    
-    const clubId = actionBtn.dataset.clubId;
-    const action = actionBtn.dataset.action;
-    let endpoint = "";
+        const clubId = actionBtn.dataset.clubId;
+        const action = actionBtn.dataset.action;
+        let endpoint = "";
 
-    if (action === "delete") {
-      if (!confirm(`Delete "${club.name}"? This cannot be undone.`)) return;
-      endpoint = "/club_api/deleteclub";
-    } else if (action === "leave") {
-      endpoint = "/club_api/leave";
-    } else {
-      endpoint = "/club_api/join";
-    }
+        if (action === "delete") {
+          if (!confirm(`Delete "${club.name}"? This cannot be undone.`)) return;
+          endpoint = "/club_api/deleteclub";
+        } else if (action === "leave") {
+          endpoint = "/club_api/leave";
+        } else if (action === "request_join") {
+          endpoint = "/club_api/requestjoin";
+        } else if (action === "cancel_request") {
+          endpoint = "/club_api/cancelrequest";
+        } else {
+          endpoint = "/club_api/join";
+        }
 
-    try {
-      const resp = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, club_id: clubId })
+        try {
+          const resp = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, club_id: clubId })
+          });
+
+          const payload = await resp.json().catch(() => null);
+
+          if (!resp.ok) {
+            const msg = payload && payload.error ? payload.error : `HTTP ${resp.status}`;
+            alert("Action failed: " + msg);
+            return;
+          }
+
+          await (window.loadClubs ? window.loadClubs() : Promise.resolve());
+        } catch (err) {
+          console.error("Club action error:", err);
+          alert("An error occurred.");
+        }
       });
-
-      const payload = await resp.json().catch(() => null);
-      console.log(endpoint, resp.status, payload);
-
-      if (!resp.ok) {
-        const msg = payload && payload.error ? payload.error : `HTTP ${resp.status}`;
-        alert("Action failed: " + msg);
-        return;
-      }
-
-      await (window.loadClubs ? window.loadClubs() : Promise.resolve());
-    } catch (err) {
-      console.error("Club action error:", err);
-      alert("An error occurred.");
     }
-  });
-}
 
     const viewBtn = card.querySelector("button.view-club-btn");
     if (viewBtn) {

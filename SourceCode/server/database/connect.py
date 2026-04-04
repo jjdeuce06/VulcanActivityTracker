@@ -28,17 +28,18 @@ def get_db_connection():
         f"DATABASE={database};"
         f"UID={username};"
         f"PWD={password};"
-        "TrustServerCertificate=yes;"
+        "Encrypt=yes;"
+        "TrustServerCertificate=no;"
     )
 
     # Retry logic
-    for attempt in range(15):
+    for attempt in range(60):
         try:
             conn = pyodbc.connect(conn_str, timeout=5)
             print("DB connection successful")
             return conn
         except pyodbc.Error as e:
-            print(f"DB not ready yet (attempt {attempt+1}/15): {e}")
-            time.sleep(2)
+            print(f"DB not ready yet (attempt {attempt+1}/60): {e}")
+            time.sleep(3)
 
     raise RuntimeError("SQL Server never became ready")

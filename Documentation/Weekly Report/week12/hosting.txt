@@ -1,0 +1,48 @@
+Summary of Deployment Attempts for Vulcan Activity Tracker
+
+1. Render Free and Paid Services
+
+Attempted to deploy Flask + MSSQL using Render’s Docker service.
+Flask app built successfully locally with Docker (docker build -t test-flask .) and worked on local machine.
+Added repository to Render, pointing Dockerfile path correctly (SourceCode/Dockerfile).
+Set environment variables for database (DB_SERVER=mssql, DB_NAME=master, DB_USER=sa, DB_PASS=VulcanP@ssw0rd!).
+
+Failure: Private service instance on Render would not start MSSQL container. Logs showed:
+
+RuntimeError: SQL Server never became ready
+
+→ Render free/private tier does not support multi-container setups with MSSQL, or startup timing was insufficient.
+
+2. Azure Container Apps / Azure CLI
+
+Tried deploying with Docker image pushed to Azure Container Registry, then creating Container App with Flask container and MSSQL container.
+Script used correct environment variables and port mappings.
+Failure: Student subscription limited, and Azure Container Apps could not provision multi-container apps reliably. MSSQL never became ready; container exited with code 3.
+
+3. Docker Deployment Locally / Multi-Architecture Issues
+
+MSSQL container worked locally on Intel (amd64) machine but not on Apple Silicon (arm64).
+Tried configuring platform: linux/amd64 and Oracle Linux base image for multi-architecture.
+Local build succeeded, but cloud deployment failed due to platform restrictions on Render/Azure.
+
+4. Render / Environment Variables Issue
+
+Even after paying for private service, Flask failed to start because MSSQL container did not run, so environment variables (DB_SERVER, etc.) were missing at runtime.
+Retry logic in Python (get_db_connection) was exhausted → app exited.
+
+5. Limitations Encountered
+
+Render free tier: Only 1 container public, 512MB RAM → cannot host both Flask + MSSQL.
+Render paid private service: MSSQL container failed to start.
+Azure Student Subscription: Not enough quota/resources for multi-container deployment.
+DigitalOcean managed DB: Only supports PostgreSQL/MySQL → cannot use MSSQL without self-hosting.
+
+6. Constraints
+
+Cannot change MSSQL schema — legacy project, all tables and queries are SQL Server–specific.
+Cloud providers either do not support MSSQL or require full self-managed deployment.
+
+7. Conclusion 
+Cloud deployment with multi-container Flask + MSSQL is not trivial under free/student tiers.
+The simplest solution that preserves the MSSQL schema is to use a VPS (DigitalOcean/Hetzner) and run both Flask + MSSQL in Docker containers, giving full control over networking and environment variables.
+All attempted platform-as-a-service (Render, Azure) deployments failed because MSSQL container did not start or the platform did not allow multi-container support with required memory/architecture.

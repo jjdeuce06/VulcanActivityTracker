@@ -45,6 +45,10 @@ for rule, (tpl, active_page) in ROUTES.items():
 def club_detail(club_name):
     return render_template('pages/dash/club_details.html', active_page='clubs')
 
+@blue.route('/create_club')
+def create_club():
+    return render_template('pages/dash/club_create.html', active_page='clubs')
+
 @blue.route('/challenge/<challenge_name>')
 def challenge_detail(challenge_name):
     return render_template('pages/dash/challenge_details.html', active_page='challenges')

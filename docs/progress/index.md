@@ -3,8 +3,8 @@
 Track development milestones and weekly updates for the Vulcan Activity Tracker.
 </p>
 
-
 <!-- ===================== WEEK CARDS ===================== -->
+
 <div style="
 display:flex;
 flex-wrap:wrap;
@@ -30,6 +30,7 @@ View Progress →
 </div>
 
 <!-- COPY THIS CARD FOR NEW WEEKS -->
+
 <div  style="
 background:linear-gradient(135deg,#11175a,#070b3f);
 color:#ffffff;
@@ -63,7 +64,6 @@ box-shadow:0 6px 16px rgba(0,0,0,0.3);
    View Progress →
 </a>
 </div>
-
 
 <div  style="
 background:linear-gradient(135deg,#11175a,#070b3f);
@@ -163,9 +163,124 @@ box-shadow:0 6px 16px rgba(0,0,0,0.3);
     <p><strong>Date:</strong> Mar 30, 2026</p>
     <p>Much Progress On Different Pages, Azure Set Up.</p>
 
-  <a href="week11" style="color:#7dd3fc; font-weight:600;">
+<a href="week11" style="color:#7dd3fc; font-weight:600;">
         View Progress →
   </a>
 </div>
 
+ `<div  style="     background:linear-gradient(135deg,#11175a,#070b3f);     color:#ffffff;     border-radius:16px;     padding:20px;     min-width:220px;     box-shadow:0 6px 16px rgba(0,0,0,0.3);   ">`
+
+
+<div  style="
+    background:linear-gradient(135deg,#11175a,#070b3f);
+    color:#ffffff;
+    border-radius:16px;
+    padding:20px;
+    min-width:220px;
+    box-shadow:0 6px 16px rgba(0,0,0,0.3);
+  ">
+  <h3>📅 Week 12</h3>
+    <p><strong>Date:</strong> Mar 30, 2026</p>
+    <p>Much Progress On Teams Page, Host set up.</p>
+
+
+<a href="week12" style="color:#7dd3fc; font-weight:600;">
+        View Progress →
+  </a>
 </div>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 📅 Week 11
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    **Date:** Mar 30, 2026
+
+
+    Much Progress On Different Pages, Azure Set Up.

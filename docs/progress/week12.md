@@ -84,7 +84,7 @@
 ">
 <h2>🔗 Links</h2>
 <ul>
-  <li><strong>PRs:</strong> 1 Merged Pull Requests</li>
+  <li><strong>PRs:</strong> 2 Merged Pull Requests</li>
   <li><strong>Tickets / Issues:</strong>
     <ul>
       <li>#46</li>

@@ -1,5 +1,95 @@
-[ ]
+<h1 align="center" style="color:#000000;">📆 Weekly Progress – Week 12</h1>
 
-Theme:
+<!-- ===================== GOALS ===================== -->
 
-<pre class="vditor-reset" placeholder="" contenteditable="true" spellcheck="false"><div class="vditor-wysiwyg__block" data-type="html-block" data-block="0"><pre class="vditor-wysiwyg__preview" data-render="1"><h1 align="center">📆 Weekly Progress – Week 12</h1></pre></div><div class="vditor-wysiwyg__block" data-type="html-block" data-block="0"><pre class="vditor-wysiwyg__preview" data-render="1"></pre></div><div class="vditor-wysiwyg__block" data-type="html-block" data-block="0"><pre class="vditor-wysiwyg__preview" data-render="1"><div><h2>🎯 Goals</h2><ul><li><p>Goal 1 – Finish teams page</p></li><li data-node-id="20260405220522-vpefwn9"><p>Goal 2 – Clubs page progress</p></li><li><p>Goal 3 – Find domain to host</p></li></ul></div></pre></div><div class="vditor-wysiwyg__block" data-type="html-block" data-block="0"><pre><code><!-- ===================== WORK COMPLETED ===================== --></code></pre><pre class="vditor-wysiwyg__preview" data-render="1"></pre></div><div class="vditor-wysiwyg__block" data-type="html-block" data-block="0"><pre class="vditor-wysiwyg__preview" data-render="1"><div><h2>✅ Work Completed</h2><ul><li><p>Goal 1 - completed</p></li><li data-node-id="20260405220522-orxo6ve"><p>Goal 2 - completed</p></li><li><p>Goal 3 - completed</p></li></ul></div></pre></div><div class="vditor-wysiwyg__block" data-type="html-block" data-block="0"><pre class="vditor-wysiwyg__preview" data-render="1"></pre></div><div class="vditor-wysiwyg__block" data-type="html-block" data-block="0"><pre class="vditor-wysiwyg__preview" data-render="1"><div><h2>⚠️ Challenges / Issues</h2><ul><li><p>Coach is currently in team leaderboard</p></li><li data-node-id="20260405220522-osxvayz"><p>Athletes invited via username and not their email</p></li></ul></div></pre></div><div class="vditor-wysiwyg__block" data-type="html-block" data-block="0"><pre class="vditor-wysiwyg__preview" data-render="1"></pre></div><div class="vditor-wysiwyg__block" data-type="html-block" data-block="0"><pre class="vditor-wysiwyg__preview" data-render="1"><div><h2>🔜 Next Week / Team Plan</h2><ul><li><p>Finalize Components</p></li><li data-node-id="20260405220522-xh1qvkq"><p>Debugging</p></li><li><p>Prepare Final Presentation</p></li><li data-node-id="20260405220522-le8dd9b"><p>Prepare User Manual</p></li></ul></div></pre></div><div class="vditor-wysiwyg__block" data-type="html-block" data-block="0"><pre class="vditor-wysiwyg__preview" data-render="1"></pre></div><div class="vditor-wysiwyg__block" data-type="html-block" data-block="0"><pre class="vditor-wysiwyg__preview" data-render="1"><div><h2>🔗 Links</h2><ul><li><p><strong>PRs:</strong><span> </span>1 Merged Pull Requests</p></li><li data-node-id="20260405220522-jkabq2e"><p><strong>Tickets / Issues:</strong></p><ul><li><p>#46</p><p>#47</p></li></ul></li></ul></div></pre></div></pre>
+<div style="
+  background:#0b102f;
+  color:#ffffff;
+  border-radius:16px;
+  padding:20px;
+  margin:20px 0;
+  box-shadow:0 6px 16px rgba(0,0,0,0.3);
+">
+<h2>🎯 Goals</h2>
+<ul>
+  <li>Goal 1 – Finish Teams Page</li>
+  <li>Goal 2 – Clubs Page Progress </li>
+  <li>Goal 3 – Find domain to host our project</li>
+</ul>
+</div>
+
+<!-- ===================== WORK COMPLETED ===================== -->
+
+<div style="
+  background:#11175a;
+  color:#ffffff;
+  border-radius:16px;
+  padding:20px;
+  margin:20px 0;
+  box-shadow:0 6px 16px rgba(0,0,0,0.3);
+">
+<h2>✅ Work Completed</h2>
+<ul>
+  <li>Goal 1 - completed</li>
+  <li>Goal 2 - completed</li>
+  <li>Goal 3 - completed</li>
+</ul>
+</div>
+
+<!-- ===================== ISSUES / BLOCKERS ===================== -->
+
+<div style="
+  background:#0b102f;
+  color:#ffffff;
+  border-radius:16px;
+  padding:20px;
+  margin:20px 0;
+  box-shadow:0 6px 16px rgba(0,0,0,0.3);
+">
+<h2>⚠️ Challenges / Issues</h2>
+<ul>
+    <li>Coaches are part of the leaderboard in the teams page</li>
+    <li>Athletes can only be invited via usernames</li>
+</ul>
+</div>
+
+<!-- ===================== NEXT WEEK ===================== -->
+
+<div style="
+  background:#11175a;
+  color:#ffffff;
+  border-radius:16px;
+  padding:20px;
+  margin:20px 0;
+  box-shadow:0 6px 16px rgba(0,0,0,0.3);
+">
+<h2>🔜 Next Week / Team Plan</h2>
+<ul>
+  <li>Finalize Components</li>
+  <li>Debugging</li>
+  <li>Prepare Final Presentation</li>
+  <li>Prepare User Manual</li>
+</ul> 
+</div>
+
+<!-- ===================== LINKS ===================== -->
+
+<div style="
+  background:#0b102f;
+  color:#ffffff;
+  border-radius:16px;
+  padding:20px;
+  margin:20px 0;
+  box-shadow:0 6px 16px rgba(0,0,0,0.3);
+">
+<h2>🔗 Links</h2>
+<ul>
+  <li><strong>PRs:</strong> 1 Merged Pull Requests</li>
+  <li><strong>Tickets / Issues:</strong>
+    <ul>
+      <li>#46</li>
+      <li>#47</li>
+    </ul>
+  </li>
+</ul>
+</div>

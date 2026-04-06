@@ -168,8 +168,6 @@ box-shadow:0 6px 16px rgba(0,0,0,0.3);
   </a>
 </div>
 
- `<div  style="     background:linear-gradient(135deg,#11175a,#070b3f);     color:#ffffff;     border-radius:16px;     padding:20px;     min-width:220px;     box-shadow:0 6px 16px rgba(0,0,0,0.3);   ">`
-
 
 <div  style="
     background:linear-gradient(135deg,#11175a,#070b3f);
@@ -181,7 +179,7 @@ box-shadow:0 6px 16px rgba(0,0,0,0.3);
   ">
   <h3>📅 Week 12</h3>
     <p><strong>Date:</strong> Mar 30, 2026</p>
-    <p>Much Progress On Teams Page, Host set up.</p>
+    <p>Teams page almost complete, hosting progress</p>
 
 
 <a href="week12" style="color:#7dd3fc; font-weight:600;">

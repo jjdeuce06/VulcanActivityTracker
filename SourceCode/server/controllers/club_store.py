@@ -150,17 +150,33 @@ def remove_member_from_club(conn, club_id, user_id, username): #removes the user
         
 def remove_club_from_database(conn, club_id, user_id):
     cursor = conn.cursor()
-    
+
     try:
-        cursor.execute("SELECT CreatorUserID FROM clubs WHERE ClubID = ?", (club_id, ))
+        # Verify club exists and user is owner
+        cursor.execute(
+            "SELECT CreatorUserID FROM clubs WHERE ClubID = ?",
+            (club_id,)
+        )
         row = cursor.fetchone()
+
         if not row:
             raise ValueError("Club Not Found")
+
         if str(row.CreatorUserID) != str(user_id):
             raise ValueError("Only Club Owner can Delete Club")
-        
-        cursor.execute("DELETE FROM clubs WHERE ClubID = ? AND CreatorUserID = ?", (club_id, user_id,))
-    
+
+        # Delete all join requests FIRST (this is the FK blocker)
+        cursor.execute(
+            "DELETE FROM club_join_requests WHERE ClubID = ?",
+            (club_id,)
+        )
+
+        # Now delete the club
+        cursor.execute(
+            "DELETE FROM clubs WHERE ClubID = ?",
+            (club_id,)
+        )
+
         conn.commit()
         print("Club deleted successfully")
         return True

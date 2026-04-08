@@ -2,19 +2,24 @@
 {% extends "base_temp/dashboard.html" %}
 
 {% block page_css %}
+<!-- CSS page for challenge details -->
 <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/challenges.css') }}">
 {% endblock %}
 
 {% block content %}
 
+<!-- Challenge Details Page -->
 <div class="challengepage-page challenge-detail-page">
   <div class="challenge-detail-header">
     <div class="challenge-title-card">
+      <!-- Challenge Title -->
       <h1 id="challenge-name-heading">Challenge Name</h1>
     </div>
+    <!-- Action Button -->
     <button id="challenge-action-btn" class="secondary-btn">Join Challenge</button>
   </div>
 
+  <!-- Challenge Info and Overview -->
   <div class="challenge-detail-top">
     <div class="challengepage-card challenge-detail-info-card">
       <h3>Challenge Details</h3>
@@ -52,18 +57,22 @@
         <span id="participant-count">0</span>
       </p>
 
+      <!-- Back Button -->
       <button onclick="history.back()" class="secondary-btn challenge-back-btn">Back</button>
     </div>
 
+    <!-- Challenge Overview -->
     <div class="challengepage-card challenge-detail-overview-card">
       <h3>Challenge Overview</h3>
       <p id="challenge-description">No description provided.</p>
     </div>
   </div>
 
+<!--challenge leaderboard-->
 <div class="challengepage-card challenge-detail-leaderboard-card">
   <h3>Leaderboard</h3>
 
+  <!-- Leaderboard Header -->
   <div class="challenge-detail-leaderboard-header">
     <div>Rank</div>
     <div>Name</div>

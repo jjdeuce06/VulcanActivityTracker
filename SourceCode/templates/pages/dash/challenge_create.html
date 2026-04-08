@@ -1,24 +1,30 @@
 {% extends "base_temp/dashboard.html" %}
 
 {% block page_css %}
+<!-- CSS page for challenges -->
 <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/challenges.css') }}">
 {% endblock %}
 
 {% block content %}
 <div class="challengepage-page">
 
-
+    <!--Begin form class for creating challeneges -->
     <form class="challengepage-form" id="create-challenge-form">
+        <!-- Form for creating a challenge -->
         <h3>Create Challenge</h3>
 
+        <!-- Input for challenge name -->
         <label>Challenge Name</label>
         <input type="text" id="challenge-name" required>
 
+        <!-- Input for challenge description -->
         <label>Description</label>
         <textarea id="challenge-description" rows="3"></textarea>
 
+        <!-- Input for activity type -->
         <label>Activity Type</label>
         <select id="challenge-activity-type" required>
+            <!-- Options for activity types -->
             <option value="run">Running</option>
             <option value="bike">Cycling</option>
             <option value="swim">Swimming</option>
@@ -34,6 +40,7 @@
             <option value="equestrian">Equestrian</option>
         </select>
 
+        <!-- Input for metric type -->
         <label>Metric Type</label>
         <select id="challenge-metric-type" required>
             <option value="distance">Distance</option>
@@ -41,15 +48,18 @@
             <option value="count">Count</option>
         </select>
 
+        <!-- Input for target goal -->
         <label id="challenge-target-label">Target Goal</label>
         <input type="number" id="challenge-target" required min="1">
 
+        <!-- Input for start and end dates -->
         <label>Start Date</label>
         <input type="date" id="start-date" required>
 
         <label>End Date</label>
         <input type="date" id="end-date" required>
 
+        <!-- Buttons for submitting or canceling the form -->
         <div class="challengepage-form-buttons">
             <button type="submit" class="challengepage-submit-btn">
                 Create Challenge
@@ -63,6 +73,7 @@
 </div>
 </div>
 
+<!-- JavaScript for handling challenge creation -->
 <script src="{{ url_for('style_folder.static', filename='js/challenges.js') }}"></script>
 
 {% endblock %}

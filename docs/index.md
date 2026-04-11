@@ -8,6 +8,37 @@
 
 ---
 
+<!-- ===================== PROJECT OVERVIEW ===================== -->
+<div style="
+  background: #0b102f;
+  border-radius: 20px;
+  padding: 28px;
+  margin: 32px 0;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  color: #ffffff;
+">
+
+<h2>🏃‍♀️ Project Overview</h2>
+
+<p>
+The <strong>Vulcan Activity Tracker</strong> is an athletic and social engagement platform
+designed for campus communities.
+</p>
+
+<ul>
+  <li>🏋️ Track and log athletic activities</li>
+  <li>🏫 Support student organizations and clubs</li>
+  <li>💬 Encourage social interaction</li>
+  <li>🎯 Plan and achieve fitness goals</li>
+</ul>
+
+<p><strong>All in one free, accessible platform built with students in mind.</strong></p>
+
+</div>
+
+---
+
+
 <!-- ===================== QUICK LINKS ===================== -->
 <div style="
   background: linear-gradient(135deg, #11175a, #070b3f);
@@ -61,40 +92,21 @@
     <a href="progress/gantt">Explore →</a>
   </div>
 
-</div>
-</div>
-
----
-
-<!-- ===================== PROJECT OVERVIEW ===================== -->
-<div style="
-  background: #0b102f;
-  border-radius: 20px;
-  padding: 28px;
-  margin: 32px 0;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
-  color: #ffffff;
-">
-
-<h2>🏃‍♀️ Project Overview</h2>
-
-<p>
-The <strong>Vulcan Activity Tracker</strong> is an athletic and social engagement platform
-designed for campus communities.
-</p>
-
-<ul>
-  <li>🏋️ Track and log athletic activities</li>
-  <li>🏫 Support student organizations and clubs</li>
-  <li>💬 Encourage social interaction</li>
-  <li>🎯 Plan and achieve fitness goals</li>
-</ul>
-
-<p><strong>All in one free, accessible platform built with students in mind.</strong></p>
+  <div style="
+    flex: 1;
+    min-width: 220px;
+    background: #0b102f;
+    border-radius: 16px;
+    padding: 16px;
+    color: #ffffff;
+  ">
+    <h3>📊 Documents</h3>
+    <p>Project planning and implementaion documents.</p>
+    <a href="progress/documents">Explore →</a>
+  </div>
 
 </div>
-
----
+</div>
 
 <!-- ===================== TEAM MEMBERS ===================== -->
 <div style="

@@ -3,7 +3,7 @@
 Vulcan Activity Tracker documents from inital stages to implementation design.
 </p>
 
-<script>
+<style>
 .doc-section {
     margin: 40px auto;
     width: 90%;
@@ -18,7 +18,8 @@ Vulcan Activity Tracker documents from inital stages to implementation design.
     margin-bottom: 15px;
     color: #333;
 }
-</script>
+</style>
+
 
 <div class="doc-section">
   <h2>📌 Proposal</h2>

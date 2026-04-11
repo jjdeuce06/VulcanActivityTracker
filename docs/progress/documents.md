@@ -22,25 +22,25 @@ Vulcan Activity Tracker documents from inital stages to implementation design.
 
 <div class="doc-section">
   <h2>📌 Proposal</h2>
-  <iframe src="vulcandocs/Group2_CMSC-4900-Proposal_REVISED.docx" width="100%" height="600px"></iframe>
+  <iframe src="vulcandocs/Group2_CMSC-4900-Proposal_REVISED.pdf" width="100%" height="600px"></iframe>
 </div>
 
 <div class="doc-section">
   <h2>📋 Requirements</h2>
-  <iframe src="vulcandocs/Group2_CMSC-4900_Requirements.docx" width="100%" height="600px"></iframe>
+  <iframe src="vulcandocs/Group2_CMSC-4900_Requirements.pdf" width="100%" height="600px"></iframe>
 </div>
 
 <div class="doc-section">
   <h2>🛠️ Specifications</h2>
-  <iframe src="vulcandocs/Group2_Specifications.docx" width="100%" height="600px"></iframe>
+  <iframe src="vulcandocs/Group2_Specifications.pdf" width="100%" height="600px"></iframe>
 </div>
 
 <div class="doc-section">
   <h2>🗄️ Design</h2>
-  <iframe src="vulcandocs/CMSC4900Group2 - Design Paper.docx" width="100%" height="600px"></iframe>
+  <iframe src="vulcandocs/CMSC4900Group2 - Design Paper.pdf" width="100%" height="600px"></iframe>
 </div>
 
 <div class="doc-section">
   <h2>🚀 User Manual</h2>
-  <iframe src="vulcandocs/VulcanActivityTracker-UserManual-CodeListing.docx" width="100%" height="600px"></iframe>
+  <iframe src="vulcandocs/VulcanActivityTracker-UserManual-CodeListing.pdf" width="100%" height="600px"></iframe>
 </div>

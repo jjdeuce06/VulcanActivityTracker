@@ -187,3 +187,21 @@ box-shadow:0 6px 16px rgba(0,0,0,0.3);
   </a>
 </div>
 
+
+<div  style="
+    background:linear-gradient(135deg,#11175a,#070b3f);
+    color:#ffffff;
+    border-radius:16px;
+    padding:20px;
+    min-width:220px;
+    box-shadow:0 6px 16px rgba(0,0,0,0.3);
+  ">
+  <h3>📅 Week 13</h3>
+    <p><strong>Date:</strong> April 13, 2026</p>
+    <p>Project Finalization</p>
+
+
+<a href="week13" style="color:#7dd3fc; font-weight:600;">
+        View Progress →
+  </a>
+</div>

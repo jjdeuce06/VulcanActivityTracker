@@ -135,7 +135,7 @@ def delete_account():
 @settings_api.route("/fillActivityStat", methods=["POST"])
 def activity_stat():
     try:
-        username = session.get("user_id", None)
+        username = session.get("username", None)
         conn = get_db_connection()
         try:
             user_id = get_user_id(conn, username)
@@ -165,11 +165,8 @@ def activity_stat():
 
 @settings_api.route('/get-user-info', methods=['GET'])
 def get_user_info():
-    username = session.get('user_id') 
-
-    if not username:
-        return jsonify({"error": "Not logged in"}), 401
-
+    username = session.get('username') 
+    
     conn = get_db_connection()
     cursor = conn.cursor()
 

@@ -152,6 +152,8 @@ def activity_stat():
     except Exception as e:
         print("Error in enter_activity route:", e)
         return jsonify({"error": str(e)}), 500
+    
+    print (f"User: {username}, Activities: {activities}, Challenges: {challenges}, Clubs: {clubs}, Email: {email}")
 
     return jsonify({"status": "success",
                     "activities": activities, 
@@ -163,7 +165,7 @@ def activity_stat():
 
 @settings_api.route('/get-user-info', methods=['GET'])
 def get_user_info():
-    username = session.get('user_id')  # ⚠️ you're storing username here
+    username = session.get('user_id') 
 
     if not username:
         return jsonify({"error": "Not logged in"}), 401

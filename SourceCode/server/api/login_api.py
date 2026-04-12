@@ -75,6 +75,7 @@ def verify():
             print("\n=== LOGIN DEBUG ===")
             print("UserID (should be UUID):", user.UserID)
             print("Email:", user.Email)
+            print("session id:", session.get("user_id"))
             print("====================\n")
 
             return jsonify({

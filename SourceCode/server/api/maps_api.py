@@ -15,13 +15,10 @@ def storeMapRoutes():
     username = session.get("user_id", None)
     
     conn = get_db_connection()
-    user_id = get_user_id(conn, username)
-    if not user_id:
-        return jsonify({"error": "Not logged in"}), 401
 
     result = add_route(
         conn,
-        user_id,
+        username,
         data.get("name"),
         data.get("distance"),
         data.get("coordinates")
@@ -35,15 +32,11 @@ def storeMapRoutes():
 @map_api.route('/get_user_routes', methods=['GET'])
 def getUserRoutes():
     try:
-
         username = session.get("user_id", None)
+        print("Username in getMapRoutes:", username)
         
         conn = get_db_connection()
-        user_id = get_user_id(conn, username)
-        if not user_id:
-            return jsonify({"error": "Not logged in"}), 401
-
-        result = get_user_routes(conn, user_id)
+        result = get_user_routes(conn, username)
         conn.close()
         return jsonify({"success": True, "maps": result})
     except Exception as e:

@@ -145,7 +145,5 @@ function fillDisplayInfo(data){
     displayEmail.textContent = data.email;
 
     const profileName = document.querySelector("#profile-name");
-    profileName.textContent = data.name;
-
-    
+    profileName.textContent = data.name; 
 }

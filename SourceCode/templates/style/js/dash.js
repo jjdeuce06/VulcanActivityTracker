@@ -25,8 +25,37 @@ document.addEventListener("DOMContentLoaded", async () => {
     const selectedUser = e.target.value;
     addFriend(selectedUser);
   });
+
+  checkInboxNotifications();
 });
 
+
+async function checkInboxNotifications() {
+  try {
+    const res = await fetch("/team_api/invites", {
+      method: "GET",
+      credentials: "include"
+    });
+
+    if (!res.ok) return;
+
+    const data = await res.json();
+    const invites = data.invites || [];
+
+    const dot = document.getElementById("inbox-dot");
+
+    if (!dot) return;
+
+    if (invites.length > 0) {
+      dot.style.display = "inline-block";
+    } else {
+      dot.style.display = "none";
+    }
+
+  } catch (err) {
+    console.error("Inbox notification check failed:", err);
+  }
+}
 
 async function fillDashFriends(currentUser) {
   try {
@@ -614,11 +643,11 @@ function populateDashChallenge(challenge) {
     challengeDiv.className = "challenge-item";
 
     challengeDiv.innerHTML = `
-       <div class="challenge-badge"></div>
+      <div class="challenge-badge"></div>
         <div>
             <div class="challenge-title">${challenge.name}</div>
             <div class="challenge-meta">${challenge.participants.length} participants</div>
-             <div class="challenge-progress">${challenge.progress.current} / ${challenge.progress.target} ${challenge.metric_type}</div>
+            <div class="challenge-progress">${challenge.progress.current} / ${challenge.progress.target} ${challenge.metric_type}</div>
         </div>
        
     `;

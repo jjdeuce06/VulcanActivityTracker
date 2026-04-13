@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, session
 from server.database.connect import get_db_connection
-from server.controllers.user_store import get_user_id
+from server.controllers.user_store import get_user_email
 from server.controllers.team_store import (
     create_team as create_team_store,
     invite_user_to_team,
@@ -15,10 +15,14 @@ from server.database.team_queries import (
     get_team_details,
     create_team_announcement,
     is_user_team_coach,
+    create_team_invite,
     get_team_announcements,
     create_team_schedule_event,
     get_team_schedule,
-    get_team_leaderboard
+    get_team_leaderboard,
+    get_pending_team_invites,
+    accept_team_invite,
+    decline_team_invite
 )
 
 team_api = Blueprint("team_api", __name__)
@@ -57,54 +61,63 @@ def create_team_route():
 def invite_to_team():
     try:
         data = request.get_json() or {}
-        invited_username = data.get("invited_username")
+        invited_email = data.get("invited_email")
         team_id = data.get("team_id")
 
         coach_user_id = session.get("user_id")
-        username = session.get("username")
 
         print("\n=== ROUTE DEBUG ===")
         print("SESSION USER ID:", coach_user_id)
-        print("SESSION USERNAME:", username)
         print("REQUEST JSON:", data)
         print("====================\n")
 
-        if not coach_user_id or not username:
+        if not coach_user_id:
             return jsonify({"error": "Not logged in"}), 401
 
-        if not invited_username or not team_id:
+        if not invited_email or not team_id:
             return jsonify({"error": "Missing required fields"}), 400
 
         conn = get_db_connection()
         try:
-            invited_user_id = get_user_id(conn, invited_username)
-
-            if not invited_user_id:
-                return jsonify({"error": "Invited user not found"}), 404
-
+            # ✅ FIX 1: convert email -> user_id (GUID)
             cursor = conn.cursor()
             cursor.execute("""
-                SELECT 1
-                FROM team_members
-                WHERE TeamID = ?
-                  AND UserID = ?
-                  AND Role IN ('coach', 'admin')
-                  AND Status = 'active'
-            """, (team_id, coach_user_id))
+                SELECT UserID
+                FROM [user]
+                WHERE LOWER(Email) = LOWER(?)
+            """, (invited_email,))
+            row = cursor.fetchone()
 
-            if not cursor.fetchone():
+            if not row:
+                cursor.close()
+                return jsonify({"error": "Invited user not found"}), 404
+
+            invited_user_id = row.UserID
+            print("INVITED USER ID:", invited_user_id, type(invited_user_id))
+
+            # ✅ FIX 2: use your helper instead of raw SQL
+            if not is_user_team_coach(conn, coach_user_id, team_id):
                 cursor.close()
                 return jsonify({"error": "Only coaches can invite users"}), 403
 
             cursor.close()
 
-            invite_user_to_team(conn, team_id, coach_user_id, invited_user_id)
-            return jsonify({"status": "success", "message": "Invite sent"}), 200
+            # ✅ FIX 3: use correct invite function
+            success, message = create_team_invite(
+                conn,
+                team_id,
+                invited_user_id,
+                coach_user_id
+            )
+
+            if not success:
+                return jsonify({"error": message}), 400
+
+            return jsonify({"status": "success", "message": message}), 200
+
         finally:
             conn.close()
 
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 400
     except Exception as e:
         print("Invite error:", e)
         return jsonify({"error": str(e)}), 500
@@ -135,12 +148,19 @@ def my_invites():
     try:
         user_id = session.get("user_id")
 
+        print("\n=== INVITES DEBUG ===")
+        print("SESSION USER ID:", user_id)
+        print("=====================\n")
+
         if not user_id:
             return jsonify({"error": "Not logged in"}), 401
 
         conn = get_db_connection()
         try:
             invites = get_pending_team_invites(conn, user_id)
+
+            print("INVITES RETURNED:", invites)  # 🔥 KEY DEBUG
+
             return jsonify({"invites": invites}), 200
         finally:
             conn.close()
@@ -154,24 +174,26 @@ def my_invites():
 def accept_invite_route():
     try:
         data = request.get_json() or {}
-        team_id = data.get("team_id")
+        invite_id = data.get("invite_id")  # 🔥 FIXED
         user_id = session.get("user_id")
 
         if not user_id:
             return jsonify({"error": "Not logged in"}), 401
 
-        if not team_id:
-            return jsonify({"error": "Missing team_id"}), 400
+        if not invite_id:
+            return jsonify({"error": "Missing invite_id"}), 400
 
         conn = get_db_connection()
         try:
-            accept_team_invite(conn, team_id, user_id)
+            success, message = accept_team_invite(conn, invite_id, user_id)
+
+            if not success:
+                return jsonify({"error": message}), 400
+
             return jsonify({"status": "success"}), 200
         finally:
             conn.close()
 
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 400
     except Exception as e:
         print("Accept invite error:", e)
         return jsonify({"error": str(e)}), 500
@@ -199,6 +221,32 @@ def decline_invite_route():
 
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        print("Decline invite error:", e)
+        return jsonify({"error": str(e)}), 500@team_api.route("/declineinvite", methods=["POST"])
+def decline_invite_route():
+    try:
+        data = request.get_json() or {}
+        invite_id = data.get("invite_id")  # 🔥 FIXED
+        user_id = session.get("user_id")
+
+        if not user_id:
+            return jsonify({"error": "Not logged in"}), 401
+
+        if not invite_id:
+            return jsonify({"error": "Missing invite_id"}), 400
+
+        conn = get_db_connection()
+        try:
+            success, message = decline_team_invite(conn, invite_id, user_id)
+
+            if not success:
+                return jsonify({"error": message}), 400
+
+            return jsonify({"status": "success"}), 200
+        finally:
+            conn.close()
+
     except Exception as e:
         print("Decline invite error:", e)
         return jsonify({"error": str(e)}), 500

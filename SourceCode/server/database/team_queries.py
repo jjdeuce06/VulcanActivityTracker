@@ -195,6 +195,17 @@ def get_user_id(conn, username):
     cursor.close()
     return row.UserID if row else None
 
+def get_user_id_by_email(conn, email):
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT UserID
+        FROM [user]
+        WHERE LOWER(Email) = LOWER(?)
+    """, (email,))
+    row = cursor.fetchone()
+    cursor.close()
+    return row.UserID if row else None
+
 
 def create_team_invite(conn, team_id, invited_user_id, invited_by_user_id):
     """

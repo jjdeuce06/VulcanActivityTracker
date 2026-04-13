@@ -251,7 +251,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  async function sendInvite(invitedUsername) {
+  async function sendInvite(invitedEmail) {
     try {
       const resp = await fetch("/team_api/invite", {
         method: "POST",
@@ -260,7 +260,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
         credentials: "include",
         body: JSON.stringify({
-          invited_username: invitedUsername,
+          invited_email: invitedEmail,
           team_id: teamId
         })
       });
@@ -272,7 +272,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      alert(`Invite sent to ${invitedUsername}`);
+      alert(`Invite sent to ${invitedEmail}`);
       inviteForm.reset();
     } catch (err) {
       console.error("Invite error:", err);
@@ -289,14 +289,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (inviteForm) {
     inviteForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const invitedUsername = inviteUsernameInput.value.trim();
+      const invitedEmail = inviteUsernameInput.value.trim();
 
-      if (!invitedUsername) {
-        alert("Enter a username to invite.");
+      if (!invitedEmail) {
+        alert("Enter a email to invite.");
         return;
       }
 
-      await sendInvite(invitedUsername);
+      await sendInvite(invitedEmail);
     });
   }
 

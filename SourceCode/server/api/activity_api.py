@@ -3,33 +3,41 @@ from server.database.connect import get_db_connection
 from server.controllers.user_store import get_user_id
 from server.controllers.activity_store import insert_activity, get_user_activities, get_public_activities
 import pyodbc
+
+# Blueprint for all activity-related routes
 activity_api = Blueprint('activity_api', __name__)
 
 
 @activity_api.route('/enteractivity', methods=['POST'])
 def enter_activity():
     try:
+        # Get incoming JSON data
         data = request.get_json()
+
+        # Extract username and remove it from data payload
         username = data.pop("username", None)
 
+        # Open database connection
         conn = get_db_connection()
         try:
+            # Convert username → user_id
             user_id = get_user_id(conn, username)
 
             if not user_id:
                 return jsonify({"error": "User not found"}), 404
 
-            # unwrap form if present
+            # If frontend wrapped form data, unwrap it
             if "form" in data:
                 data = data["form"]
 
-            # insert activity
+            # Insert activity into database
             insert_activity(conn, user_id, data)
 
             return jsonify({"status": "success"}), 201
 
         finally:
-            conn.close()  # safely close connection
+            # Always close connection
+            conn.close()
 
     except Exception as e:
         print("Error in enter_activity route:", e)
@@ -40,30 +48,43 @@ def enter_activity():
 def fill_activity():
 
     try:
+        # Get request data
         data = request.get_json()
+
+        # Extract username
         username = data.pop("username", None)
+
         conn = get_db_connection()
         try:
+            # Convert username → user_id
             user_id = get_user_id(conn, username)
         
             if not user_id:
                 return jsonify({"error": "User not found"}), 404
             
+            # Fetch all activities for this user
             activities = get_user_activities(conn, user_id)
+
         finally:
-            conn.close()  #close conn
+            # Close connection
+            conn.close()
+
     except Exception as e:
         print("Error in enter_activity route:", e)
         return jsonify({"error": str(e)}), 500
 
+    # Return activities
     return jsonify({"status": "success","activities": activities}), 200
+
 
 @activity_api.route('/fillDashAct', methods=['POST'])
 def fill_Dashactivity():
 
     try:
+        # Same logic as fill_activity (used for dashboard)
         data = request.get_json()
         username = data.pop("username", None)
+
         conn = get_db_connection()
         try:
             user_id = get_user_id(conn, username)
@@ -71,9 +92,12 @@ def fill_Dashactivity():
             if not user_id:
                 return jsonify({"error": "User not found"}), 404
             
+            # Fetch activities for dashboard display
             activities = get_user_activities(conn, user_id)
+
         finally:
-            conn.close()  #close conn
+            conn.close()
+
     except Exception as e:
         print("Error in enter_activity route:", e)
         return jsonify({"error": str(e)}), 500
@@ -85,19 +109,24 @@ def fill_Dashactivity():
 def fill_FriendActivity():
 
     try:
+        # Get request data
         data = request.get_json()
         username = data.pop("username", None)
+
         conn = get_db_connection()
         try:
+            # Convert username → user_id
             user_id = get_user_id(conn, username)
         
             if not user_id:
                 return jsonify({"error": "User not found"}), 404
             
+            # Fetch ONLY public activities for friend view
             activities = get_public_activities(conn, user_id)
 
         finally:
-            conn.close()  #close conn
+            conn.close()
+
     except Exception as e:
         print("Error in enter_activity route:", e)
         return jsonify({"error": str(e)}), 500
@@ -110,15 +139,17 @@ def fill_FriendActivity():
 @activity_api.route('/publicleaderboard', methods=['GET'])
 def public_leaderboard():
     try:
-        sport_type = request.args.get("sport_type")  # optional filter
+        # Optional sport filter from query params
+        sport_type = request.args.get("sport_type")
 
         conn = get_db_connection()
         try:
+            # Fetch leaderboard data
             rows = get_public_leaderboard(conn, sport_type=sport_type)
         finally:
             conn.close()
 
-        # define score here if you want (example: score = totalMinutes)
+        # Add score field (currently using totalMinutes)
         for r in rows:
             r["score"] = r["totalMinutes"]
 
@@ -128,9 +159,13 @@ def public_leaderboard():
         print("Error in public_leaderboard:", e)
         return jsonify({"error": str(e)}), 500
 
+
 def get_public_leaderboard(conn, sport_type=None):
     print("sport type: ", sport_type)
+
     params = []
+
+    # SQL query to aggregate public activity data per user
     sql = """
         SELECT
             u.Username AS name,
@@ -147,23 +182,31 @@ def get_public_leaderboard(conn, sport_type=None):
                 AND a.Visibility = 'public'
                 FOR JSON PATH
             ) AS activities
+
             FROM [user] u
             LEFT JOIN activity a
             ON a.UserID = u.UserID
             AND a.Visibility = 'public'
+
             GROUP BY u.Username, u.UserID
             ORDER BY totalMinutes DESC;
     """
 
     cur = conn.cursor()
+
+    # Execute query
     cur.execute(sql, params)
+
+    # Get column names
     cols = [c[0] for c in cur.description]
+
+    # Convert rows → list of dictionaries
     return [dict(zip(cols, row)) for row in cur.fetchall()]
 
 
 def get_specific_sport_data(conn, sport):
-    pass
+    pass  # placeholder for future sport-specific logic
+
+
 def get_specific_sport_data(conn, sport):
-    pass
-
-
+    pass  # duplicate placeholder (likely accidental, but left as-is)

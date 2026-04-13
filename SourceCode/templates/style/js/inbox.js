@@ -22,14 +22,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (item.type === "team_invite") {
       div.innerHTML = `
-        <div class="invite-title">${item.name}</div>
+        <div class="invite-title">${item.team_name}</div>
         <div class="invite-meta">Team Invite</div>
         <div class="invite-meta">Sport: ${item.sport}</div>
-        <div class="invite-meta">Coach: ${item.coach_username || "Unknown"}</div>
+        <div class="invite-meta">Coach: ${item.invited_by || "Unknown"}</div>
 
         <div class="invite-actions">
-          <button class="btn-accept" onclick="handleAcceptTeam('${item.id}')">Accept</button>
-          <button class="btn-decline" onclick="handleDeclineTeam('${item.id}')">Decline</button>
+          <button class="btn-accept" onclick="handleAcceptTeam('${item.invite_id}')">Accept</button>
+          <button class="btn-decline" onclick="handleDeclineTeam('${item.invite_id}')">Decline</button>
         </div>
       `;
     } else {
@@ -50,17 +50,68 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 });
 
-async function loadTeamInvites() {
-  const response = await fetch("/team_api/invites", {
-    method: "GET",
-    credentials: "include"
-  });
 
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) return [];
-  return data.invites || [];
+// -----------------------------
+// TEAM INVITES
+// -----------------------------
+async function loadTeamInvites() {
+  try {
+    const response = await fetch("/team_api/invites", {
+      method: "GET",
+      credentials: "include"
+    });
+
+    const data = await response.json();
+
+    console.log("INVITES RESPONSE:", data);
+
+    if (!response.ok) return [];
+
+    // 🔥 IMPORTANT FIX
+    return Array.isArray(data.invites) ? data.invites : [];
+
+  } catch (err) {
+    console.error("Failed to load invites:", err);
+    return [];
+  }
 }
 
+async function handleAcceptTeam(inviteId) {
+  const res = await fetch("/team_api/acceptinvite", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ invite_id: inviteId }) // ✅ FIXED
+  });
+
+  if (res.ok) {
+    location.reload();
+  } else {
+    const data = await res.json();
+    alert(data.error);
+  }
+}
+
+async function handleDeclineTeam(inviteId) {
+  const res = await fetch("/team_api/declineinvite", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ invite_id: inviteId }) // ✅ FIXED
+  });
+
+  if (res.ok) {
+    location.reload();
+  } else {
+    const data = await res.json();
+    alert(data.error);
+  }
+}
+
+
+// -----------------------------
+// CLUB REQUESTS (unchanged)
+// -----------------------------
 async function loadClubRequests() {
   const username = localStorage.getItem("currentUser");
   if (!username) return [];
@@ -73,43 +124,13 @@ async function loadClubRequests() {
 
   const data = await response.json().catch(() => ({}));
   if (!response.ok) return [];
+
   return data.requests || [];
-}
-
-async function handleAcceptTeam(teamId) {
-  const res = await fetch("/team_api/acceptinvite", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify({ team_id: teamId })
-  });
-
-  if (res.ok) {
-    location.reload();
-  } else {
-    const data = await res.json();
-    alert(data.error);
-  }
-}
-
-async function handleDeclineTeam(teamId) {
-  const res = await fetch("/team_api/declineinvite", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify({ team_id: teamId })
-  });
-
-  if (res.ok) {
-    location.reload();
-  } else {
-    const data = await res.json();
-    alert(data.error);
-  }
 }
 
 async function handleAcceptClub(clubId, requestingUsername) {
   const username = localStorage.getItem("currentUser");
+
   const res = await fetch("/club_api/acceptrequest", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -130,6 +151,7 @@ async function handleAcceptClub(clubId, requestingUsername) {
 
 async function handleDeclineClub(clubId, requestingUsername) {
   const username = localStorage.getItem("currentUser");
+
   const res = await fetch("/club_api/declinerequest", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

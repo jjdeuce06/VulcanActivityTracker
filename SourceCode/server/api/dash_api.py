@@ -196,7 +196,7 @@ def fill_dash_clubs():
 @dash_api.route("/fillDashChallenges", methods =["GET"])
 def fill_dash_challenges():
 
-    username = session.get("user_id", None)
+    username = session.get("username", None)
 
     conn = get_db_connection()
     try:

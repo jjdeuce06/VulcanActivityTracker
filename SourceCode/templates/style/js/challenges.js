@@ -213,7 +213,6 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error(err.error || `HTTP ${response.status}`);
       }
 
-      alert("Challenge created!");
       form.reset();
       window.location.href = "/challenges";
     } catch (err) {

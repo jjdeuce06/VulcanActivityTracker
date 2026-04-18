@@ -73,13 +73,12 @@ def deleteRoute():
         RouteName = data.get("name")
 
         # Get current user from session
-        username = session.get("user_id", None)
+        user_id = session.get("user_id", None)# the user name is id here now due to merge
+        print("username in deleteRoute:", user_id)
 
         # Open DB connection
         conn = get_db_connection()
 
-        # Convert session value → user_id (if needed)
-        user_id = get_user_id(conn, username)
 
         # Validate user
         if not user_id:

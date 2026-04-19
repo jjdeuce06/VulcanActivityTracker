@@ -23,7 +23,7 @@ Vulcan Activity Tracker documents from inital stages to implementation design.
 
 <div class="doc-section">
   <h2>📌 Proposal</h2>
-  <iframe src="../vulcandocs/Group2_CMSC-4900-Proposal_REVISED.pdf" width="100%" height="600px"></iframe>
+  <iframe src="../progress/vulcandocs/Group2_CMSC-4900-Proposal_REVISED.pdf" width="100%" height="600px"></iframe>
 </div>
 
 <div class="doc-section">

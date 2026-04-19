@@ -102,7 +102,7 @@ designed for campus communities.
   ">
     <h3>📊 Documents</h3>
     <p>Project planning and implementaion documents.</p>
-    <a href="progress/vulcandocs/documents">Explore →</a>
+    <a href="progress/vulcandocs/documents.html">Explore →</a>
   </div>
 
 </div>

@@ -553,6 +553,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   function buildComputedRows(rawRows, sport) {
     const s = normalizeSport(sport);
 
+
     return rawRows.map(row => {
       const activities = parseActivities(row);
       const filtered = filterBySport(activities, s);

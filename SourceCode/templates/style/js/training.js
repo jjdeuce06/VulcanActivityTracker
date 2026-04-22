@@ -236,6 +236,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   //submit button event handler
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    //Prevent future dates
+    const dateInput = document.getElementById("activity-date");
+    const selectedDate = new Date(dateInput.value);
+    const today = new Date();
+
+    today.setHours(0, 0, 0, 0); // normalize
+
+    if (selectedDate > today) {
+      alert("You cannot add an activity in the future.");
+      return;
+    }
     const data = collectSportData(form);
     console.log("Collected Data:", data);
     try {
@@ -379,6 +391,7 @@ function populateActivityTable(data){
     }
     const dateObj = new Date(common.date);
     const formattedDate = dateObj.toLocaleDateString("en-US", { year:"numeric", month:"short", day:"numeric" });
+
 
     const row = document.createElement("tr");
 

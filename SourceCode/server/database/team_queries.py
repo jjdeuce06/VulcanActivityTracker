@@ -644,6 +644,8 @@ def get_team_leaderboard(conn, team_id, sport_type="all"):
             JOIN [user] u ON tm.UserID = u.UserID
             LEFT JOIN activity a ON a.UserID = u.UserID
             WHERE tm.TeamID = ?
+              AND tm.Role = 'member'          -- ✅ ONLY PLAYERS
+              AND tm.Status = 'active'     -- ✅ ONLY ACTIVE MEMBERS
             GROUP BY u.Username
             ORDER BY u.Username
         """, (team_id,))

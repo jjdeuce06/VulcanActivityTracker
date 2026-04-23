@@ -14,7 +14,7 @@ from server.controllers.challenges_store import (
 challenges_api = Blueprint('challenges_api', __name__)
 
 
-@challenges_api.route('/createchallenge', methods=['POST'])
+@challenges_api.route('/createchallenge', methods=['POST']) #create a new challenge route
 def create_challenge():
     try:
         # Get request data
@@ -40,7 +40,7 @@ def create_challenge():
         
         conn = get_db_connection()
         try:
-            # Convert username → user_id
+            #cnonvert username to user_id
             user_id = get_user_id(conn, username)
             if not user_id:
                 return jsonify({"error": "User not found"}), 404
@@ -65,7 +65,7 @@ def create_challenge():
             return jsonify({"status": "success"}), 201
 
         finally:
-            # Always close connection
+            #close connection
             conn.close()
 
     except Exception as e:
@@ -73,28 +73,28 @@ def create_challenge():
         return jsonify({"error": str(e)}), 500
 
 
-@challenges_api.route('/listchallenges', methods=['POST'])
+@challenges_api.route('/listchallenges', methods=['POST']) #List challenges route
 def list_challenges():
     try:
-        # Get request data
+        #Get request data
         data = request.get_json() or {}
         username = data.get("username")
 
-        # Validate username
+        #Validate username
         if not username:
             return jsonify({"error": "Missing username"}), 400
 
         conn = get_db_connection()
         try:
-            # Convert username → user_id
+            #Convert username → user_id
             user_id = get_user_id(conn, username)
             if not user_id:
                 return jsonify({"error": "User not found"}), 404
 
-            # Finalize any expired challenges before fetching
+            #Finalize any expired challenges before fetching
             finalize_expired_challenges(conn)
 
-            # Get challenges user is NOT part of
+            #Get challenges user is NOT part of
             challenges = get_visible_not_user_challenges(conn, user_id)
 
         finally:
@@ -104,45 +104,46 @@ def list_challenges():
         print("Error fetching user challenges:", e)
         return jsonify({"error": str(e)}), 500
 
-    # Return challenge list
+    #Return challenge list
     return jsonify({"status": "success", "challenges": challenges}), 200
     
 
-@challenges_api.route('/mychallenges', methods=['POST']) #lists challenges that the user is a member or creator of
+@challenges_api.route('/mychallenges', methods=['POST']) #Lists challenges that the user is a member or creator of
 def my_challenges():
     try:
-        # Get request data
+        #Get request data
         data = request.get_json() or {}
         username = data.get("username")
 
-        # Validate username
+        #Validate username
         if not username:
             return jsonify({"error": "Missing username"}), 400
 
         conn = get_db_connection()
         try:
-            # Convert username → user_id
+            #Convert username to user_id
             user_id = get_user_id(conn, username)
             if not user_id:
                 return jsonify({"error": "User not found"}), 404
 
-            # Finalize expired challenges before fetching
+            #Finalize expired challenges before fetching
             finalize_expired_challenges(conn)
 
-            # Get user's challenges
+            #Get user's challenges
             challenges = get_visible_user_challenges(conn, user_id)
 
-            # Get medals earned by user
+            #Get medals earned by user
             medals = get_user_medals(conn, user_id)
 
         finally:
+            #Close connection
             conn.close()
 
     except Exception as e:
         print("Error fetching user challenges:", e)
         return jsonify({"error": str(e)}), 500
 
-    # Return challenges + medals
+    #Return challenges + medals
     return jsonify({
             "status": "success",
             "challenges": challenges,
@@ -150,26 +151,26 @@ def my_challenges():
     }), 200
 
 
-@challenges_api.route('/join', methods=['POST']) #user joins a challenge and calls the add member to challenge function
+@challenges_api.route('/join', methods=['POST']) #User joins a challenge and calls the add member to challenge function
 def join_challenge():
     try:
-        # Get request data
+        #Get request data
         data = request.get_json() or {}
         username = data.get("username")
         challenge_id = data.get("challenge_id")
 
-        # Validate inputs
+        #Validate inputs
         if not username or not challenge_id:
             return jsonify({"error": "Missing username or challenge_id"}), 400
 
         conn = get_db_connection()
         try:
-            # Convert username → user_id
+            #Convert username → user_id
             user_id = get_user_id(conn, username)
             if not user_id:
                 return jsonify({"error": "User not found"}), 404
 
-            # Add user to challenge
+            #Add user to challenge
             participants = add_participant_to_challenge(conn, challenge_id, user_id)
 
         finally:
@@ -182,7 +183,7 @@ def join_challenge():
         return jsonify({"error": str(e)}), 500
     
 
-@challenges_api.route('/leave', methods=['POST']) #user leaves a challenge and calls the remove member from challenge function
+@challenges_api.route('/leave', methods=['POST']) #User leaves a challenge and calls the remove member from challenge function
 def leave_challenge():
     try:
         # Get request data
@@ -215,28 +216,28 @@ def leave_challenge():
     
 
 
-@challenges_api.route('/deletechallenge', methods=['POST']) #deletes challenge
+@challenges_api.route('/deletechallenge', methods=['POST']) #Deletes challenge route
 def delete_challenge():
     try:
-        # Get request data
+        #Get request data
         data = request.get_json()
         print("Delete challenge payload:", data)
 
         username = data.get("username")
         challenge_id = data.get("challenge_id")
         
-        # Validate inputs
+        #Validate inputs
         if not username or not challenge_id:
             return jsonify({"error": "Missing username or challenge_id"}), 400
 
         conn = get_db_connection()
         try:
-            # Convert username → user_id
+            #Convert username to user_id
             user_id = get_user_id(conn, username)
             if not user_id:
                 return jsonify({"error": "User not found"}), 404
 
-            # Delete challenge
+            #Deletes challenge
             remove_challenge_from_database(conn, challenge_id, user_id)
             return jsonify({"status": "success"}), 201
 
@@ -250,37 +251,37 @@ def delete_challenge():
         return jsonify({"error": str(e)}), 500
     
 
-@challenges_api.route('/challengedetail', methods=['POST'])
+@challenges_api.route('/challengedetail', methods=['POST']) #Gets challenge details route
 def challenge_detail():
     try:
-        # Get request data
+        #Get request data
         data = request.get_json() or {}
         challenge_name = data.get("challenge_name")
 
-        # Validate input
+        #Validate input
         if not challenge_name:
             return jsonify({"error": "Missing challenge_name"}), 400
 
         conn = get_db_connection()
         try:
-            # Fetch all challenges
+            #Fetch all challenges
             challenges = get_all_challenges(conn)
 
-            # Find specific challenge by name
+            #Find specific challenge by name
             challenge = next((c for c in challenges if c["name"] == challenge_name), None)
 
             if not challenge:
                 return jsonify({"error": "challenge not found"}), 404
             
-            # Convert participant IDs → detailed user info
+            #Convert participant IDs to detailed user info
             participant_details = get_participant_details(conn, challenge.get("participants", []))
             challenge["participant_details"] = participant_details
 
-            # Build leaderboard for this challenge
+            #Build leaderboard for this challenge
             leaderboard = get_challenge_leaderboard(conn, challenge)
             challenge["leaderboard"] = leaderboard
 
-            # Return full challenge object
+            #Return full challenge object
             return jsonify({"challenge": challenge}), 200
 
         finally:

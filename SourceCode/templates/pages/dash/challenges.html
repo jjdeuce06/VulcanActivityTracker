@@ -1,61 +1,79 @@
- <!-- challenges.html: -->
- {% extends "base_temp/dashboard.html" %}
+<!-- challenges.html: -->
+
+{% extends "base_temp/dashboard.html" %}
+<!-- Extends the main dashboard layout (nav, structure, etc.) -->
 
 {% block page_css %}
+<!-- Page-specific stylesheet for challenges -->
 <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/challenges.css') }}">
 {% endblock %}
 
+
 {% block content %}
+<!-- Main content block injected into dashboard template -->
+
 <div class ="challengepage-page">
     
-<div class="challengepage-top-section">
-  <div class="challengepage-header-card">
-    <h1>Challenges</h1>
-    <p class="challengepage-description">
-      Compete with others and push your limits.
-    </p>
-  </div>
+    <!-- ---------------- TOP SECTION ---------------- -->
+    <div class="challengepage-top-section">
 
-  <a href="/create_challenge" class="challengepage-create-btn">
-    + Create Challenge
-  </a>
-</div>
+        <!-- Header card -->
+        <div class="challengepage-header-card">
+            <h1>Challenges</h1>
+            <p class="challengepage-description">
+                Compete with others and push your limits.
+            </p>
+        </div>
 
-<div class="challenge-medals-title-card">
-  <h3>Your Medals</h3>
-</div>
+        <!-- Button to create a new challenge -->
+        <a href="/create_challenge" class="challengepage-create-btn">
+            + Create Challenge
+        </a>
+    </div>
 
-<div class="challenge-medal-summary" id="challenge-medal-summary">
-  <div class="challenge-medal-pill">🥇 Gold: <span id="gold-medal-count">0</span></div>
-  <div class="challenge-medal-pill">🥈 Silver: <span id="silver-medal-count">0</span></div>
-  <div class="challenge-medal-pill">🥉 Bronze: <span id="bronze-medal-count">0</span></div>
-  <div class="challenge-medal-pill">✅ Completed Challenges: <span id="completed-count">0</span></div>
-</div>
+    <!-- ---------------- MEDALS SECTION ---------------- -->
+    <div class="challenge-medals-title-card">
+        <h3>Your Medals</h3>
+    </div>
 
+    <!-- Medal summary display -->
+    <div class="challenge-medal-summary" id="challenge-medal-summary">
+        <!-- Each pill shows a different medal count -->
+        <div class="challenge-medal-pill">🥇 Gold: <span id="gold-medal-count">0</span></div>
+        <div class="challenge-medal-pill">🥈 Silver: <span id="silver-medal-count">0</span></div>
+        <div class="challenge-medal-pill">🥉 Bronze: <span id="bronze-medal-count">0</span></div>
+        <div class="challenge-medal-pill">✅ Completed Challenges: <span id="completed-count">0</span></div>
+    </div>
 
-
+    <!-- ---------------- MAIN LAYOUT ---------------- -->
     <div class="challengepage-layout">
 
-    
-        <!-- RIGHT: MY CHALLENGES -->
+        <!-- LEFT/RIGHT COLUMN: USER'S CHALLENGES -->
         <div class="challengepage-card">
             <h3>My Challenges</h3>
+
+            <!-- Container for challenges created or joined by the user -->
             <div class="challengepage-list" id="my-challenge-list">
-                <!-- JS will inject challenges here -->
+                <!-- JS dynamically injects challenge cards here -->
             </div>
         </div>
 
-        <!-- RIGHT: ACTIVE CHALLENGES -->
+        <!-- LEFT/RIGHT COLUMN: ALL CHALLENGES -->
         <div class="challengepage-card">
             <h3>All Challenges</h3>
+
+            <!-- Container for all available challenges -->
             <div class="challengepage-list" id="all-challenge-list">
-                <!-- JS will inject challenges here -->
+                <!-- JS dynamically injects challenge cards here -->
             </div>
         </div>
     </div>
 </div>
 
 </body>
+
+<!-- ---------------- SCRIPT ---------------- -->
+<!-- Handles fetching, rendering, and interacting with challenges -->
 <script src="{{ url_for('style_folder.static', filename='js/challenges.js') }}"></script>
 
 {% endblock %}

@@ -1,29 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- ---------------- PAGE META ---------------- -->
     <title>Vulcan Activity Tracker</title>
+
+    <!-- Login page stylesheet -->
     <link rel="stylesheet" href="style/css/loginstyle.css">
 </head>
 
 <body>
+
+    <!-- ---------------- MAIN CONTAINER ---------------- -->
     <main class="page">
+
+        <!-- -------- LOGIN CARD -------- -->
         <div class="login-card">
 
+            <!-- App logo -->
             <img src="{{ url_for('style_folder.static', filename='img/vulcan.png') }}"
                  alt="Vulcan Logo"
                  class="profile-img">
-                 <label><h2>Welcome</h2></label>
 
+            <!-- Welcome title -->
+            <label><h2>Welcome</h2></label>
+
+            <!-- ---------------- LOGIN FORM ---------------- -->
             <div class="login-form">
+
+                <!-- Username input -->
                 <input type="text" placeholder="Enter Username" id="user_entry" required>
+
+                <!-- Password input -->
                 <input type="password" placeholder="Enter Password" id="pass_entry" required>
 
+                <!-- Login button -->
                 <button id="loginBtn">Login</button>
+
+                <!-- Navigate to create account page -->
                 <button class="createacc" onclick="createAcc()">Create Account</button>
+
+                <!-- Navigate to password reset page -->
                 <button class="resetPassword" onclick="toReset()">Forgot Password?</button>
+
+                <!-- Cancel button redirects to home -->
                 <button class="cancelbtn" onclick="backHome()">Cancel</button>
             </div>
 
+
+            <!-- ---------------- PASSWORD REQUIREMENTS (DISPLAY) ---------------- -->
+            <!-- Likely reused validation UI (may not be needed on login, but displayed here) -->
             <div id="message">
                 <h3> Password must contain the following:</h3>
                 <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
@@ -35,15 +60,38 @@
         </div>
     </main>
 
+
+    <!-- ---------------- FOOTER ---------------- -->
     <footer>
         <p>&copy; 2025 The Vulcan Activity Tracker.</p>
     </footer>
 
+
+<!-- ---------------- NAVIGATION SCRIPTS ---------------- -->
 <script>
-function backHome() {window.location.href = "/";}
-function createAcc() {window.location.href = "/createacc";}
-function toReset() {window.location.href = "/resetpassword";}
+    // Redirect to home page
+    function backHome() {
+        window.location.href = "/";
+    }
+
+    // Redirect to account creation page
+    function createAcc() {
+        window.location.href = "/createacc";
+    }
+
+    // Redirect to password reset page
+    function toReset() {
+        window.location.href = "/resetpassword";
+    }
 </script>
+
+
+<!-- ---------------- LOGIN SCRIPT ---------------- -->
+<!-- Handles:
+     - login request
+     - authentication verification
+     - session setup -->
 <script src="{{ url_for('style_folder.static', filename='js/verifyLogin.js') }}"></script>
+
 </body>
 </html>

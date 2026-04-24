@@ -1,13 +1,18 @@
 {% extends "base_temp/dashboard.html" %}
+<!-- Extends the main dashboard layout -->
 
 {% block page_css %}
+<!-- Page-specific stylesheet for clubs -->
 <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/clubs.css') }}">
 {% endblock %}
 
+
 {% block content %}
+<!-- Main content injected into dashboard -->
 
 <div class="clubs-page create-club-page">
 
+  <!-- ---------------- HEADER SECTION ---------------- -->
   <div class="clubs-topbar-card single-page-header">
     <div class="clubs-topbar-text">
       <h1>Create Club</h1>
@@ -17,15 +22,19 @@
     </div>
   </div>
 
+  <!-- ---------------- CREATE CLUB FORM ---------------- -->
   <form id="clubs-form" class="clubs-form create-club-form">
     <h3>Create Club</h3>
 
+    <!-- Club name input -->
     <label>Club Name</label>
     <input type="text" name="club_name" id="club-name" required>
 
+    <!-- Club description input -->
     <label>Club Description</label>
     <textarea name="description" id="club-description"></textarea>
 
+    <!-- Sport type dropdown -->
     <label>Sport Type</label>
     <select id="club-sport-type" required>
         <option value="run">Running</option>
@@ -44,6 +53,7 @@
         <option value="multisport">Multisport</option>
     </select>
 
+    <!-- Privacy selection (radio buttons) -->
     <label>Club Privacy</label>
     <div class="club-radio-group">
         <label class="club-radio-option">
@@ -56,13 +66,19 @@
         </label>
     </div>
 
+    <!-- Form actions -->
     <div class="create-club-actions">
+        <!-- Submit button -->
         <button type="submit">Create Club</button>
+
+        <!-- Cancel button redirects back to clubs page -->
         <a href="/clubs" class="secondary-btn">Cancel</a>    
     </div>
-</form>
+  </form>
 </div>
 
+<!-- ---------------- SCRIPT ---------------- -->
+<!-- Handles form submission and club creation logic -->
 <script src="{{ url_for('style_folder.static', filename='js/clubs.js') }}"></script>
 
 {% endblock %}

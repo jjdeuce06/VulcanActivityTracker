@@ -1,11 +1,21 @@
 {% extends "base_temp/dashboard.html" %}
+<!-- Extends the main dashboard layout (nav, structure, etc.) -->
 
 {% block content %}
-<h1>Leaderboard</h1>
-<div class = "leaderboard-card">
+<!-- Main content block injected into dashboard -->
 
-   <div class="lb-controls">
+<!-- ---------------- PAGE HEADER ---------------- -->
+<h1>Leaderboard</h1>
+
+<!-- ---------------- LEADERBOARD CARD ---------------- -->
+<div class="leaderboard-card">
+
+  <!-- ---------------- CONTROLS ---------------- -->
+  <div class="lb-controls">
+
+    <!-- LEFT SIDE: SPORT FILTER -->
     <div class="left-controls">
+      <!-- Dropdown to filter leaderboard by sport -->
       <select id="filterSport">
         <option value="all" selected>All Sports</option>
         <option value="running">Running</option>
@@ -24,21 +34,40 @@
         <option value="hockey">Hockey</option>
       </select>
     </div>
+
+    <!-- RIGHT SIDE: SORT CONTROLS -->
     <div class="right-controls">
+
+      <!-- Dropdown to select sorting metric -->
       <select id="sortBy">
         <option value="score" selected>Score</option>
         <option value="name">Name</option>
         <option value="totalMinutes">Duration</option>
         <option value="totalActivities">Activities</option>
       </select>
+
+      <!-- Button to toggle sort direction -->
       <button id="sortDir" type="button" data-dir="desc">Desc</button>
     </div>
   </div>
 
+  <!-- ---------------- LEADERBOARD TABLE ---------------- -->
   <table id="leaderboard">
+
+    <!-- Table headers dynamically generated -->
     <thead></thead>
+
+    <!-- Table rows dynamically generated -->
     <tbody></tbody>
   </table>
 </div>
+
+<!-- ---------------- SCRIPT ---------------- -->
+<!-- Handles:
+     - fetching leaderboard data
+     - filtering by sport
+     - sorting logic
+     - rendering table dynamically -->
 <script src="{{ url_for('style_folder.static', filename='js/leaderboard.js') }}"></script>
+
 {% endblock %}

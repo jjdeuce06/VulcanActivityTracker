@@ -1,46 +1,92 @@
 {% extends "base_temp/dashboard.html" %}
+<!-- Extends the main dashboard layout (nav, structure, etc.) -->
 
 {% block content %}
-<!---reference: https://leafletjs.com/-->
+
+<!-- ---------------- EXTERNAL LIBRARIES ---------------- -->
+<!-- Leaflet CSS for map rendering -->
+<!-- reference: https://leafletjs.com/ -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+<!-- Custom map styling -->
 <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/map.css') }}">
+
+<!-- Leaflet JS for interactive maps -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 
+<!-- ---------------- MAP DISPLAY ---------------- -->
 <div class="map-container">
+
+    <!-- Map canvas (Leaflet will render map here) -->
     <div id="map"></div>
 </div>
 
+
+<!-- ---------------- CONTROL PANEL ---------------- -->
 <div class="map-controls">
-    <!-- Add New Route Card -->
+
+    <!-- -------- ADD NEW ROUTE CARD -------- -->
     <div class="card">
         <h3 style="margin-bottom:10px;">Add New Route</h3>
+
+        <!-- Start capturing route -->
         <button id="startRoute">Start Route</button>
+
+        <!-- End route and finalize -->
         <button id="endRoute">End Route</button>
+
+        <!-- Input container for naming route -->
         <div id="routeNameContainer"></div>
+
+        <!-- Displays live route points -->
         <ul id="newRouteList"></ul>
+
+        <!-- Displays calculated distance -->
         <div id="routeDistance" style="margin-top:10px; font-weight:bold;"></div>
     </div>
 
-    <!-- My Routes Card -->
-    <div id= "myroutes" class="card routeUI">
+
+    <!-- -------- USER SAVED ROUTES -------- -->
+    <div id="myroutes" class="card routeUI">
         <h3 style="margin-bottom:10px;">My Routes</h3>
+
+        <!-- List populated dynamically with user's saved routes -->
         <ul id="savedRoutesList"></ul>
     </div>
 
-    <!-- Default Routes Card -->
+
+    <!-- -------- DEFAULT (PRESET) ROUTES -------- -->
     <div id="defaultroutes" class="card routeUI">
         <h3 style="margin-bottom:10px;">Vulcan Routes</h3>
+
+        <!-- List populated with predefined campus routes -->
         <ul id="defaultRoutesList"></ul>
     </div>
 
+
+    <!-- -------- WEATHER FORECAST -------- -->
     <div class="card weather-card">
         <h3>Forecast</h3>
-    <div id="forecastContainer" class="forecast-scroll"></div>
-</div>
+
+        <!-- Scrollable container for forecast data -->
+        <div id="forecastContainer" class="forecast-scroll"></div>
+    </div>
     
 </div>
 
+
+<!-- ---------------- SCRIPTS ---------------- -->
+
+<!-- Handles:
+     - map initialization
+     - route drawing
+     - saving/loading routes -->
 <script src="{{ url_for('style_folder.static', filename='js/maps.js') }}"></script>
+
+<!-- Handles:
+     - fetching weather API data
+     - rendering forecast -->
 <script src="{{ url_for('style_folder.static', filename='js/weather.js') }}"></script>
+
 {% endblock %}

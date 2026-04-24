@@ -1,55 +1,82 @@
 {% extends "base_temp/dashboard.html" %}
+<!-- Extends main dashboard layout (nav, structure, etc.) -->
 
 {% block page_css %}
+<!-- Page-specific stylesheet for club details -->
 <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/clubs.css') }}">
 {% endblock %}
 
+
 {% block content %}
+<!-- Main content injected into dashboard -->
 
 <div class="club-detail-page">
 
+  <!-- ---------------- HEADER ---------------- -->
   <div class="club-detail-header">
     <div class="club-title-card">
+      <!-- Club name populated dynamically -->
       <h1 id="club-name-heading">Club Name</h1>
     </div>
   </div>
 
+  <!-- ---------------- DESCRIPTION ---------------- -->
   <div class="club-detail-description-card">
     <h3>About This Club</h3>
+    <!-- Club description populated dynamically -->
     <p id="club-description">No description provided.</p>
   </div>
 
+  <!-- ---------------- MAIN LAYOUT ---------------- -->
   <div class="club-detail-main">
+
+    <!-- LEFT SIDE (TABS + CONTENT) -->
     <div class="club-detail-left">
+
+      <!-- Tab navigation -->
       <div class="club-detail-tabs">
         <button class="club-tab-btn active" data-tab="leaderboard">Club Leaderboard</button>
         <button class="club-tab-btn" data-tab="recent">Recent Activity</button>
         <button class="club-tab-btn" data-tab="members">Members</button>
       </div>
 
+      <!-- Tab content container -->
       <div class="club-detail-table-card">
         <div id="club-tab-content">
-          <!-- JS fills this -->
+          <!-- JS dynamically fills leaderboard / activity / members -->
         </div>
       </div>
     </div>
 
+    <!-- RIGHT SIDE (INFO PANEL) -->
     <div class="club-detail-right">
       <div class="club-detail-side-card">
+
         <h3>Club Info</h3>
+
+        <!-- Dynamic club metadata -->
         <p><strong>Members:</strong> <span id="member-count">0</span></p>
         <p><strong>Sport:</strong> <span id="club-sport-type">Unknown</span></p>
         <p><strong>Privacy:</strong> <span id="club-privacy">Public</span></p>
 
+        <!-- Action button (Join/Leave handled by JS) -->
         <button id="club-action-btn" class="secondary-btn">Join Club</button>
+
+        <!-- Back navigation -->
         <button onclick="history.back()" class="secondary-btn club-back-btn">Back</button>
       </div>
     </div>
+
   </div>
 
 </div>
 
+<!-- ---------------- SCRIPTS ---------------- -->
+
+<!-- Handles like interactions (activities/users) -->
 <script src="{{ url_for('style_folder.static', filename='js/like.js') }}"></script>
+
+<!-- Handles fetching club data, tab switching, rendering content -->
 <script src="{{ url_for('style_folder.static', filename='js/club_details.js') }}"></script>
 
 {% endblock %}

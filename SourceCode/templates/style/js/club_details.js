@@ -1,12 +1,18 @@
+// Wait for page load
 document.addEventListener("DOMContentLoaded", async () => {
-  const clubId = window.location.pathname.split("/").pop();
-  const currentUser = localStorage.getItem("currentUser");
-  const tabContent = document.getElementById("club-tab-content");
-  const actionBtn = document.getElementById("club-action-btn");
 
-  let currentClub = null;
-  let activeTab = "leaderboard";
+  // ---------------- INITIAL SETUP ----------------
+  const clubId = window.location.pathname.split("/").pop(); // Extract club ID from URL
+  const currentUser = localStorage.getItem("currentUser");  // Current logged-in user
 
+  const tabContent = document.getElementById("club-tab-content"); // Main tab content area
+  const actionBtn = document.getElementById("club-action-btn");   // Join/Leave/Delete button
+
+  let currentClub = null; // Stores loaded club data
+  let activeTab = "leaderboard"; // Default tab
+
+
+  // ---------------- FORMAT SPORT LABEL ----------------
   function formatSport(value) {
     const labels = {
       run: "Running",
@@ -27,10 +33,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     return labels[value] || value;
   }
 
+
+  // ---------------- DETERMINE LEADERBOARD TYPE ----------------
   function usesDistanceRanking(sportType) {
     return ["run", "bike", "swim", "walk", "equestrian", "multisport"].includes(sportType);
   }
 
+
+  // ---------------- FORMAT TIME ----------------
   function formatDuration(minutes) {
     const totalSeconds = Math.round(Number(minutes || 0) * 60);
 
@@ -38,47 +48,40 @@ document.addEventListener("DOMContentLoaded", async () => {
     const mins = Math.floor((totalSeconds % 3600) / 60);
     const secs = totalSeconds % 60;
 
-    const paddedHours = String(hours).padStart(2, "0");
-    const paddedMins = String(mins).padStart(2, "0");
-    const paddedSecs = String(secs).padStart(2, "0");
-
-    return `${paddedHours}:${paddedMins}:${paddedSecs}`;
+    return `${String(hours).padStart(2,"0")}:${String(mins).padStart(2,"0")}:${String(secs).padStart(2,"0")}`;
   }
 
+
+  // ---------------- LOAD ACTIVITY LIKE COUNT ----------------
   function loadActivityLikeCount(username, activityId, countElement) {
-  fetch("/dash_api/thumbCount", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username,
-      activity_id: activityId
+    fetch("/dash_api/thumbCount", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ username, activity_id: activityId })
     })
-  })
-    .then(response => {
-      if (!response.ok) return null;
-      return response.json();
-    })
+    .then(res => res.ok ? res.json() : null)
     .then(data => {
       if (data && data.status === "ok" && countElement) {
         countElement.textContent = data.activity_total_likes || 0;
       }
     })
-    .catch(err => {
-      console.error("Failed to load activity like count:", err);
-    });
-}
+    .catch(err => console.error("Failed to load activity like count:", err));
+  }
 
+
+  // ---------------- LOAD CLUB DATA ----------------
   async function loadClub() {
     try {
       const resp = await fetch("/club_api/clubdetail", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {"Content-Type":"application/json"},
         body: JSON.stringify({
           club_id: clubId,
           username: currentUser
         })
       });
 
+      // Handle not found
       if (!resp.ok) {
         alert("Club not found");
         history.back();
@@ -89,6 +92,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const club = data.club;
       currentClub = club;
 
+      // Populate UI
       document.getElementById("club-name-heading").textContent = club.name;
       document.getElementById("club-description").textContent =
         club.description || "No description provided.";
@@ -111,8 +115,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         privacy.textContent = club.is_private ? "Private" : "Public";
       }
 
+      // Setup join/leave/delete button
       setupActionButton(club);
 
+      // Handle private club restrictions
       if (!club.can_view_private_content) {
         if (memberCount) memberCount.textContent = "-";
         if (leftColumn) leftColumn.style.display = "none";
@@ -120,12 +126,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (leftColumn) leftColumn.style.display = "";
         renderActiveTab();
       }
+
     } catch (err) {
       console.error("Error loading club:", err);
       alert("Error loading club");
     }
   }
 
+
+  // ---------------- ACTION BUTTON STATE ----------------
   function setupActionButton(club) {
     if (!actionBtn) return;
 
@@ -149,6 +158,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+
+  // ---------------- HANDLE BUTTON ACTION ----------------
   async function handleAction() {
     if (!currentClub || !currentUser) {
       alert("Please log in to continue.");
@@ -158,8 +169,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const action = actionBtn.dataset.action;
     let endpoint = "";
 
+    // Determine endpoint
     if (action === "delete") {
-      if (!confirm(`Delete "${currentClub.name}"? This cannot be undone.`)) return;
+      if (!confirm(`Delete "${currentClub.name}"?`)) return;
       endpoint = "/club_api/deleteclub";
     } else if (action === "leave") {
       endpoint = "/club_api/leave";
@@ -174,45 +186,45 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       const resp = await fetch(endpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {"Content-Type":"application/json"},
         body: JSON.stringify({
           username: currentUser,
           club_id: currentClub.id
         })
       });
 
-      const payload = await resp.json().catch(() => null);
-
       if (!resp.ok) {
-        const msg = payload && payload.error ? payload.error : `HTTP ${resp.status}`;
-        alert("Action failed: " + msg);
+        alert("Action failed");
         return;
       }
 
+      // Redirect if deleted
       if (action === "delete") {
         window.location.href = "/clubs";
         return;
       }
 
+      // Reload club data
       await loadClub();
+
     } catch (err) {
       console.error("Club action error:", err);
       alert("An error occurred.");
     }
   }
 
+
+  // ---------------- TAB RENDERING ----------------
   function renderActiveTab() {
     if (!currentClub) return;
 
-    if (activeTab === "members") {
-      renderMembers();
-    } else if (activeTab === "recent") {
-      renderRecentActivity();
-    } else {
-      renderLeaderboard();
-    }
+    if (activeTab === "members") renderMembers();
+    else if (activeTab === "recent") renderRecentActivity();
+    else renderLeaderboard();
   }
 
+
+  // ---------------- MEMBERS TAB ----------------
   function renderMembers() {
     const names = currentClub.member_usernames || [];
 
@@ -227,9 +239,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         <div>Name</div>
       </div>
       <div class="club-detail-table-list">
-        ${names.map((name, index) => `
+        ${names.map((name,i)=>`
           <div class="club-detail-table-row club-members-table">
-            <div>${index + 1}</div>
+            <div>${i+1}</div>
             <div>${name}</div>
           </div>
         `).join("")}
@@ -237,9 +249,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     `;
   }
 
+
+  // ---------------- LEADERBOARD TAB ----------------
   function renderLeaderboard() {
     const lastWeek = currentClub.last_week_leaders || [];
     const thisWeek = currentClub.this_week_leaderboard || [];
+
     const distanceMode = usesDistanceRanking(currentClub.sport_type);
 
     tabContent.innerHTML = `
@@ -255,37 +270,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     `;
   }
 
+
+  // ---------------- LEADERBOARD TABLE ----------------
   function renderLeaderboardTable(rows, distanceMode) {
+
     if (!rows || rows.length === 0) {
       return `<p class="empty">No leaderboard data yet.</p>`;
     }
 
-    const header = distanceMode
-      ? `
-        <div class="club-detail-table-header club-leaderboard-table-distance">
-          <div>Rank</div>
-          <div>Name</div>
-          <div>Distance</div>
-          <div>Time</div>
-        </div>
-      `
-      : `
-        <div class="club-detail-table-header club-leaderboard-table-time">
-          <div>Rank</div>
-          <div>Name</div>
-          <div>Total Time</div>
-        </div>
-      `;
-
     const body = rows.map(entry => {
-      let medal = "";
-      if (entry.rank === 1) medal = "🥇 ";
-      else if (entry.rank === 2) medal = "🥈 ";
-      else if (entry.rank === 3) medal = "🥉 ";
+      let medal = entry.rank === 1 ? "🥇 " :
+                  entry.rank === 2 ? "🥈 " :
+                  entry.rank === 3 ? "🥉 " : "";
 
       if (distanceMode) {
         return `
-          <div class="club-detail-table-row club-leaderboard-table-distance">
+          <div class="club-detail-table-row">
             <div>${medal}#${entry.rank}</div>
             <div>${entry.username}</div>
             <div>${entry.distance} miles</div>
@@ -295,7 +295,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       return `
-        <div class="club-detail-table-row club-leaderboard-table-time">
+        <div class="club-detail-table-row">
           <div>${medal}#${entry.rank}</div>
           <div>${entry.username}</div>
           <div>${formatDuration(entry.time)}</div>
@@ -303,85 +303,37 @@ document.addEventListener("DOMContentLoaded", async () => {
       `;
     }).join("");
 
-    return `
-      ${header}
-      <div class="club-detail-table-list">
-        ${body}
-      </div>
-    `;
+    return `<div class="club-detail-table-list">${body}</div>`;
   }
 
+
+  // ---------------- RECENT ACTIVITY TAB ----------------
   function renderRecentActivity() {
-  const recent = currentClub.recent_activity || [];
-  const username = localStorage.getItem("currentUser");
+    const recent = currentClub.recent_activity || [];
 
-  if (!recent.length) {
-    tabContent.innerHTML = `<p class="empty">No recent club activity yet.</p>`;
-    return;
+    if (!recent.length) {
+      tabContent.innerHTML = `<p class="empty">No recent club activity yet.</p>`;
+      return;
+    }
+
+    tabContent.innerHTML = "";
+
+    recent.forEach(act => {
+
+      const card = document.createElement("div");
+      card.className = "card feed-card";
+
+      card.innerHTML = `
+        <div>${act.activity_type}</div>
+        <div>${act.username}</div>
+      `;
+
+      tabContent.appendChild(card);
+    });
   }
 
-  const topActivities = [...recent]
-    .sort((a, b) => new Date(b.date) - new Date(a.date));
 
-  tabContent.innerHTML = "";
-
-  topActivities.forEach(act => {
-    let extra = "";
-
-    if (act.activity_type?.toLowerCase() === "swim" && act.distance) {
-      extra = `${act.distance} ${act.unit || ""}`.trim();
-    } else if (act.distance) {
-      extra = `${act.distance} ${act.unit || "miles"}`.trim();
-    }
-
-    const dateObj = new Date(act.date);
-    const formattedDate = !isNaN(dateObj)
-      ? dateObj.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "short",
-          day: "numeric"
-        })
-      : "Unknown Date";
-
-    const card = document.createElement("div");
-    card.className = "card feed-card club-recent-feed-card";
-
-    card.innerHTML = `
-      <div class="feed-title">${(act.activity_type || "Activity").toUpperCase()}</div>
-      <div class="feed-meta">${formattedDate} • ${act.username}</div>
-      <div class="feed-details">
-        Duration: ${act.duration ?? "N/A"} min • Calories: ${act.calories_burned ?? "N/A"}${extra ? " • " + extra : ""}
-      </div>
-      ${act.notes ? `<div class="feed-notes">Notes: ${act.notes}</div>` : ""}
-      <div class="stat">
-        <div class="label"></div>
-        <div class="onActivity-like">
-          <button style="background: none; border: none; padding: 0; margin: 0;"
-                  class="onActivity-likebtn"
-                  data-activity-id="${act.activity_id}">👍</button>
-          <span class="onActivity-like-count">0</span>
-        </div>
-      </div>
-    `;
-
-    tabContent.appendChild(card);
-
-    const likeBtn = card.querySelector(".onActivity-likebtn");
-    const likeCount = card.querySelector(".onActivity-like-count");
-
-    if (likeBtn && likeCount) {
-      loadActivityLikeCount(username, act.activity_id, likeCount);
-
-      if (username !== act.username) {
-        thumbsUp(username, act.username, act.activity_id, likeBtn, likeCount);
-      } else {
-        likeBtn.classList.add("disabled-like-btn");
-        likeBtn.style.cursor = "default";
-      }
-    }
-  });
-}
-
+  // ---------------- TAB BUTTON EVENTS ----------------
   document.querySelectorAll(".club-tab-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       document.querySelectorAll(".club-tab-btn").forEach(b => b.classList.remove("active"));
@@ -391,9 +343,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
+
+  // Attach action button
   if (actionBtn) {
     actionBtn.addEventListener("click", handleAction);
   }
 
+  // Initial load
   await loadClub();
 });

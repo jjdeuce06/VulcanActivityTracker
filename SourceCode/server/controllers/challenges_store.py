@@ -93,7 +93,7 @@ def get_all_challenges(conn):
     finally:
         cursor.close()
         
-def get_not_user_challenges(conn, user_id):#Gets the challenges a user is not a participant or owner of
+def get_not_user_challenges(conn, user_id):
     try:
         all_challenges = get_all_challenges(conn)
         uid = str(user_id)
@@ -103,7 +103,7 @@ def get_not_user_challenges(conn, user_id):#Gets the challenges a user is not a 
         print("Get not user challenges error:", e)
         raise
 
-def get_user_challenges(conn, user_id):#Gets the challenges a user is a participant or owner of
+def get_user_challenges(conn, user_id):
     try:
         all_challenges = get_all_challenges(conn)
         uid = str(user_id)
@@ -117,7 +117,7 @@ def get_user_challenges(conn, user_id):#Gets the challenges a user is a particip
 
 
 
-def get_dash_challenges(conn, user_id):#Gets the challenges a user is a participant or owner of for dashboard
+def get_dash_challenges(conn, user_id):
     try:
         all_challenges = get_all_challenges(conn)
         uid = str(user_id)
@@ -142,7 +142,7 @@ def get_dash_challenges(conn, user_id):#Gets the challenges a user is a particip
         print("Get user challenges error:", e)
         raise
     
-def add_participant_to_challenge(conn, challenge_id, user_id):#Adds participant to challenge
+def add_participant_to_challenge(conn, challenge_id, user_id):
     cursor = conn.cursor()
     try:
         cursor.execute("SELECT Participants, CreatorUserID FROM challenges WHERE ChallengeID = ?", (challenge_id,))
@@ -177,7 +177,7 @@ def add_participant_to_challenge(conn, challenge_id, user_id):#Adds participant 
         cursor.close()
         
 
-def remove_participant_from_challenge(conn, challenge_id, user_id): #Removes the user from the participant list of a challenge in the database
+def remove_participant_from_challenge(conn, challenge_id, user_id): #removes the user from the member list of a challenge in the database
     cursor = conn.cursor()
     try:
         cursor.execute("SELECT Participants FROM challenges WHERE ChallengeID = ?", (challenge_id,))
@@ -209,7 +209,7 @@ def remove_participant_from_challenge(conn, challenge_id, user_id): #Removes the
         
      
         
-def remove_challenge_from_database(conn, challenge_id, user_id):#Removes challenge from database by ChallengeID
+def remove_challenge_from_database(conn, challenge_id, user_id):
     cursor = conn.cursor()
     
     try:
@@ -234,7 +234,7 @@ def remove_challenge_from_database(conn, challenge_id, user_id):#Removes challen
         cursor.close()
         
 
-def calculate_challenge_progress(conn, challenge, user_id):#Calculate a users challenge progress
+def calculate_challenge_progress(conn, challenge, user_id):
     activities = get_user_activities(conn, user_id)
 
     start = datetime.fromisoformat(challenge["start_date"])
@@ -254,7 +254,7 @@ def calculate_challenge_progress(conn, challenge, user_id):#Calculate a users ch
         if activity["activity_type"] != challenge["activity_type"]:
             continue
 
-        #Parse date correctly
+        # Parse date correctly
         activity_date = datetime.fromisoformat(activity["date"])
 
         if not (start <= activity_date <= end):
@@ -262,59 +262,59 @@ def calculate_challenge_progress(conn, challenge, user_id):#Calculate a users ch
 
         metric = challenge["metric_type"].lower()
 
-        #DISTANCE
+        # DISTANCE
         if metric == "distance":
             total += float(activity.get("distance", 0))
 
-        #TIME
+        # TIME
         elif metric == "time":
             total += float(activity.get("duration", 0))
 
-        #COUNT
+        # COUNT
         elif metric == "count":
             total += 1
 
-        #STEPS
+        # STEPS
         elif metric == "steps":
             total += float(activity.get("steps", 0))
 
-        #SETS
+        # SETS
         elif metric == "sets":
             total += float(activity.get("sets", 0))
 
-        #GOALS
+        # GOALS
         elif metric == "goals":
             total += float(activity.get("goals", 0))
 
-        #ASsISTS
+        # ASSISTS
         elif metric == "assists":
             total += float(activity.get("assists", 0))
 
-        #HITS
+        # HITS
         elif metric == "hits":
             total += float(activity.get("hits", 0))
 
-        #RUNS
+        # RUNS
         elif metric == "runs":
             total += float(activity.get("runs", 0))
 
-        #TOUCHDOWNS
+        # TOUCHDOWNS
         elif metric == "touchdowns":
             total += float(activity.get("touchdowns", 0))
 
-        #POINTS
+        # POINTS
         elif metric == "points":
             total += float(activity.get("points", 0))
 
-        #REBOUNDS
+        # REBOUNDS
         elif metric == "rebounds":
             total += float(activity.get("rebounds", 0))
 
-        #KILLS
+        # KILLS
         elif metric == "kills":
             total += float(activity.get("kills", 0))
 
-        #INTENSITY
+        # INTENSITY
         elif metric == "intensity":
             total += float(activity.get("intensity", 0))
 
@@ -331,7 +331,7 @@ def calculate_challenge_progress(conn, challenge, user_id):#Calculate a users ch
     }
     
 
-def challenge_name_exists(conn, challenge_name):#Checks if a challenge name is already in use by a current challenge
+def challenge_name_exists(conn, challenge_name):
     cursor = conn.cursor()
     try:
         cursor.execute("""
@@ -348,7 +348,7 @@ def challenge_name_exists(conn, challenge_name):#Checks if a challenge name is a
         cursor.close()    
         
 
-def get_participant_details(conn, user_ids):#Gets the participants details
+def get_participant_details(conn, user_ids):
     cursor = conn.cursor()
     try:
         if not user_ids:
@@ -374,7 +374,7 @@ def get_participant_details(conn, user_ids):#Gets the participants details
     finally:
         cursor.close()
         
-def get_challenge_leaderboard(conn, challenge):#Get the leaderboard for challenge details pages
+def get_challenge_leaderboard(conn, challenge):
     leaderboard = []
 
     participant_ids = challenge.get("participants", [])
@@ -401,7 +401,7 @@ def get_challenge_leaderboard(conn, challenge):#Get the leaderboard for challeng
 
     return leaderboard
 
-def get_user_medals(conn, user_id):#Gets a users medals
+def get_user_medals(conn, user_id):
     cursor = conn.cursor()
     try:
         cursor.execute("SELECT Medals FROM [user] WHERE UserID = ?", (user_id,))
@@ -425,7 +425,7 @@ def get_user_medals(conn, user_id):#Gets a users medals
         cursor.close()
 
 
-def add_medal_to_user(conn, user_id, medal_type):#Adds the medals awarded to a user
+def add_medal_to_user(conn, user_id, medal_type):
     cursor = conn.cursor()
     try:
         medals = get_user_medals(conn, user_id)
@@ -445,18 +445,18 @@ def add_medal_to_user(conn, user_id, medal_type):#Adds the medals awarded to a u
         cursor.close()
 
 
-def award_challenge_medals(conn, challenge):#Awards the medals to a user
+def award_challenge_medals(conn, challenge):
     if challenge.get("medals_awarded"):
         return
 
     leaderboard = get_challenge_leaderboard(conn, challenge)
 
-    #award top 3 medals
+    # award top 3 medals
     medal_order = ["gold", "silver", "bronze"]
     for index, entry in enumerate(leaderboard[:3]):
         add_medal_to_user(conn, entry["user_id"], medal_order[index])
 
-    #award completed to every participant who met the goal
+    # award "completed" to every participant who met the goal
     for entry in leaderboard:
         if float(entry["current"]) >= float(entry["target"]):
             add_medal_to_user(conn, entry["user_id"], "completed")
@@ -474,7 +474,7 @@ def award_challenge_medals(conn, challenge):#Awards the medals to a user
         cursor.close()
 
 
-def finalize_expired_challenges(conn):#Finishes challenges that reach the end date
+def finalize_expired_challenges(conn):
     today = datetime.now().date()
     all_challenges = get_all_challenges(conn)
 
@@ -488,7 +488,7 @@ def finalize_expired_challenges(conn):#Finishes challenges that reach the end da
             award_challenge_medals(conn, challenge)
 
 
-def get_visible_not_user_challenges(conn, user_id):#Gets challenges that have not yet completed user is not participant or owner of
+def get_visible_not_user_challenges(conn, user_id):
     all_challenges = get_all_challenges(conn)
     uid = str(user_id)
     return [
@@ -499,7 +499,7 @@ def get_visible_not_user_challenges(conn, user_id):#Gets challenges that have no
     ]
 
 
-def get_visible_user_challenges(conn, user_id):#Gets challenges that have not yet completed user is participant or owner of
+def get_visible_user_challenges(conn, user_id):
     all_challenges = get_all_challenges(conn)
     uid = str(user_id)
 

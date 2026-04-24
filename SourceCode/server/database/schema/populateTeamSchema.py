@@ -1,8 +1,15 @@
 import pyodbc
 
+
+# ---------------- SEED TEAMS AND COACHES ----------------
+# Inserts predefined teams and associated coach emails into the database
 def seed_teams_and_coaches(conn: pyodbc.Connection) -> None:
+
+    # Create DB cursor
     cursor = conn.cursor()
 
+    # ---------------- PREDEFINED TEAM DATA ----------------
+    # List of teams with sport, description, and coach emails
     teams_to_seed = [
         {
             "team_name": "PennWest Men's Soccer",
@@ -89,72 +96,73 @@ def seed_teams_and_coaches(conn: pyodbc.Connection) -> None:
             ]
         },
         {
-        "team_name": "PennWest Women's Golf",
-        "sport": "Golf",
-        "description": "Official women's golf team",
-        "coach_emails": [
-            "noro@pennwest.edu",
-            "morelli_v@pennwest.edu"
-        ]
-    },
-    {
-        "team_name": "PennWest Men's Baseball",
-        "sport": "Baseball",
-        "description": "Official men's baseball team",
-        "coach_emails": [
-            "baseball@pennwest.edu"
-        ]
-    },
-    {
-        "team_name": "PennWest Men's Track and Field",
-        "sport": "Track and Field",
-        "description": "Official men's track and field team",
-        "coach_emails": [
-            "caulfield@pennwest.edu",
-            "estep@pennwest.edu",
-            "wert@pennwest.edu"
-        ]
-    },
-    {
-        "team_name": "PennWest Women's Softball",
-        "sport": "Softball",
-        "description": "Official women's softball team",
-        "coach_emails": [
-            "erb_k@pennwest.edu",
-            "hall_r@pennwest.edu"
-        ]
-    },
-    {
-        "team_name": "PennWest Women's Swimming",
-        "sport": "Swimming",
-        "description": "Official women's swimming team",
-        "coach_emails": [
-            "gitzen@pennwest.edu",
-            "kennedy_r@pennwest.edu"
-        ]
-    },
-    {
-        "team_name": "PennWest Women's Tennis",
-        "sport": "Tennis",
-        "description": "Official women's tennis team",
-        "coach_emails": [
-            "onufer@pennwest.edu"
-        ]
-    },
-    {
-        "team_name": "PennWest Women's Volleyball",
-        "sport": "Volleyball",
-        "description": "Official women's volleyball team",
-        "coach_emails": [
-            "emerich_a@pennwest.edu",
-            "greene_ma@pennwest.edu"
-        ]
-    }
+            "team_name": "PennWest Women's Golf",
+            "sport": "Golf",
+            "description": "Official women's golf team",
+            "coach_emails": [
+                "noro@pennwest.edu",
+                "morelli_v@pennwest.edu"
+            ]
+        },
+        {
+            "team_name": "PennWest Men's Baseball",
+            "sport": "Baseball",
+            "description": "Official men's baseball team",
+            "coach_emails": [
+                "baseball@pennwest.edu"
+            ]
+        },
+        {
+            "team_name": "PennWest Men's Track and Field",
+            "sport": "Track and Field",
+            "description": "Official men's track and field team",
+            "coach_emails": [
+                "caulfield@pennwest.edu",
+                "estep@pennwest.edu",
+                "wert@pennwest.edu"
+            ]
+        },
+        {
+            "team_name": "PennWest Women's Softball",
+            "sport": "Softball",
+            "description": "Official women's softball team",
+            "coach_emails": [
+                "erb_k@pennwest.edu",
+                "hall_r@pennwest.edu"
+            ]
+        },
+        {
+            "team_name": "PennWest Women's Swimming",
+            "sport": "Swimming",
+            "description": "Official women's swimming team",
+            "coach_emails": [
+                "gitzen@pennwest.edu",
+                "kennedy_r@pennwest.edu"
+            ]
+        },
+        {
+            "team_name": "PennWest Women's Tennis",
+            "sport": "Tennis",
+            "description": "Official women's tennis team",
+            "coach_emails": [
+                "onufer@pennwest.edu"
+            ]
+        },
+        {
+            "team_name": "PennWest Women's Volleyball",
+            "sport": "Volleyball",
+            "description": "Official women's volleyball team",
+            "coach_emails": [
+                "emerich_a@pennwest.edu",
+                "greene_ma@pennwest.edu"
+            ]
+        }
     ]
 
+    # ---------------- SEED LOOP ----------------
     for team in teams_to_seed:
 
-        # ✅ Insert team if it doesn't exist
+        # Insert team if it does not already exist
         cursor.execute("""
             IF NOT EXISTS (
                 SELECT 1 FROM teams WHERE TeamName = ? AND Sport = ?
@@ -170,22 +178,24 @@ def seed_teams_and_coaches(conn: pyodbc.Connection) -> None:
             team["sport"],
             team["description"]
         ))
+
         conn.commit()
 
-        # ✅ Get TeamID
+        # ---------------- FETCH TEAM ID ----------------
         cursor.execute("""
             SELECT TeamID FROM teams
             WHERE TeamName = ? AND Sport = ?
         """, (team["team_name"], team["sport"]))
 
         row = cursor.fetchone()
+
         if not row:
             print(f"Failed to fetch TeamID for {team['team_name']}")
             continue
 
         team_id = row.TeamID
 
-        # ✅ Insert coach emails
+        # ---------------- INSERT COACH EMAILS ----------------
         for email in team["coach_emails"]:
             cursor.execute("""
                 IF NOT EXISTS (
@@ -198,7 +208,10 @@ def seed_teams_and_coaches(conn: pyodbc.Connection) -> None:
                 END
             """, (team_id, email, team_id, email))
 
+        # Commit coach inserts
         conn.commit()
+
         print(f"Seeded: {team['team_name']}")
 
+    # Close cursor
     cursor.close()

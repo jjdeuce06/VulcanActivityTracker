@@ -1,6 +1,8 @@
+// ---------------- PAGE LOAD: FETCH AND DISPLAY ALL INVITES ----------------
 document.addEventListener("DOMContentLoaded", async () => {
   const container = document.getElementById("invites-container");
 
+  // Load both sources at the same time
   const [teamInvites, clubRequests] = await Promise.all([
     loadTeamInvites(),
     loadClubRequests()
@@ -15,11 +17,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     container.innerHTML = `<div class="no-invites">No invites yet</div>`;
     return;
   }
-
+// Create a card for each invite/request
   allItems.forEach(item => {
     const div = document.createElement("div");
     div.className = "invite-card";
 
+    // ---------------- TEAM INVITE CARD ----------------
     if (item.type === "team_invite") {
       div.innerHTML = `
         <div class="invite-title">${item.team_name}</div>
@@ -32,6 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           <button class="btn-decline" onclick="handleDeclineTeam('${item.invite_id}')">Decline</button>
         </div>
       `;
+       // ---------------- CLUB JOIN REQUEST CARD ----------------
     } else {
       div.innerHTML = `
         <div class="invite-title">${item.name}</div>
@@ -76,6 +80,7 @@ async function loadTeamInvites() {
   }
 }
 
+// ---------------- TEAM INVITE ACTIONS ----------------
 async function handleAcceptTeam(inviteId) {
   const res = await fetch("/team_api/acceptinvite", {
     method: "POST",
@@ -110,7 +115,7 @@ async function handleDeclineTeam(inviteId) {
 
 
 // -----------------------------
-// CLUB REQUESTS (unchanged)
+// CLUB REQUESTS 
 // -----------------------------
 async function loadClubRequests() {
   const username = localStorage.getItem("currentUser");
@@ -128,6 +133,7 @@ async function loadClubRequests() {
   return data.requests || [];
 }
 
+// ---------------- CLUB REQUEST ACTIONS ----------------
 async function handleAcceptClub(clubId, requestingUsername) {
   const username = localStorage.getItem("currentUser");
 

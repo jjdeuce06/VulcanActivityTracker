@@ -105,6 +105,19 @@ designed for campus communities.
     <a href="progress/vulcandocs/documents.html">Explore →</a>
   </div>
 
+  <div style="
+    flex: 1;
+    min-width: 220px;
+    background: #0b102f;
+    border-radius: 16px;
+    padding: 16px;
+    color: #ffffff;
+  ">
+    <h3>Vulcan Activity Tracker</h3>
+    <p>Live Web Based Application</p>
+    <a href="https://vulcanactivitytracker.onrender.com">Live →</a>
+  </div>
+
 </div>
 </div>
 

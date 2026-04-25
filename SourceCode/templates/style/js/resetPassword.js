@@ -1,6 +1,8 @@
+//redirects user back to the login page
 function backToLogin() {window.location.href = "/login";}
 
 
+// ---------------- PASSWORD RESET REQUEST ----------------
 function resetPassword() {
     const email = document.getElementById("user_entry").value.trim();
     fetch("/password_api/reset-password", {

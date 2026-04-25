@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const searchInput = document.getElementById('activity-searchbar');
   const tableBody = document.getElementById('activities-body');
 
+  // ---------------- ACTIVITY TEMPLATES ----------------
   const templates = {
     run: `
       <label>Distance (miles)</label>
@@ -214,13 +215,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         <textarea name="notes" rows="3"></textarea>
     `
   };
-
+// ---------------- SET ACTIVITY FIELDS ----------------
   function setFields(activityKey) 
   {
     activityTypeInput.value = activityKey;
     fieldsContainer.innerHTML = templates[activityKey] || "";
   }
 
+  // ---------------- ACTIVITY DROPDOWN SELECT ----------------
   // Click handling (only respond to menu items)
   dropdown.addEventListener("click", (e) => {
     const link = e.target.closest(".dropdown-content a");
@@ -233,6 +235,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     selectedActivityBtn.textContent = link.textContent;
   });
 
+  // ---------------- SUBMIT ACTIVITY FORM ----------------
   //submit button event handler
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -274,8 +277,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     selectedActivityBtn.textContent = "None Selected";
   });
 
+  // ---------------- INITIAL LOAD ACTIVITY TABLE ----------------
   await fillActivityTable(username);
 
+// ---------------- ACTIVITY SEARCH FILTER ----------------
   searchInput.addEventListener('input', function(){
     const filter = searchInput.value.toLowerCase();
     const rows = tableBody.getElementsByTagName('tr');
@@ -294,7 +299,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 });
 
-
+// ---------------- COLLECT FORM DATA ----------------
 function collectSportData(form) 
 {
   if (!form) throw new Error("Form element not provided");
@@ -324,7 +329,7 @@ function collectSportData(form)
   return data;
 }
 
-
+// ---------------- SEND ACTIVITY DATA ----------------
 async function sendActivityData(data, username){
     const response = await fetch("/activity_api/enteractivity", {
         method: "POST",
@@ -341,7 +346,7 @@ async function sendActivityData(data, username){
 }
 
 
-//fill activities data
+// ---------------- FETCH ACTIVITY TABLE ----------------
 async function fillActivityTable(username) {
   try {
     const response = await fetch("/activity_api/fillactivity", {
@@ -373,7 +378,7 @@ async function fillActivityTable(username) {
   }
 }
 
-
+// ---------------- POPULATE ACTIVITY TABLE ----------------
 function populateActivityTable(data){
   const activityTable = document.querySelector("#activities-body");
   activityTable.innerHTML = "";

@@ -31,12 +31,12 @@ def get_db_connection():
     # Build ODBC connection string for SQL Server
     conn_str = (
         f"DRIVER={{ODBC Driver 18 for SQL Server}};"
-        f"SERVER={server},1433;"                     # SQL Server port
-        f"DATABASE={database};"                     # target database
-        f"UID={username};"                          # username
-        f"PWD={password};"                          # password
-        "Encrypt=yes;"                              # enforce encryption
-        "TrustServerCertificate=yes;"               # allow self-signed certs
+        f"SERVER={server},1433;"
+        f"DATABASE={database};"
+        f"UID={username};"
+        f"PWD={password};"
+        "Encrypt=yes;"
+        "TrustServerCertificate=no;" #no for hosting, yes for local 
     )
 
     # ---------------- RETRY LOGIC ----------------

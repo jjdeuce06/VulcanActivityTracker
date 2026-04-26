@@ -1,118 +1,175 @@
-<!-- Main Dashboard Layout -->
-  <main class="dash-shell">
-    <div class="dash-grid">
+<!-- ---------------- MAIN DASHBOARD LAYOUT ---------------- -->
+<main class="dash-shell">
+  <div class="dash-grid">
 
-      <!-- Left column -->
-      <aside class="dash-col dash-left">
-        <div class="card profile-card">
-          <!-- Replace with your user avatar -->
-          <img class="avatar" src="{{ url_for('style_folder.static', filename='img/pfp.jpg') }}" alt="User avatar">
-          <div class="name" id="user-name"></div>
+    <!-- ================= LEFT COLUMN ================= -->
+    <aside class="dash-col dash-left">
 
+      <!-- -------- PROFILE CARD -------- -->
+      <div class="card profile-card">
+
+        <!-- User avatar -->
+        <img class="avatar" src="{{ url_for('style_folder.static', filename='img/pfp.jpg') }}" alt="User avatar">
+
+        <!-- Username populated dynamically -->
+        <div class="name" id="user-name"></div>
+
+        <!-- -------- USER STATS -------- -->
+        <div class="stats">
+
+          <!-- Clubs count -->
+          <div class="stat">
+            <div class="value">Clubs</div>
+            <div class="label" id="club-count">Number</div>
+          </div>
+
+          <!-- Activities count -->
+          <div class="stat">
+            <div class="value">Activities</div>
+            <div class="label" id="activity-count">Number</div>
+          </div>
+
+          <!-- Likes count -->
+          <div class="stat">
+            <div class="label">❤️</div>
+            <div class="main-like-container">
+              <span id="main-like-count">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- -------- MY CLUBS CARD -------- -->
+      <div class="card">
+        <h3 style="margin-bottom:10px;">My Clubs</h3>
+
+        <!-- Populated dynamically with user's clubs -->
+        <div id="dash-clubs-container" class="clubs-container"></div>
+      </div>
+      
+      <!-- -------- FRIENDS CARD -------- -->
+      <div class="card" id="friends-card">
+        <h3 style="margin-bottom:10px;">My Friends</h3>
+
+        <!-- Friend list populated dynamically -->
+        <div id="friends-list" style="color:#777;">show friends</div>
+
+        <!-- Button to trigger add friend modal/dropdown -->
+        <button id="friendBtn">Add Friend</button>
+
+        <!-- Dropdown for selecting users to add -->
+        <select id="friendDropdown" style="display:none;">
+          <option value="">Select a user</option>
+        </select>
+      </div>
+    </aside>
+
+
+    <!-- ================= FRIEND MODAL ================= -->
+    <!-- Popup for viewing a selected friend's profile -->
+    <div class="modal" id="friendModal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+
+        <!-- -------- FRIEND PROFILE CARD -------- -->
+        <div class="card profile-card friend-view-card">
+
+          <!-- Friend avatar -->
+          <img class="avatar" src="{{ url_for('style_folder.static', filename='img/pfp.jpg') }}">
+
+          <!-- Friend name -->
+          <div class="name" id="friend-name"></div>
+
+          <!-- Friend stats -->
           <div class="stats">
+
             <div class="stat">
-              <div class="value">Clubs</div>
-              <div class="label" id="club-count">Number</div>
+              <div class="label">Activities</div>
+              <div class="label" id="Factivity-count">0</div>
             </div>
+
             <div class="stat">
-              <div class="value">Activities</div>
-              <div class="label" id="activity-count">Number</div>
+              <div class="label">Friends</div>
+              <div class="label" id="Ffriend-count">0</div>
             </div>
-              <div class="stat">
-                  <div class="label">❤️</div>
-                  <div class="main-like-container">
-                    <span id="main-like-count">0</span>
-                  </div>
+
+            <!-- Like button for friend -->
+            <div class="stat">
+              <div class="label">Likes</div>
+              <div class="like-container">
+
+                <!-- Like toggle button -->
+                <button style="background: none; border: none; padding: 0; margin: 0;" id="like-friend-btn">❤️</button>
+
+                <!-- Like count -->
+                <span id="like-friend-count">0</span>
               </div>
+            </div>
+
           </div>
         </div>
 
-        <div class="card">
-          <h3 style="margin-bottom:10px;">My Clubs</h3>
-         <div id="dash-clubs-container" class="clubs-container"></div>
+        <!-- -------- FRIEND ACTIVITIES -------- -->
+        <div class="friend-activities">
+          <h4 style="color:#000; margin-bottom:10px;">Public Activities</h4>
+
+          <!-- Populated dynamically -->
+          <div id="friend-activity-feed"></div>
         </div>
-        
-        <div class="card" id="friends-card">
-          <h3 style="margin-bottom:10px;">My Friends</h3>
-          <div id="friends-list" style="color:#777;">show friends</div>
-          <button id="friendBtn">Add Friend</button>
-          <select id="friendDropdown" style="display:none;">
-            <option value="">Select a user</option>
-          </select>
-        </div>
-      </aside>
 
+        <!-- -------- FRIEND CLUBS -------- -->
+        <div class="friend-clubs">
+          <h4 style="color:#000; margin-bottom:10px;">Clubs</h4>
 
-        <div class="modal" id="friendModal">
-          <div class="modal-content">
-            <span class="close">&times;</span>
-
-            <!-- Friend Card (Left) -->
-            <div class="card profile-card friend-view-card">
-              <img class="avatar" src="{{ url_for('style_folder.static', filename='img/pfp.jpg') }}">
-              <div class="name" id="friend-name"></div>
-              <div class="stats">
-                <div class="stat">
-                  <div class="label">Activities</div>
-                  <div class="label" id="Factivity-count">0</div>
-                </div>
-                <div class="stat">
-                  <div class="label">Friends</div>
-                  <div class="label" id="Ffriend-count">0</div>
-                </div>
-                <div class="stat">
-                <div class="label">Likes</div>
-                <div class="like-container">
-                  <button style="background: none; border: none; padding: 0; margin: 0;"  id="like-friend-btn">❤️</button>
-                  <span id="like-friend-count">0</span>
-                </div>
-              </div>
-
-              </div>
-            </div>
-
-            <!-- Friend Activities (Middle) -->
-            <div class="friend-activities">
-              <h4 style="color:#000; margin-bottom:10px;">Public Activities</h4>
-              <div id="friend-activity-feed"></div>
-            </div>
-
-           <!-- Friend Clubs (Right) -->
-            <div class="friend-clubs">
-              <h4 style="color:#000; margin-bottom:10px;">Clubs</h4>
-              <div id="friendClubsContainer">
-                <!-- Club cards will be inserted here dynamically -->
-              </div>
-            </div>
+          <!-- Populated dynamically -->
+          <div id="friendClubsContainer">
+            <!-- Club cards inserted here -->
           </div>
         </div>
-
-
-      <!-- Center column -->
-      <section class="dash-col dash-center">
-        <div id="activity-feed">
-          <div class="card feed-card">
-            <div class="feed-title">Display User Activities Here</div>
-            <div class="feed-meta">Today at 8:32 PM • Vulcan Tracker</div>
-            <div style="margin-top:12px; color:#777; font-size:13px;">
-              Temporary Data
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Right column -->
-      <!-- Right column -->
-      <aside class="dash-col dash-right">
-        <div class="card challenges-card">
-          <h3>My Challenges</h3>
-
-          <div id="challenge-list"></div>
-
-        </div>
-      </aside>
-
+      </div>
     </div>
-  </main>
+
+
+    <!-- ================= CENTER COLUMN ================= -->
+    <section class="dash-col dash-center">
+
+      <!-- Activity feed -->
+      <div id="activity-feed">
+
+        <!-- Example / placeholder card -->
+        <div class="card feed-card">
+          <div class="feed-title">Display User Activities Here</div>
+          <div class="feed-meta">Today at 8:32 PM • Vulcan Tracker</div>
+
+          <!-- Placeholder text -->
+          <div style="margin-top:12px; color:#777; font-size:13px;">
+            Temporary Data
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= RIGHT COLUMN ================= -->
+    <aside class="dash-col dash-right">
+
+      <!-- Challenges card -->
+      <div class="card challenges-card">
+        <h3>My Challenges</h3>
+
+        <!-- Populated dynamically -->
+        <div id="challenge-list"></div>
+
+      </div>
+    </aside>
+
+  </div>
+</main>
+
+<!-- ---------------- SCRIPTS ---------------- -->
+
+<!-- Handles dashboard data loading, rendering, and interactions -->
 <script src="{{ url_for('style_folder.static', filename='js/dash.js') }}"></script>
+
+<!-- Handles like functionality across dashboard -->
 <script src="{{ url_for('style_folder.static', filename='js/like.js') }}"></script>

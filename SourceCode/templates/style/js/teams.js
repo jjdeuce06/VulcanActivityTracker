@@ -1,9 +1,11 @@
+
 document.addEventListener("DOMContentLoaded", () => {
   const teamsContainer = document.getElementById("teams-container");
   const genderSelect = document.getElementById("sortByGender");
 
   let allTeams = [];
 
+  // Fetch all teams from the server
   async function fetchAllTeams() {
     try {
       const response = await fetch("/team_api/listallteams", {
@@ -28,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Render teams based on selected filter
   function renderTeams() {
     teamsContainer.innerHTML = "";
 
@@ -67,5 +70,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   genderSelect.addEventListener("change", renderTeams);
 
+  // Initial load of teams
   fetchAllTeams();
 });

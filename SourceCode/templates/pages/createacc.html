@@ -1,33 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- ---------------- PAGE META ---------------- -->
     <title>Vulcan Activity Tracker</title>
+
+    <!-- Favicon -->
     <link rel="icon" type="image" href="../style/img/vulcan.png">
+
+    <!-- Login page stylesheet -->
     <link rel="stylesheet" href="style/css/loginstyle.css">
 </head>
 
 <body>
+
+    <!-- ---------------- MAIN CONTAINER ---------------- -->
     <main class="page">
+
+        <!-- -------- LOGIN / REGISTER CARD -------- -->
         <div class="login-card">
 
+            <!-- App logo -->
             <img src="{{ url_for('style_folder.static', filename='img/vulcan.png') }}"
                 alt="Vulcan Logo"
                 class="profile-img">
-                <label><h2>Create Account</h2></label>
 
+            <!-- Form title -->
+            <label><h2>Create Account</h2></label>
+
+            <!-- ---------------- FORM INPUTS ---------------- -->
             <div class="login-form">
+
+                <!-- Email input -->
                 <input type="email" placeholder="Enter Email" id="email_entry" required>
+
+                <!-- Username input -->
                 <input type="text" placeholder="Enter Username" id="user_entry" required>
+
+                <!-- Password input -->
                 <input type="password" placeholder="Enter Password" id="pass_entry" required>
+
+                <!-- Confirm password input -->
                 <input type="password" placeholder="Confirm Password" id="confirm_pass_entry" required>
+
+                <!-- Error message display -->
                 <div id="register-error" style="color: red; margin-top: 8px;"></div>
 
+                <!-- Submit button -->
                 <button id="createBtn">Submit</button>
+
+                <!-- Cancel button redirects to home -->
                 <button class="cancelbtn" onclick="backHome()">Cancel</button>
             </div>
 
+
+            <!-- ---------------- PASSWORD REQUIREMENTS ---------------- -->
+            <!-- Live validation UI (likely controlled via JS) -->
             <div id="message">
                 <h3> Password must contain the following:</h3>
+
                 <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
                 <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
                 <p id ="number" class="invalid">A <b>number</b></p>
@@ -37,14 +67,33 @@
         </div>
     </main>
 
+
+    <!-- ---------------- FOOTER ---------------- -->
     <footer>
         <p>&copy; 2025 The Vulcan Activity Tracker.</p>
     </footer>
 
+
+<!-- ---------------- NAVIGATION SCRIPTS ---------------- -->
 <script>
-function backHome() {window.location.href = "/";}
-function backToLogin() {window.location.href = "/login";}
+    // Redirect back to home page
+    function backHome() {
+        window.location.href = "/";
+    }
+
+    // Redirect back to login page (not used here but available)
+    function backToLogin() {
+        window.location.href = "/login";
+    }
 </script>
+
+
+<!-- ---------------- MAIN SCRIPT ---------------- -->
+<!-- Handles:
+     - registration logic
+     - validation
+     - API calls -->
 <script src="{{ url_for('style_folder.static', filename='js/login.js') }}"></script>
+
 </body>
 </html>

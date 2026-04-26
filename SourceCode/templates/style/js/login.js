@@ -16,6 +16,7 @@
         errorDiv.style.color = "red";
     }
 
+    // ---------------- SHOW PASSWORD REQUIREMENTS WHEN PASSWORD FIELD IS CLICKED ----------------
     myInput.onfocus = function() 
     {
         document.getElementById("message").style.display = "block";
@@ -24,6 +25,7 @@
         errorDiv.style.color = "red";
     }
 
+    // ---------------- LIVE PASSWORD VALIDATION AS USER TYPES ----------------
     myInput.onkeyup = function() 
     {
         // Validate lowercase letters
@@ -78,8 +80,10 @@
         }
     };
 
+// ---------------- EMAIL DOMAIN VALIDATION ----------------
 function validateEmail(email) 
 {
+    //Only allow PennWest emails
     if (!email.includes("@pennwest.edu"))
     {
         return false;
@@ -87,6 +91,7 @@ function validateEmail(email)
     return true;
 }
 
+// ---------------- CREATE ACCOUNT BUTTON CLICK HANDLER ----------------
 document.getElementById("createBtn").addEventListener("click", async () =>{
     const username = document.getElementById("user_entry").value;
     const password = document.getElementById("pass_entry").value;
@@ -133,6 +138,7 @@ document.getElementById("createBtn").addEventListener("click", async () =>{
 
     //hash password before sending
     const hash = await hashPassword(password);
+    
         //send to backend
         try {
         const response = await sendLoginData(email, username, hash);

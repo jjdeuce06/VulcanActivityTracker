@@ -1,8 +1,10 @@
+// ---------------- LIKE A FRIEND PROFILE ----------------
 async function likeFeature(username, friendName) {
   const likeBtn = document.getElementById("like-friend-btn");
   const likeCount = document.getElementById("like-friend-count");
   const FriendCount = document.getElementById("Ffriend-count");
 
+   // Stop if required elements or data are missing
   if (!likeBtn || !likeCount || !friendName) return;
 
   let isLiked = false;
@@ -17,6 +19,7 @@ async function likeFeature(username, friendName) {
   }
 
   //STEP 1: LOAD current likes (no toggle)
+   //Gets whether the current user has liked this friend already
   try {
     const res = await fetch("/dash_api/like", {
       method: "POST",
@@ -69,7 +72,7 @@ async function likeFeature(username, friendName) {
 }
 
 
-
+// ---------------- LIKE AN ACTIVITY ----------------
 async function thumbsUp(username, friendName, activity_id, modallikeBtn, modallikeCount) {
   if (!modallikeBtn || !modallikeCount || !friendName) return;
 

@@ -1,9 +1,11 @@
+// ---------------- DOM LOAD ----------------
 document.addEventListener("DOMContentLoaded", async () => {
   const username = localStorage.getItem("currentUser");
   if (username) {
     document.getElementById("user-name").textContent = username;
   }
 
+ // Load all dashboard sections
   await fillDashActivity(username);
   await fillDashFriends(username); // pass current user for filtering
   await dashLikes(username);
@@ -29,7 +31,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   checkInboxNotifications();
 });
 
-
+// ---------------- INBOX NOTIFICATION CHECK ----------------
 async function checkInboxNotifications() {
   try {
     const res = await fetch("/team_api/invites", {
@@ -57,6 +59,7 @@ async function checkInboxNotifications() {
   }
 }
 
+// ---------------- LOAD DASH FRIENDS RENDER ----------------
 async function fillDashFriends(currentUser) {
   try {
     const response = await fetch("/dash_api/sendFriendsList", {
@@ -174,7 +177,7 @@ async function fillDashFriends(currentUser) {
   }
 }
 
-
+// ---------------- ADD FRIEND HELPER ----------------
 async function addFriend(selectedUser) {
   if (!selectedUser) return;
 
@@ -274,6 +277,7 @@ async function fillDashActivity(username) {
   }
 }
 
+// ---------------- POPULATES ACTIVITIES IN DASHBOARD ----------------
 function populateDashActivity(data, username) {
   const feedContainer = document.querySelector("#activity-feed");
   feedContainer.innerHTML = ""; // clear old feed
@@ -338,7 +342,7 @@ function populateDashActivity(data, username) {
   });
 }
 
-
+// ---------------- OPENS FRIEND MODAL ----------------
 async function openFriendModal(friendData) {
     const modal = document.getElementById("friendModal");
     const closeBtn = modal.querySelector(".close");
@@ -381,6 +385,7 @@ async function fillFriendActivity(friendUsername) {
   }
 }
 
+// ---------------- POPULATES ACTIVITIES IN FRIEND VIEW ----------------
 function populateFriendActivities(activities, friendUsername) {
   const feedContainer = document.getElementById("friend-activity-feed");
   feedContainer.innerHTML = ""; // clear previous content
@@ -450,7 +455,7 @@ function populateFriendActivities(activities, friendUsername) {
   });
 }
 
-
+// ---------------- FRIEND CLUBS FILL ----------------
 async function fillFriendsClub(friendUsername){
   try {
     const response = await fetch("/club_api/myclubs", {
@@ -471,7 +476,7 @@ async function fillFriendsClub(friendUsername){
 
 }
 
-
+// ---------------- FRIEND CLUBS RENDER ----------------
 function populateFriendClubs(clubs) {
     const container = document.getElementById("friendClubsContainer");
 
@@ -507,7 +512,7 @@ function populateFriendClubs(clubs) {
     });
 }
 
-
+// ---------------- DASHBOARD TOTAL LIKES ----------------
 async function dashLikes(username){
   const likes = document.querySelector("#main-like-count");
 
@@ -527,6 +532,7 @@ async function dashLikes(username){
   }
 }
 
+// ---------------- ACTIVITY LIKE COUNTS ----------------
 async function dashActivityLikes(username, activity_id) {
   try {
     const response = await fetch("/dash_api/thumbCount", {
@@ -557,7 +563,7 @@ async function dashActivityLikes(username, activity_id) {
   }
 }
 
-
+// ---------------- DASHBOARD CLUBS FILL ----------------
 async function fillDashClub(username){
   try {
     const response = await fetch("/dash_api/fillDashClubs", {
@@ -578,6 +584,7 @@ async function fillDashClub(username){
 
 }
 
+// ---------------- DASHBOARD CLUBS RENDER ----------------
 function populateDashClubs(clubs) {
   const container = document.getElementById("dash-clubs-container");
   container.innerHTML = "";
@@ -610,9 +617,7 @@ function populateDashClubs(clubs) {
 }
 
 
-
-
-
+// ---------------- DASHBOARD CHALLENGES FILL----------------
 async function fillDashChallenge(){
   try {
     const response = await fetch("/dash_api/fillDashChallenges", {method: "GET", });
@@ -629,6 +634,7 @@ async function fillDashChallenge(){
 
 }
 
+// ---------------- DASHBOARD CHALLENGES RENDER ----------------
 function populateDashChallenge(challenge) {
   const container = document.getElementById("challenge-list");
   container.innerHTML = "";

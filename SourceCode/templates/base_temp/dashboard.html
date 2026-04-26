@@ -1,26 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Basic page metadata -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Page title shown in browser tab -->
   <title>The Vulcan Activity Tracker</title>
+
+  <!-- Favicon (tab icon) -->
   <link rel="icon" type="image" href="../style/img/vulcan.png">
+
+  <!-- Global stylesheets -->
   <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/dashboardStyle.css') }}">
   <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/modal.css') }}">
   <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/activity.css') }}">
   <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/weather.css') }}">
   <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/leaderboard.css') }}">
+
+  <!-- Placeholder for page-specific CSS (Jinja block override) -->
   {% block page_css %}{% endblock %} /* For page-specific CSS */
 </head>
 
 <body class="dashboard-page">
 
-  <!-- Top Navigation (Strava-like) -->
+  <!-- ---------------- TOP NAVIGATION BAR ---------------- -->
+  <!-- Navigation styled similar to Strava layout -->
   <nav class="top-nav">
     <div class="nav-inner">
+
+      <!-- App branding -->
       <div class="brand">VULCAN TRACKER</div>
 
+      <!-- ---------------- NAV LINKS ---------------- -->
       <ul class="nav-links">
+        <!-- Each link highlights as active based on current page -->
         <li><a class="{% if active_page == 'dashboard' %}active{% endif %}" href="/dashboard">Dashboard</a></li>
         <li><a class="{% if active_page == 'training' %}active{% endif %}" href="/training">Training</a></li>
         <li><a class="{% if active_page == 'maps' %}active{% endif %}" href="/maps">Maps</a></li>
@@ -29,24 +43,35 @@
         <li><a class="{% if active_page == 'leaderboard' %}active{% endif %}" href="/leaderboard">Leaderboard</a></li>
         <li><a class="{% if active_page == 'challenges' %}active{% endif %}" href="/challenges">Challenges</a></li>
         <li><a class="{% if active_page == 'settings' %}active{% endif %}" href="/settings">Settings</a></li>
+
+        <!-- Inbox link with notification dot -->
         <li>
           <a class="{% if active_page == 'inbox' %}active{% endif %}" href="/inbox" style="position: relative;">
             Inbox
+            <!-- Red dot shown when notifications exist -->
             <span id="inbox-dot" class="notif-dot" style="display:none;"></span>
           </a>
         </li>
       </ul>
 
+      <!-- ---------------- ACTION BUTTONS ---------------- -->
       <div class="nav-actions">
+        <!-- Logout button triggers JS logout function -->
         <button class="cta-button" type="button" onclick="logout()">Logout</button>
       </div>
     </div>
   </nav>
 
+  <!-- ---------------- MAIN CONTENT BLOCK ---------------- -->
+  <!-- Default content is home dashboard, can be overridden by child templates -->
   {% block content %}
     {% include "pages/dash/home.html" %}
   {% endblock %}
 
 </body>
+
+<!-- ---------------- SCRIPTS ---------------- -->
+<!-- Logout functionality -->
 <script src="{{ url_for('style_folder.static', filename='js/logout.js') }}"></script>
+
 </html>

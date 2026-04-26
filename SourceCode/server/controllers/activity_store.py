@@ -4,23 +4,28 @@ import json
 from datetime import datetime
 
 
+# ---------------- INSERT ACTIVITY ----------------
 def insert_activity(conn, user_id: str, data: dict):
     print("enter insert")
     try:
-        # Split common vs sport-specific fields
+        # Split common fields vs sport-specific fields
         common_fields = ['activity_type', 'date', 'duration', 'calories_burned', 'visibility', 'notes']
         activity_common = {k: data.get(k) for k in common_fields}
+
+        # Everything else is considered sport-specific data
         sport_specific = {k: v for k, v in data.items() if k not in common_fields}
 
-        # Debug log
+        # Debug logging
         print("Activity common fields:", activity_common)
         print("Sport-specific fields:", sport_specific)
 
-        # Safely convert numeric fields
+        # ---------------- CONVERT NUMERIC VALUES ----------------
+        # Convert duration and calories to float if present
         duration = float(activity_common.get('duration')) if activity_common.get('duration') is not None else None
         calories = float(activity_common.get('calories_burned')) if activity_common.get('calories_burned') is not None else None
 
-        # Convert date to datetime object
+        # ---------------- HANDLE DATE ----------------
+        # Convert incoming date string → datetime object
         date_str = activity_common.get('date')
         try:
             activity_date = datetime.fromisoformat(date_str) if date_str else datetime.now()
@@ -28,14 +33,15 @@ def insert_activity(conn, user_id: str, data: dict):
             print(f"Invalid date format: {date_str}, using current time instead")
             activity_date = datetime.now()
 
-        # Ensure sport-specific fields are JSON serializable
+        # ---------------- SERIALIZE SPORT-SPECIFIC DATA ----------------
+        # Convert dictionary → JSON string for DB storage
         try:
             details_json = json.dumps(sport_specific)
         except Exception as e:
             print("Error serializing sport-specific fields:", e)
             details_json = "{}"
 
-        # Insert into DB
+        # ---------------- INSERT INTO DATABASE ----------------
         cursor = conn.cursor()
         cursor.execute("""
             INSERT INTO [activity] 
@@ -51,6 +57,8 @@ def insert_activity(conn, user_id: str, data: dict):
         activity_common.get('notes'),
         details_json
         )
+
+        # Commit transaction
         conn.commit()
         print("Activity inserted successfully")
 
@@ -59,15 +67,18 @@ def insert_activity(conn, user_id: str, data: dict):
         raise
 
     finally:
+        # Always close cursor
         cursor.close()
 
 
-
+# ---------------- GET USER ACTIVITIES ----------------
 def get_user_activities(conn, user_id: str):
     print("enter fill A table")
+
     cursor = conn.cursor()
 
     try:
+        # Fetch all activities for a user
         cursor.execute("""
             SELECT
                 ActivityType,
@@ -89,13 +100,15 @@ def get_user_activities(conn, user_id: str):
         for row in rows:
             details = {}
 
-            # Parse sport-specific JSON safely
+            # ---------------- PARSE JSON DETAILS ----------------
+            # Convert stored JSON string → dictionary
             if row.Details:
                 try:
                     details = json.loads(row.Details)
                 except json.JSONDecodeError:
                     print("Invalid JSON in Details column")
 
+            # Build activity object
             activity = {
                 "activity_type": row.ActivityType,
                 "date": row.ActivityDate.isoformat(),
@@ -106,6 +119,7 @@ def get_user_activities(conn, user_id: str):
                 "activity_id": str(row.ActivityID)
             }
 
+            # Merge sport-specific fields into main object
             activity.update(details)
 
             activities.append(activity)
@@ -117,10 +131,15 @@ def get_user_activities(conn, user_id: str):
         raise
 
     finally:
+        # Always close cursor
         cursor.close()
 
+
+# ---------------- GET PUBLIC ACTIVITIES ----------------
 def get_public_activities(conn, user_id):
     cursor = conn.cursor()
+
+    # Query only public activities for a user
     query = """
         SELECT ActivityID, ActivityType, ActivityDate, Duration,
                CaloriesBurned, Visibility, Notes, Details
@@ -128,6 +147,7 @@ def get_public_activities(conn, user_id):
         WHERE UserID = ? AND Visibility = 'public'
         ORDER BY ActivityDate DESC
     """
+
     cursor.execute(query, (user_id,))
     rows = cursor.fetchall()
 
@@ -135,12 +155,15 @@ def get_public_activities(conn, user_id):
 
     for row in rows:
         details = {}
+
+        # Parse JSON details if present
         if row.Details:
             try:
                 details = json.loads(row.Details)
             except:
                 pass
 
+        # Build activity object
         activity = {
             "activity_type": row.ActivityType,
             "date": row.ActivityDate.isoformat() if row.ActivityDate else None,
@@ -151,7 +174,9 @@ def get_public_activities(conn, user_id):
             "activity_id": str(row.ActivityID)
         }
 
+        # Merge sport-specific data
         activity.update(details)
+
         activities.append(activity)
 
     return activities

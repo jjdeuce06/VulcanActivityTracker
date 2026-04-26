@@ -1,127 +1,176 @@
 {% extends "base_temp/dashboard.html" %}
+<!-- Extends the main dashboard layout -->
 
 {% block content %}
+
+<!-- ---------------- PAGE STYLES ---------------- -->
 <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/team_detail.css') }}">
 
 <div class="team-detail-page">
+
+  <!-- ---------------- TEAM HEADER ---------------- -->
   <div class="team-header">
+
+    <!-- Team name populated dynamically -->
     <h1 id="team-name-heading">Team Name</h1>
 
+    <!-- Team metadata pills -->
     <div class="team-meta">
-      <span class="team-pill" id="team-sport">Sport</span>
-      <span class="team-pill" id="team-coach">Coach</span>
-      <span class="team-pill" id="team-member-count">0 Members</span>
+      <span class="team-pill" id="team-sport">Sport</span>                <!-- Sport type -->
+      <span class="team-pill" id="team-coach">Coach</span>               <!-- Coach name -->
+      <span class="team-pill" id="team-member-count">0 Members</span>    <!-- Member count -->
     </div>
 
+    <!-- Team description -->
     <p class="team-description" id="team-description">
       Team description goes here.
     </p>
   </div>
 
+
+  <!-- ---------------- MAIN GRID LAYOUT ---------------- -->
   <div class="team-grid">
-  <!-- LEFT COLUMN -->
-  <div class="team-panel">
-    <h2>Roster</h2>
-    <div id="roster-list" class="roster-list">
-      <p class="empty-state">Loading roster...</p>
-    </div>
-  </div>
 
-  <!-- RIGHT COLUMN -->
-  <div class="team-panel">
-    <h2>Announcements</h2>
-    <div id="announcement-list" class="announcement-list">
-      <p class="empty-state">Loading announcements...</p>
-    </div>
-  </div>
+    <!-- -------- ROSTER (LEFT) -------- -->
+    <div class="team-panel">
+      <h2>Roster</h2>
 
-  <!-- LEFT COLUMN -->
-  <div class="team-panel" id="coach-tools-panel" style="display:none;">
-    <h2>Coach Tools</h2>
-
-    <form id="invite-player-form" class="coach-form">
-      <input type="text" id="invite-username" placeholder="Enter email to invite" required>
-      <button type="submit" class="team-btn">Invite Player</button>
-    </form>
-
-    <form id="announcement-form" class="coach-form">
-      <input type="text" id="announcement-title" placeholder="Announcement title" required>
-      <textarea id="announcement-body" placeholder="Write announcement here..." required></textarea>
-      <button type="submit" class="team-btn">Post Announcement</button>
-    </form>
-
-    <form id="schedule-form" class="coach-form">
-      <input type="text" id="schedule-title" placeholder="Event title" required>
-
-      <select id="schedule-type" required>
-        <option value="">Select type</option>
-        <option value="Practice">Practice</option>
-        <option value="Game">Game</option>
-        <option value="Meeting">Meeting</option>
-        <option value="Workout">Workout</option>
-      </select>
-
-      <input type="datetime-local" id="schedule-date" required>
-      <input type="text" id="schedule-location" placeholder="Location">
-      <textarea id="schedule-notes" placeholder="Extra notes..."></textarea>
-
-      <button type="submit" class="team-btn">Create Event</button>
-    </form>
-  </div>
-
-  <!-- RIGHT COLUMN -->
-  <div class="team-panel">
-    <h2>Upcoming Schedule</h2>
-    <div id="schedule-list" class="schedule-list">
-      <p class="empty-state">Loading schedule...</p>
-    </div>
-  </div>
-
-  <!-- FULL WIDTH (optional) -->
-  <div class="team-panel" style="grid-column: span 2;">
-  <h2>Team Leaderboard</h2>
-
-  <div class="leaderboard-card team-leaderboard-card">
-    <div class="lb-controls">
-      <div class="left-controls">
-        <select id="teamFilterSport">
-          <option value="all" selected>All Sports</option>
-          <option value="running">Running</option>
-          <option value="lifting">Lifting</option>
-          <option value="cycling">Cycling</option>
-          <option value="swimming">Swimming</option>
-          <option value="yoga">Yoga</option>
-          <option value="walking">Walking</option>
-          <option value="soccer">Soccer</option>
-          <option value="basketball">Basketball</option>
-          <option value="tennis">Tennis</option>
-          <option value="volleyball">Volleyball</option>
-          <option value="equestrian">Equestrian</option>
-          <option value="football">Football</option>
-          <option value="baseball">Baseball</option>
-          <option value="hockey">Hockey</option>
-        </select>
-      </div>
-
-      <div class="right-controls">
-        <select id="teamSortBy">
-          <option value="score" selected>Score</option>
-          <option value="name">Name</option>
-          <option value="totalMinutes">Duration</option>
-          <option value="totalActivities">Activities</option>
-        </select>
-        <button id="teamSortDir" type="button" data-dir="desc">Desc</button>
+      <!-- List of team members -->
+      <div id="roster-list" class="roster-list">
+        <p class="empty-state">Loading roster...</p>
       </div>
     </div>
 
-    <table id="teamLeaderboard">
-      <thead></thead>
-      <tbody></tbody>
-    </table>
+
+    <!-- -------- ANNOUNCEMENTS (RIGHT) -------- -->
+    <div class="team-panel">
+      <h2>Announcements</h2>
+
+      <!-- Team announcements -->
+      <div id="announcement-list" class="announcement-list">
+        <p class="empty-state">Loading announcements...</p>
+      </div>
+    </div>
+
+
+    <!-- -------- COACH TOOLS (LEFT, CONDITIONAL) -------- -->
+    <!-- Only shown if user is coach (controlled via JS) -->
+    <div class="team-panel" id="coach-tools-panel" style="display:none;">
+      <h2>Coach Tools</h2>
+
+      <!-- Invite player form -->
+      <form id="invite-player-form" class="coach-form">
+        <input type="text" id="invite-username" placeholder="Enter email to invite" required>
+        <button type="submit" class="team-btn">Invite Player</button>
+      </form>
+
+      <!-- Create announcement form -->
+      <form id="announcement-form" class="coach-form">
+        <input type="text" id="announcement-title" placeholder="Announcement title" required>
+        <textarea id="announcement-body" placeholder="Write announcement here..." required></textarea>
+        <button type="submit" class="team-btn">Post Announcement</button>
+      </form>
+
+      <!-- Create schedule event form -->
+      <form id="schedule-form" class="coach-form">
+        <input type="text" id="schedule-title" placeholder="Event title" required>
+
+        <!-- Event type -->
+        <select id="schedule-type" required>
+          <option value="">Select type</option>
+          <option value="Practice">Practice</option>
+          <option value="Game">Game</option>
+          <option value="Meeting">Meeting</option>
+          <option value="Workout">Workout</option>
+        </select>
+
+        <!-- Date/time -->
+        <input type="datetime-local" id="schedule-date" required>
+
+        <!-- Optional location -->
+        <input type="text" id="schedule-location" placeholder="Location">
+
+        <!-- Optional notes -->
+        <textarea id="schedule-notes" placeholder="Extra notes..."></textarea>
+
+        <button type="submit" class="team-btn">Create Event</button>
+      </form>
+    </div>
+
+
+    <!-- -------- SCHEDULE (RIGHT) -------- -->
+    <div class="team-panel">
+      <h2>Upcoming Schedule</h2>
+
+      <!-- Schedule events -->
+      <div id="schedule-list" class="schedule-list">
+        <p class="empty-state">Loading schedule...</p>
+      </div>
+    </div>
+
+
+    <!-- -------- TEAM LEADERBOARD (FULL WIDTH) -------- -->
+    <div class="team-panel" style="grid-column: span 2;">
+      <h2>Team Leaderboard</h2>
+
+      <div class="leaderboard-card team-leaderboard-card">
+
+        <!-- Controls -->
+        <div class="lb-controls">
+
+          <!-- Sport filter -->
+          <div class="left-controls">
+            <select id="teamFilterSport">
+              <option value="all" selected>All Sports</option>
+              <option value="running">Running</option>
+              <option value="lifting">Lifting</option>
+              <option value="cycling">Cycling</option>
+              <option value="swimming">Swimming</option>
+              <option value="yoga">Yoga</option>
+              <option value="walking">Walking</option>
+              <option value="soccer">Soccer</option>
+              <option value="basketball">Basketball</option>
+              <option value="tennis">Tennis</option>
+              <option value="volleyball">Volleyball</option>
+              <option value="equestrian">Equestrian</option>
+              <option value="football">Football</option>
+              <option value="baseball">Baseball</option>
+              <option value="hockey">Hockey</option>
+            </select>
+          </div>
+
+          <!-- Sorting controls -->
+          <div class="right-controls">
+            <select id="teamSortBy">
+              <option value="score" selected>Score</option>
+              <option value="name">Name</option>
+              <option value="totalMinutes">Duration</option>
+              <option value="totalActivities">Activities</option>
+            </select>
+
+            <!-- Sort direction toggle -->
+            <button id="teamSortDir" type="button" data-dir="desc">Desc</button>
+          </div>
+        </div>
+
+        <!-- Leaderboard table -->
+        <table id="teamLeaderboard">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 </div>
-</div>
-</div>
 
+
+<!-- ---------------- SCRIPT ---------------- -->
+<!-- Handles:
+     - fetching team data
+     - rendering roster, announcements, schedule
+     - coach tools logic
+     - leaderboard logic -->
 <script src="{{ url_for('style_folder.static', filename='js/team_detail.js') }}"></script>
+
 {% endblock %}

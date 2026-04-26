@@ -1,4 +1,7 @@
+// Wait for page load
 document.addEventListener("DOMContentLoaded", async () => {
+
+    // ---------------- INITIAL SETUP ----------------
   const clubId = window.location.pathname.split("/").pop();
   const currentUser = localStorage.getItem("currentUser");
   const tabContent = document.getElementById("club-tab-content");
@@ -7,6 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let currentClub = null;
   let activeTab = "leaderboard";
 
+  // ---------------- FORMAT SPORT LABEL ----------------
   function formatSport(value) {
     const labels = {
       run: "Running",
@@ -27,10 +31,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     return labels[value] || value;
   }
 
+  // ---------------- DETERMINE LEADERBOARD TYPE ----------------
   function usesDistanceRanking(sportType) {
     return ["run", "bike", "swim", "walk", "equestrian", "multisport"].includes(sportType);
   }
 
+  // ---------------- FORMAT TIME ----------------
   function formatDuration(minutes) {
     const totalSeconds = Math.round(Number(minutes || 0) * 60);
 
@@ -45,6 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return `${paddedHours}:${paddedMins}:${paddedSecs}`;
   }
 
+  // ---------------- LOAD ACTIVITY LIKE COUNT ----------------
   function loadActivityLikeCount(username, activityId, countElement) {
   fetch("/dash_api/thumbCount", {
     method: "POST",
@@ -68,6 +75,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 }
 
+  // ---------------- LOAD CLUB DATA ----------------
   async function loadClub() {
     try {
       const resp = await fetch("/club_api/clubdetail", {
@@ -126,6 +134,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+    // ---------------- ACTION BUTTON STATE ----------------
   function setupActionButton(club) {
     if (!actionBtn) return;
 
@@ -149,6 +158,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // ---------------- HANDLE BUTTON ACTION ----------------
   async function handleAction() {
     if (!currentClub || !currentUser) {
       alert("Please log in to continue.");
@@ -201,6 +211,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // ---------------- TAB RENDERING ----------------
   function renderActiveTab() {
     if (!currentClub) return;
 
@@ -213,6 +224,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // ---------------- MEMBERS TAB ----------------
   function renderMembers() {
     const names = currentClub.member_usernames || [];
 
@@ -237,6 +249,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     `;
   }
 
+  // ---------------- LEADERBOARD TAB ----------------
   function renderLeaderboard() {
     const lastWeek = currentClub.last_week_leaders || [];
     const thisWeek = currentClub.this_week_leaderboard || [];
@@ -255,6 +268,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     `;
   }
 
+  // ---------------- LEADERBOARD TABLE ----------------
   function renderLeaderboardTable(rows, distanceMode) {
     if (!rows || rows.length === 0) {
       return `<p class="empty">No leaderboard data yet.</p>`;
@@ -311,6 +325,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     `;
   }
 
+    // ---------------- RECENT ACTIVITY TAB ----------------
   function renderRecentActivity() {
   const recent = currentClub.recent_activity || [];
   const username = localStorage.getItem("currentUser");
@@ -382,6 +397,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 }
 
+ // ---------------- TAB BUTTON EVENTS ---------------
   document.querySelectorAll(".club-tab-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       document.querySelectorAll(".club-tab-btn").forEach(b => b.classList.remove("active"));
@@ -395,5 +411,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     actionBtn.addEventListener("click", handleAction);
   }
 
+   // Initial load
   await loadClub();
 });

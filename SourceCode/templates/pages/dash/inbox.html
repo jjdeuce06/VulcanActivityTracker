@@ -1,12 +1,34 @@
 {% extends "base_temp/dashboard.html" %}
+<!-- Extends the main dashboard layout (nav, structure, etc.) -->
 
 {% block content %}
+<!-- Main content block injected into dashboard -->
+
+<!-- ---------------- PAGE STYLES ---------------- -->
+<!-- Page-specific stylesheet for inbox UI -->
 <link rel="stylesheet" href="/style/css/inbox.css">
 
 <div class="inbox-container">
+
+  <!-- ---------------- HEADER ---------------- -->
+  <!-- Page title -->
   <h1 class="inbox-title">Your Inbox</h1>
+
+  <!-- ---------------- INVITES CONTAINER ---------------- -->
+  <!-- This container will hold all incoming items:
+       - Team invites
+       - Club join requests -->
   <div id="invites-container"></div>
+
+  <!-- JS dynamically injects invite/request cards here -->
+
 </div>
 
+<!-- ---------------- SCRIPT ---------------- -->
+<!-- Handles:
+     - fetching invites from backend
+     - rendering invite cards
+     - accept/decline actions -->
 <script src="/style/js/inbox.js"></script>
+
 {% endblock %}

@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const usernameMessage = document.getElementById("usernameMessage");
     const deleteMessage = document.getElementById("deleteMessage");
 
+    // ---------------- CHANGE USERNAME ----------------
     if (changeBtn) {
         changeBtn.addEventListener("click", async () => {
             const newUsernameInput = document.getElementById("newUsername");
@@ -49,6 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    // ---------------- DELETE ACCOUNT ----------------
     if (deleteBtn) {
         deleteBtn.addEventListener("click", async () => {
             const confirmDelete = confirm("Are you sure you want to delete your account?");
@@ -77,6 +79,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await fillQuickStats();
 });
 
+// ---------------- LOAD QUICK STATS ----------------
 async function fillQuickStats(){
 
   try {
@@ -103,6 +106,7 @@ async function fillQuickStats(){
 
 }
 
+// ---------------- LOAD USER INFO ----------------
 async function loadUserInfo() {
   try {
     const response = await fetch("/settings_api/get-user-info");
@@ -120,7 +124,7 @@ async function loadUserInfo() {
   }
 }
 
-
+// ---------------- POPULATE QUICK STATS ----------------
 function populateQuick(data) {
   // Fill the activity count using the array length
   const activityCountDiv = document.querySelector("#settingAStat");
@@ -137,6 +141,7 @@ function populateQuick(data) {
 
 document.addEventListener("DOMContentLoaded", loadUserInfo);
 
+// ---------------- FILL DISPLAY USER INFO ----------------
 function fillDisplayInfo(data){
 
     const displayName = document.querySelector("#settings-displayname");

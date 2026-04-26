@@ -1,3 +1,5 @@
+// ---------------- LOAD WEATHER FORECAST ----------------
+// Fetches API key from backend, calls OpenWeather API, processes forecast data,
 async function loadForecast() {
    // Get API key from Flask
     const keyRes = await fetch("/map_api/send-weatherkey", {
@@ -7,6 +9,7 @@ async function loadForecast() {
     const keyData = await keyRes.json();
     const API_KEY = keyData.key;
 
+    // ---------------- FETCH WEATHER FORECAST ----------------
     // Now call OpenWeather
     const res = await fetch(
         `https://api.openweathermap.org/data/2.5/forecast?q=California,PA,US&units=imperial&appid=${API_KEY}`
@@ -14,7 +17,7 @@ async function loadForecast() {
 
     const data = await res.json();
 
-
+// ---------------- RENDER CONTAINER ----------------
     const container = document.getElementById("forecastContainer");
     container.innerHTML = "";
 
@@ -40,6 +43,7 @@ async function loadForecast() {
         }
     });
 
+    // ---------------- RENDER FORECAST UI ----------------
     daily.forEach((day, i) => {
         const div = document.createElement("div");
         div.className = "forecast-day";

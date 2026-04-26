@@ -1,3 +1,4 @@
+// ---------------- PAGE LOAD: INITIALIZE LEADERBOARD ----------------
 document.addEventListener("DOMContentLoaded", () => {
   const table = document.getElementById("leaderboard");
   if (!table) return;
@@ -19,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   sortDirBtn.dataset.dir = "desc";
   sortDirBtn.textContent = "Desc";
 
+    // ---------------- FETCH LEADERBOARD DATA ----------------
   async function getLeaderboardData(leaderboardFilter) {
     const response = await fetch(
       `/activity_api/publicleaderboard?sport_type=${leaderboardFilter}`,
@@ -33,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return payload.leaderboard || [];
   }
 
+  // ---------------- UPDATE TABLE HEADERS BASED ON SPORT ----------------
   function sortTableBySport(sport) {
     const headersBySport = {
       all: ["Rank", "Name", "Score", "Total Duration (minutes)", "Total Activities"],
@@ -64,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ---------------- RENDER TABLE BODY ----------------
   function render(rows) {
     tbody.innerHTML = "";
     const sport = normalizeSport(sortSport.value);
@@ -160,6 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ---------------- SORTING LOGIC AND TIEBREAKERS ----------------
   function sortAndRender() {
     const sport = sortSport.value || "all";
     const key = sortBy.value;
@@ -213,6 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
     render(sorted);
   }
 
+   // ---------------- EVENT LISTENERS ----------------
   sortBy.addEventListener("change", sortAndRender);
 
   sortDirBtn.addEventListener("click", () => {
@@ -236,6 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // ---------------- NORMALIZE SPORT NAMES ----------------
   function normalizeSport(s) {
     if (!s) return "";
     const v = String(s).toLowerCase().trim();
@@ -265,6 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return aliases[v] || v;
   }
 
+  // ---------------- PARSE ACTIVITY JSON FROM DB ----------------
   function parseActivities(row) {
     if (!row.activities) return [];
 
@@ -295,6 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // ---------------- COMPUTE SCORES PER USER ----------------
   function buildComputedRows(rawRows, sport) {
     const s = normalizeSport(sport);
 
@@ -391,16 +400,19 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+   // ---------------- FILTER ACTIVITIES BY SELECTED SPORT ----------------
   function filterBySport(activities, sport) {
     const target = normalizeSport(sport);
     if (target === "all") return activities;
     return activities.filter(a => a.activityType === target);
   }
 
+    // ---------------- SUM TOTAL DURATION (MINUTES) ----------------
   function totalDuration(activities) {
     return activities.reduce((sum, a) => sum + (a.duration || 0), 0);
   }
 
+    // ---------------- SUM TOTAL DISTANCE (MILES) ----------------
   function totalDistance(activities) {
     return activities.reduce(
       (sum, a) => sum + (Number(a.details?.distance) || 0),
@@ -408,6 +420,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+  // ---------------- SUM TOTAL STEPS (WALKING) ----------------
   function totalSteps(activities) {
     return activities.reduce(
       (sum, a) => sum + (Number(a.details?.steps) || 0),
@@ -415,6 +428,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+  // ---------------- SUM TOTAL SETS (LIFTING) ----------------
   function totalSets(activities) {
     return activities.reduce(
       (sum, a) => sum + (Number(a.details?.sets) || 0),
@@ -422,6 +436,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+   // ---------------- YOGA INTENSITY STATS ----------------
   function yogaStats(activities) {
     const intensity = activities.reduce((acc, a) => {
       acc.intensity += Number(a.details?.intensity) || 0;
@@ -431,6 +446,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return { intensity: intensity.intensity };
   }
 
+  // ---------------- SOCCER GOALS & ASSISTS ----------------
   function soccerStats(activities) {
     const totals = activities.reduce(
       (acc, a) => {
@@ -444,6 +460,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return totals;
   }
 
+    // ---------------- BASEBALL HITS & RUNS ----------------
   function baseballStats(activities) {
     const totals = activities.reduce(
       (acc, a) => {
@@ -457,6 +474,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return totals;
   }
 
+  // ---------------- FOOTBALL TOUCHDOWNS ----------------
   function footballStats(activities) {
     const totals = activities.reduce(
       (acc, a) => {
@@ -469,6 +487,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return totals;
   }
 
+  // ---------------- VOLLEYBALL KILLS ----------------
   function volleyballStats(activities) {
     const totals = activities.reduce(
       (acc, a) => {
@@ -481,6 +500,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return totals;
   }
 
+  // ---------------- BASKETBALL POINTS / REBOUNDS / ASSISTS ----------------
   function basketballStats(activities) {
     const totals = activities.reduce(
       (acc, a) => {
@@ -495,6 +515,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return totals;
   }
 
+   // ---------------- HOCKEY GOALS & ASSISTS ----------------
   function hockeyStats(activities) {
     const totals = activities.reduce(
       (acc, a) => {
@@ -510,6 +531,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return totals;
   }
 
+  // ---------------- COMPUTE SCORE BASED ON SPORT TYPE ----------------
   function computeScore(row, sport) {
     const activities = parseActivities(row);
     const filtered = filterBySport(activities, sport);
@@ -556,6 +578,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // ---------------- INITIAL LOAD OF LEADERBOARD ----------------
   (async function init() {
     try {
       const sport = sortSport.value || "all";

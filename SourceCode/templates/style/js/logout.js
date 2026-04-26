@@ -1,3 +1,4 @@
+// ---------------- LOGOUT CURRENT USER ----------------
 function logout() {
       fetch('/login_api/logout', {
         method: 'POST',

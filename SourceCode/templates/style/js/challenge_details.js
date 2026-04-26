@@ -1,12 +1,22 @@
 //challenge_details.js:
+
+// Wait for page to fully load
 document.addEventListener("DOMContentLoaded", async () => {
+
+  // Extract challenge name from URL
   const challengeName = decodeURIComponent(
     window.location.pathname.split("/").pop()
   );
 
+  // Get current user from local storage
   const currentUser = localStorage.getItem("currentUser");
+
+  // Reference to action button (join/leave/delete)
   const actionBtn = document.getElementById("challenge-action-btn");
 
+
+  // ---------------- FORMAT METRIC LABEL ----------------
+  // Converts backend metric types into readable labels
   function formatMetricLabel(metric) {
     const labels = {
       distance: "miles",
@@ -27,6 +37,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     return labels[metric] || metric || "";
   }
 
+
+  // ---------------- FORMAT ACTIVITY LABEL ----------------
+  // Converts activity type into readable phrase
   function formatActivityLabel(activity) {
     const labels = {
       run: "Run",
@@ -46,111 +59,140 @@ document.addEventListener("DOMContentLoaded", async () => {
     return labels[activity] || activity || "Complete";
   }
 
+
+  // ---------------- BUILD GOAL TEXT ----------------
+  // Combines activity + metric + target into readable goal
   function getGoalText(challenge) {
     const activityText = formatActivityLabel(challenge.activity_type);
     const metricText = formatMetricLabel(challenge.metric_type);
     return `${activityText} ${challenge.target_value} ${metricText}`;
   }
 
+
+  // ---------------- PARSE DATE ----------------
+  // Converts YYYY-MM-DD string into JS Date object
   function parseLocalDate(dateStr) {
-  const [year, month, day] = dateStr.split("-").map(Number);
-  return new Date(year, month - 1, day);
-}
-
- function getDaysLeftText(startDateStr, endDateStr) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const startDate = parseLocalDate(startDateStr);
-  startDate.setHours(0, 0, 0, 0);
-
-  const endDate = parseLocalDate(endDateStr);
-  endDate.setHours(0, 0, 0, 0);
-
-  const msPerDay = 1000 * 60 * 60 * 24;
-
-  if (today < startDate) {
-    const daysUntilStart = Math.round((startDate - today) / msPerDay);
-    return `Starts in ${daysUntilStart} day${daysUntilStart === 1 ? "" : "s"}`;
+    const [year, month, day] = dateStr.split("-").map(Number);
+    return new Date(year, month - 1, day);
   }
 
-  if (today > endDate) {
-    return "Completed";
+
+  // ---------------- DAYS LEFT CALCULATION ----------------
+  // Determines if challenge hasn't started, is active, or completed
+  function getDaysLeftText(startDateStr, endDateStr) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const startDate = parseLocalDate(startDateStr);
+    startDate.setHours(0, 0, 0, 0);
+
+    const endDate = parseLocalDate(endDateStr);
+    endDate.setHours(0, 0, 0, 0);
+
+    const msPerDay = 1000 * 60 * 60 * 24;
+
+    // Not started yet
+    if (today < startDate) {
+      const daysUntilStart = Math.round((startDate - today) / msPerDay);
+      return `Starts in ${daysUntilStart} day${daysUntilStart === 1 ? "" : "s"}`;
+    }
+
+    // Already ended
+    if (today > endDate) {
+      return "Completed";
+    }
+
+    // Currently active
+    const daysLeft = Math.round((endDate - today) / msPerDay);
+    return `${daysLeft} day${daysLeft === 1 ? "" : "s"} left`;
   }
 
-  const daysLeft = Math.round((endDate - today) / msPerDay);
-  return `${daysLeft} day${daysLeft === 1 ? "" : "s"} left`;
-}
 
+  // ---------------- RENDER LEADERBOARD ----------------
   function renderLeaderboard(leaderboard, metricType) {
     const leaderboardList = document.getElementById("leaderboard-list");
     leaderboardList.innerHTML = "";
 
+    // Handle empty leaderboard
     if (!leaderboard || leaderboard.length === 0) {
       leaderboardList.innerHTML = "<p class='empty'>No leaderboard data yet.</p>";
       return;
     }
 
-leaderboard.forEach(entry => {
-  const row = document.createElement("div");
-  row.className = "challenge-detail-leaderboard-row";
+    // Loop through each participant
+    leaderboard.forEach(entry => {
+      const row = document.createElement("div");
+      row.className = "challenge-detail-leaderboard-row";
 
-  let medal = "";
-  if (entry.rank === 1) {
-    medal = '<span class="leaderboard-medal medal-gold">🥇</span>';
-    row.classList.add("leaderboard-first");
-  } else if (entry.rank === 2) {
-    medal = '<span class="leaderboard-medal medal-silver">🥈</span>';
-    row.classList.add("leaderboard-second");
-  } else if (entry.rank === 3) {
-    medal = '<span class="leaderboard-medal medal-bronze">🥉</span>';
-    row.classList.add("leaderboard-third");
-  }
+      // Assign medals based on rank
+      let medal = "";
+      if (entry.rank === 1) {
+        medal = '<span class="leaderboard-medal medal-gold">🥇</span>';
+        row.classList.add("leaderboard-first");
+      } else if (entry.rank === 2) {
+        medal = '<span class="leaderboard-medal medal-silver">🥈</span>';
+        row.classList.add("leaderboard-second");
+      } else if (entry.rank === 3) {
+        medal = '<span class="leaderboard-medal medal-bronze">🥉</span>';
+        row.classList.add("leaderboard-third");
+      }
 
-  row.innerHTML = `
-    <div class="challenge-detail-rank">${medal} #${entry.rank}</div>
-    <div class="challenge-detail-name">${entry.username}</div>
-    <div class="challenge-detail-progress">
-      <div class="challenge-detail-progress-text">
-        ${entry.current} / ${entry.target} ${formatMetricLabel(metricType)}
-      </div>
-      <div class="progress-container">
-        <div class="progress-bar" style="width: ${entry.percent}%;"></div>
-      </div>
-    </div>
-  `;
+      // Build row UI
+      row.innerHTML = `
+        <div class="challenge-detail-rank">${medal} #${entry.rank}</div>
+        <div class="challenge-detail-name">${entry.username}</div>
+        <div class="challenge-detail-progress">
+          <div class="challenge-detail-progress-text">
+            ${entry.current} / ${entry.target} ${formatMetricLabel(metricType)}
+          </div>
+          <div class="progress-container">
+            <div class="progress-bar" style="width: ${entry.percent}%;"></div>
+          </div>
+        </div>
+      `;
 
-  leaderboardList.appendChild(row);
+      leaderboardList.appendChild(row);
     });
   }
 
+
+  // ---------------- SET ACTION BUTTON ----------------
   function setActionButton(challenge) {
-  if (!actionBtn) return;
+    if (!actionBtn) return;
 
-  const participantDetails = challenge.participant_details || [];
-  const isOwner = currentUser === challenge.creator_username;
-  const isJoined = participantDetails.some(
-    participant => participant.username === currentUser
-  );
+    const participantDetails = challenge.participant_details || [];
 
-  if (isOwner) {
-    actionBtn.textContent = "Delete Challenge";
-    actionBtn.dataset.action = "delete";
-  } else if (isJoined) {
-    actionBtn.textContent = "Leave Challenge";
-    actionBtn.dataset.action = "leave";
-  } else {
-    actionBtn.textContent = "Join Challenge";
-    actionBtn.dataset.action = "join";
+    // Check if current user is creator
+    const isOwner = currentUser === challenge.creator_username;
+
+    // Check if user already joined
+    const isJoined = participantDetails.some(
+      participant => participant.username === currentUser
+    );
+
+    // Set button behavior
+    if (isOwner) {
+      actionBtn.textContent = "Delete Challenge";
+      actionBtn.dataset.action = "delete";
+    } else if (isJoined) {
+      actionBtn.textContent = "Leave Challenge";
+      actionBtn.dataset.action = "leave";
+    } else {
+      actionBtn.textContent = "Join Challenge";
+      actionBtn.dataset.action = "join";
+    }
+
+    actionBtn.dataset.challengeId = challenge.id;
   }
 
-  actionBtn.dataset.challengeId = challenge.id;
-}
 
+  // ---------------- HANDLE BUTTON CLICK ----------------
   async function handleActionClick() {
     if (!actionBtn) return;
 
     const username = localStorage.getItem("currentUser");
+
+    // Must be logged in
     if (!username) {
       alert("Please log in to continue.");
       return;
@@ -161,24 +203,25 @@ leaderboard.forEach(entry => {
 
     if (!challengeId || !action) return;
 
+    // Confirm delete
     if (action === "delete") {
       const confirmed = window.confirm("Delete this challenge? This cannot be undone.");
       if (!confirmed) return;
-      }
-
-    
+    }
 
     let endpoint = "";
 
+    // Determine API endpoint
     if (action === "delete") {
       endpoint = "/challenges_api/deletechallenge";
     } else if (action === "leave") {
       endpoint = "/challenges_api/leave";
     } else {
-       endpoint = "/challenges_api/join";
+      endpoint = "/challenges_api/join";
     }
 
     try {
+      // Send request
       const resp = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -190,12 +233,14 @@ leaderboard.forEach(entry => {
 
       const payload = await resp.json().catch(() => null);
 
+      // Handle errors
       if (!resp.ok) {
         const msg = payload && payload.error ? payload.error : `HTTP ${resp.status}`;
         alert("Action failed: " + msg);
         return;
       }
 
+      // Redirect or reload
       if (action === "delete") {
         window.location.href = "/challenges";
       } else {
@@ -207,10 +252,14 @@ leaderboard.forEach(entry => {
     }
   }
 
+
+  // Attach click listener
   if (actionBtn) {
     actionBtn.addEventListener("click", handleActionClick);
   }
 
+
+  // ---------------- FETCH CHALLENGE DETAILS ----------------
   try {
     const resp = await fetch("/challenges_api/challengedetail", {
       method: "POST",
@@ -227,28 +276,41 @@ leaderboard.forEach(entry => {
     const data = await resp.json();
     const challenge = data.challenge;
 
+    // Populate UI fields
     document.getElementById("challenge-name-heading").textContent = challenge.name;
     document.getElementById("challenge-description").textContent =
       challenge.description || "No description provided.";
+
     document.getElementById("challenge-start-date").textContent = challenge.start_date || "";
     document.getElementById("challenge-end-date").textContent = challenge.end_date || "";
+
     document.getElementById("challenge-days-left").textContent =
       getDaysLeftText(challenge.start_date, challenge.end_date);
+
     document.getElementById("challenge-goal-text").textContent =
       getGoalText(challenge);
+
     document.getElementById("challenge-activity-type").textContent =
       challenge.activity_type || "";
+
     document.getElementById("challenge-metric-type").textContent =
       challenge.metric_type || "";
+
     document.getElementById("challenge-target-value").textContent =
       challenge.target_value ?? "";
+
     document.getElementById("participant-count").textContent =
       challenge.participants ? challenge.participants.length : 0;
 
+    // Setup UI behavior
     setActionButton(challenge);
+
+    // Render leaderboard
     renderLeaderboard(challenge.leaderboard || [], challenge.metric_type);
+
   } catch (err) {
     console.error("Error loading challenge:", err);
     alert("Error loading challenge");
   }
+
 });

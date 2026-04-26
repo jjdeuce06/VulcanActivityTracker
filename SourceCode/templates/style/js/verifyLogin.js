@@ -43,7 +43,7 @@ then verify on backend upon login
 store in db
 */
 
-
+// ---------------- PASSWORD HASHING ----------------
 //STEP 1
 async function hashPassword(password){
     const encoder = new TextEncoder().encode(password);

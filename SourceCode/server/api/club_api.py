@@ -10,9 +10,10 @@ from server.controllers.club_store import (
     accept_club_join_request, decline_club_join_request,
     get_club_recent_activities
 )
+#Club api blueprint
 club_api = Blueprint('club_api', __name__)
 
-@club_api.route('/createclub', methods=['POST']) #gets the data from the request and calls the insert club function
+@club_api.route('/createclub', methods=['POST']) #Gets the data from the request and calls the insert club function
 def create_club():
     try:
         data = request.get_json()
@@ -43,9 +44,10 @@ def create_club():
         return jsonify({"error": str(e)}), 500
 
 
-@club_api.route('/listclubs', methods=['POST']) #lists every club in the database user is not a member or creator of and calls the get not user clubs function
+@club_api.route('/listclubs', methods=['POST']) #Lists every club in the database user is not a member or creator of and calls the get not user clubs function
 def list_clubs():
     try:
+        #Get the request data
         data = request.get_json() or {}
         username = data.get("username")
         if not username:
@@ -61,6 +63,7 @@ def list_clubs():
             for club in clubs:
                 club["has_pending_request"] = get_user_pending_club_request(conn, club["id"], str(user_id))
         finally:
+            #Close connection
             conn.close()
     except Exception as e:
         print("Error fetching user clubs:", e)
@@ -69,7 +72,7 @@ def list_clubs():
     return jsonify({"status": "success", "clubs": clubs}), 200
 
 
-@club_api.route('/myclubs', methods=['POST']) #lists clubs that the user is a member or creator of
+@club_api.route('/myclubs', methods=['POST']) #Lists clubs that the user is a member or creator of
 def my_clubs():
     try:
         data = request.get_json() or {}
@@ -95,7 +98,7 @@ def my_clubs():
     return jsonify({"status": "success", "clubs": clubs}), 200
 
 
-@club_api.route('/join', methods=['POST']) #user joins a club and calls the add member to club function
+@club_api.route('/join', methods=['POST']) #User joins a club and calls the add member to club function
 def join_club():
     try:
         data = request.get_json() or {}
@@ -132,7 +135,7 @@ def join_club():
         print("Error joining club:", e)
         return jsonify({"error": str(e)}), 500
     
-@club_api.route('/leave', methods=['POST']) #user leaves a club and calls the remove member from club function
+@club_api.route('/leave', methods=['POST']) #User leaves a club and calls the remove member from club function
 def leave_club():
     try:
         data = request.get_json() or {}
@@ -157,7 +160,7 @@ def leave_club():
         print("Error leaving club:", e)
         return jsonify({"error": str(e)}), 500
 
-@club_api.route('/deleteclub', methods=['POST']) #deletes club
+@club_api.route('/deleteclub', methods=['POST']) #Deletes club route
 def delete_club():
     try:
         data = request.get_json()
@@ -185,7 +188,7 @@ def delete_club():
         print("Error deleting club:", e)
         return jsonify({"error": str(e)}), 500
     
-@club_api.route('/clubdetail', methods=['POST'])
+@club_api.route('/clubdetail', methods=['POST'])#Club details route
 def club_detail():
     try:
         data = request.get_json() or {}
@@ -255,7 +258,7 @@ def club_detail():
         print("Error fetching club detail:", e)
         return jsonify({"error": str(e)}), 500
     
-@club_api.route('/requestjoin', methods=['POST'])
+@club_api.route('/requestjoin', methods=['POST']) #Request to join club route
 def request_join_club():
     try:
         data = request.get_json() or {}
@@ -303,7 +306,7 @@ def request_join_club():
         return jsonify({"error": str(e)}), 500
 
 
-@club_api.route('/cancelrequest', methods=['POST'])
+@club_api.route('/cancelrequest', methods=['POST'])#Cancel join request route
 def cancel_join_request():
     try:
         data = request.get_json() or {}
@@ -329,7 +332,7 @@ def cancel_join_request():
         return jsonify({"error": str(e)}), 500
 
 
-@club_api.route('/clubrequests', methods=['POST'])
+@club_api.route('/clubrequests', methods=['POST'])#Club send request to owner route
 def club_requests_for_owner():
     try:
         data = request.get_json() or {}
@@ -354,7 +357,7 @@ def club_requests_for_owner():
         return jsonify({"error": str(e)}), 500
 
 
-@club_api.route('/acceptrequest', methods=['POST'])
+@club_api.route('/acceptrequest', methods=['POST'])#Accept club request route
 def accept_club_request_route():
     try:
         data = request.get_json() or {}
@@ -383,7 +386,7 @@ def accept_club_request_route():
         return jsonify({"error": str(e)}), 500
 
 
-@club_api.route('/declinerequest', methods=['POST'])
+@club_api.route('/declinerequest', methods=['POST'])#Decline club request route
 def decline_club_request_route():
     try:
         data = request.get_json() or {}

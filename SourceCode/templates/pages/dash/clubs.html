@@ -1,13 +1,21 @@
 {% extends "base_temp/dashboard.html" %}
+<!-- Extends main dashboard layout (nav, structure, etc.) -->
 
 {% block page_css %}
+<!-- Page-specific stylesheet for clubs page -->
 <link rel="stylesheet" href="{{ url_for('style_folder.static', filename='css/clubs.css') }}">
 {% endblock %}
 
+
 {% block content %}
+<!-- Main content injected into dashboard -->
+
 <div class="clubpage-page">
 
+  <!-- ---------------- TOP SECTION ---------------- -->
   <div class="clubpage-top-section">
+
+    <!-- Header card -->
     <div class="clubpage-header-card">
       <h1>Clubs</h1>
       <p class="clubpage-description">
@@ -15,22 +23,30 @@
       </p>
     </div>
 
+    <!-- Button to create a new club -->
     <a href="/create_club" class="clubpage-create-btn">
       + Create Club
     </a>
   </div>
 
+  <!-- ---------------- MAIN LAYOUT ---------------- -->
   <div class="clubpage-layout">
 
+    <!-- LEFT COLUMN: USER'S CLUBS -->
     <div class="clubpage-card">
       <h3>My Clubs</h3>
+
+      <!-- Container populated dynamically with user's clubs -->
       <div class="clubpage-list" id="my-clubs-list">
         <!-- JS will inject clubs here -->
       </div>
     </div>
 
+    <!-- RIGHT COLUMN: ALL AVAILABLE CLUBS -->
     <div class="clubpage-card">
       <h3>Available Clubs</h3>
+
+      <!-- Container populated dynamically with all clubs -->
       <div class="clubpage-list" id="all-clubs-list">
         <!-- JS will inject clubs here -->
       </div>
@@ -39,5 +55,8 @@
   </div>
 </div>
 
+<!-- ---------------- SCRIPT ---------------- -->
+<!-- Handles fetching, rendering, and interactions for clubs -->
 <script src="{{ url_for('style_folder.static', filename='js/clubs.js') }}"></script>
+
 {% endblock %}

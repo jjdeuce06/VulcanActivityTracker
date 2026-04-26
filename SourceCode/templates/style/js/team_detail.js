@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   let currentTeam = null;
 
+// ---------------- LOAD TEAM DETAILS ----------------
   async function loadTeam() {
     try {
       const resp = await fetch("/team_api/teamdetail", {
@@ -67,6 +68,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       teamCoach.textContent = `Coach: ${coachMember ? coachMember.username : "Unknown"}`;
 
+// ----------- BUILD ROSTER LIST -----------
       rosterList.innerHTML = "";
 
       if (roster.length === 0) {
@@ -91,6 +93,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // ---------------- LOAD ANNOUNCEMENTS ----------------
   async function loadAnnouncements() {
     try {
       const resp = await fetch(`/team_api/announcements/${teamId}`, {
@@ -129,6 +132,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // ---------------- LOAD SCHEDULE ----------------
   async function loadSchedule() {
     try {
       const resp = await fetch(`/team_api/schedule/${teamId}`, {
@@ -169,6 +173,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // ---------------- POST ANNOUNCEMENT ----------------
   async function postAnnouncement() {
     const title = announcementTitleInput.value.trim();
     const body = announcementBodyInput.value.trim();
@@ -207,6 +212,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // ---------------- CREATE EVENT IN SCHEDULE ----------------
   async function createScheduleEvent() {
     const eventTitle = scheduleTitleInput.value.trim();
     const eventType = scheduleTypeInput.value;
@@ -251,6 +257,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // ---------------- SEND TEAM INVITE ----------------
   async function sendInvite(invitedEmail) {
     try {
       const resp = await fetch("/team_api/invite", {
@@ -280,12 +287,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // ---------------- DATE FORMAT HELPER ----------------
   function formatDate(dateString) {
     if (!dateString) return "Unknown date";
     const date = new Date(dateString);
     return date.toLocaleString();
   }
 
+  // ---------------- INVITE FORM HANDLER ----------------
   if (inviteForm) {
     inviteForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -314,6 +323,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // ---------------- TEAM LEADERBOARD LOGIC ----------------
   async function loadTeamLeaderboard() {
   const table = document.getElementById("teamLeaderboard");
   if (!table) return;
@@ -446,6 +456,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return activities.filter(a => a.activityType === target);
   }
 
+  // ---- helper functions to compute totals per sport ----
   function totalDuration(activities) {
     return activities.reduce((sum, a) => sum + (a.duration || 0), 0);
   }
@@ -550,6 +561,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // Build computed rows used for rendering table
   function buildComputedRows(rawRows, sport) {
     const s = normalizeSport(sport);
 
@@ -628,6 +640,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // ---------------- RENDER LEADERBOARD TABLE ----------------
   function render(rows) {
     tbody.innerHTML = "";
     const sport = normalizeSport(sortSport.value);
@@ -641,6 +654,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const count = filtered.length;
       const bodytr = document.createElement("tr");
 
+      // -------- SPORT-SPECIFIC ROW FORMATTING --------
       if (sport === "soccer") {
         bodytr.innerHTML = `
           <td>${idx + 1}</td>
@@ -724,6 +738,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // ---------------- SORT AND RENDER ----------------
   function sortAndRender() {
     const sport = sortSport.value || "all";
     const key = sortBy.value;
@@ -770,6 +785,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     render(sorted);
   }
 
+
+  // ---------------- EVENT LISTENERS ----------------
   sortBy.addEventListener("change", sortAndRender);
 
   sortDirBtn.addEventListener("click", () => {
@@ -793,6 +810,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
+  // ---------------- INITIAL LOAD ----------------
   try {
     const sport = sortSport.value || "all";
     sortTableBySport(sport);
@@ -803,6 +821,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 }
 
+// ---------------- PAGE INITIALIZATION ----------------
   await loadTeam();
   await loadAnnouncements();
   await loadSchedule();

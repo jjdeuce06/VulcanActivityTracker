@@ -1,13 +1,19 @@
 {% extends "base_temp/dashboard.html" %}
+<!-- Extends the main dashboard layout -->
 
 {% block content %}
 <body>
+    <!-- Page title -->
     <h1> Add Activity </h1>
+
+    <!-- ---------------- ACTIVITY SELECTION DROPDOWN ---------------- -->
     <div class="dropdown-wrapper">
       <div class="dropdown">
           <button class="dropbtn">Activity Selection</button>
           <button class="selected-activity">None Selected</button>
           <button class="clr-dropbtn">Clear</button>
+
+          <!-- Activity options used by JS to build dynamic fields -->
           <div class="dropdown-content">
             <a href="#" data-activity="run">🏃‍➡️Run</a>
             <a href="#" data-activity="lifting">🏋️‍♂️Weightlifting</a>
@@ -27,11 +33,16 @@
       </div>
     </div>
 
+    <!-- ---------------- MAIN ACTIVITY LAYOUT ---------------- -->
     <div class="activity-layout">
 
+      <!-- ---------------- ACTIVITY FORM ---------------- -->
       <form id="activity-form" class="activity-form">
+
+          <!-- Hidden field stores selected activity type -->
           <input type="hidden" name="activity_type" id="activity_type">
 
+          <!-- Basic activity fields -->
           <label>Date</label>
           <input type="date" name="date" id="activity-date" required>
 
@@ -41,6 +52,7 @@
           <label>Calories Burned</label>
           <input type="number" name="calories_burned" min="0" required>
 
+          <!-- Visibility selection -->
           <div class="field">
             <span class="field-label">Accessibility</span>
 
@@ -57,17 +69,24 @@
             </div>
           </div>
 
+          <!-- JS injects sport-specific fields here -->
           <div id="dynamic-fields"></div>
 
+          <!-- Submit activity -->
           <button type="submit">Save Activity</button>
       </form>
-      <!-- Right-side Activities Card -->
+
+      <!-- ---------------- ACTIVITIES TABLE CARD ---------------- -->
       <div class="activities-wrapper">
         <div class="card activities-card">
           <h3>Activities</h3>
+
+          <!-- Search input for filtering activities -->
           <div class="activities-search-container">
             <input type="text" id="activity-searchbar" placeholder="Search Activity..."/>
           </div>
+
+          <!-- Activity history table -->
           <table class="activities-table">
             <thead>
               <tr>
@@ -79,6 +98,8 @@
                 <th>Notes</th>
               </tr>
             </thead>
+
+            <!-- JS dynamically inserts activity rows here -->
             <tbody id="activities-body">
               <!-- Dynamic rows -->
             </tbody>
@@ -88,6 +109,7 @@
     </div>
 </body>
 
+<!-- Handles activity selection, dynamic fields, saving, and rendering table -->
 <script src="{{ url_for('style_folder.static', filename='js/training.js') }}"></script>
 
 {% endblock %}

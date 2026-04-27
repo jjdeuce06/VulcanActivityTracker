@@ -118,6 +118,19 @@ designed for campus communities.
     <a href="https://vulcanactivitytracker.onrender.com">Live →</a>
   </div>
 
+  <div style="
+    flex: 1;
+    min-width: 220px;
+    background: #0b102f;
+    border-radius: 16px;
+    padding: 16px;
+    color: #ffffff;
+  ">
+    <h3>Project Improvements</h3>
+    <p>Ways we would want to improve our project</p>
+    <a href="progress/improvements">Improvements →</a>
+  </div>
+
 </div>
 </div>
 

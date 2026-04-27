@@ -1,6 +1,6 @@
 <h1 align="center" style="color:#000000;">Project Improvements 📈</h1>
 
-<!-- ===================== GOALS ===================== -->
+<!-- ===================== Email ===================== -->
 
 <div style="
   background:#0b102f;
@@ -12,13 +12,14 @@
 ">
 <h2>📤 Email Integration</h2>
 <ul>
-  <li>We have a working branch that sends emails to users</li>
-  <li>Emails sent include verification upon account creation and links for when users forget their password</li>
-  <li>MailerSend's free tier only allows one email to be used, we have to upgrade to send out more</li>
+  <li>Implemented a functional email service supporting account verification and password reset workflows</li>
+  <li>Designed secure token-based links for authentication-related actions</li>
+  <li>Current limitation: free-tier constraints restrict outbound emails to a single verified address</li>
+  <li>Future improvement: upgrade provider plan or migrate to a more scalable email service for production use</li>
 </ul>
 </div>
 
-<!-- ===================== WORK COMPLETED ===================== -->
+<!-- ===================== AI Coaching ===================== -->
 
 <div style="
   background:#11175a;
@@ -30,13 +31,13 @@
 ">
 <h2>🤖 AI Coaching</h2>
 <ul>
-  <li>Early versions had us implementing an AI Coach to provide feedback on activities</li>
-  <li>We decided to cut this out due to the other features we wanted to implement</li>
-  <li>Given more time, we would have implemented this</li>
+  <li>Initial system design included an AI-driven coaching feature to analyze user activity data and provide feedback</li>
+  <li>Feature was deprioritized to focus on core platform stability and essential functionality</li>
+  <li>Future scope: integrate AI models to deliver personalized insights, recommendations, and performance tracking</li>
 </ul>
 </div>
 
-<!-- ===================== ISSUES / BLOCKERS ===================== -->
+<!-- ===================== Smartwatch ===================== -->
 
 <div style="
   background:#0b102f;
@@ -48,12 +49,13 @@
 ">
 <h2>⌚ Smartwatch Connectivity</h2>
 <ul>
-    <li>Right now we have to trust users to be honest with statistics uploaded</li>
-    <li>With our application being web-based, we were unsure how to approach connecting smartwatches to laptops</li>
+    <li>Current system relies on manual user input for activity data, which introduces potential accuracy concerns</li>
+    <li>Integration challenge: connecting wearable devices to a web-based platform requires external APIs and mobile or cloud intermediaries</li>
+    <li>Future direction: integrate with third-party services (e.g., health/fitness APIs) to automate data ingestion</li>
 </ul>
 </div>
 
-<!-- ===================== NEXT WEEK ===================== -->
+<!-- ===================== Database ===================== -->
 
 <div style="
   background:#11175a;
@@ -65,7 +67,8 @@
 ">
 <h2>🌐 Database Scalability</h2>
 <ul>
-  <li>The use of Microsoft SQL limited our hosting options</li>
-  <li>If we could do it again, we would research other tools to use to make hosting easier</li>
+  <li>Current implementation uses Microsoft SQL Server, which introduces deployment and hosting constraints</li>
+  <li>Identified need for more flexible, cloud-friendly database solutions</li>
+  <li>Future improvement: evaluate alternatives (e.g., PostgreSQL, cloud-managed databases) to improve scalability, cost-efficiency, and deployment flexibility</li>
 </ul> 
 </div>
